@@ -4,7 +4,16 @@ on:
   schedule:
     # Chạy tự động mỗi sáng lúc 07:00 (Giờ VN = 00:00 UTC) từ Thứ 2 đến Thứ 6
     - cron: '0 0 * * 1-5'
-  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên giao diện GitHub
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Chế độ chạy'
+        required: true
+        default: 'test_ai'
+        type: choice
+        options:
+          - test_ai
+          - recon
 
 permissions:
   contents: write
@@ -33,7 +42,13 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python recon_pipeline.py
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.mode }}" = "recon" ]; then
+            echo "Running automated daily reconnaissance..."
+            python recon_pipeline.py
+          else
+            echo "Running live AI deep analysis test..."
+            python test_live_ai.py
+          fi
 
       - name: Commit and Save State
         run: |
@@ -41,8 +56,8 @@ jobs:
           git config --global user.email "bot@legal-recon.local"
           git add data/
           if git diff --staged --quiet; then
-            echo "No new documents to commit."
+            echo "No changes to commit."
           else
-            git commit -m "Auto-update: New legal documents [skip ci]"
+            git commit -m "Auto-update: Legal state [skip ci]"
             git push
           fi
