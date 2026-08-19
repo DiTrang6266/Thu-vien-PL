@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-HỆ THỐNG TRINH SÁT PHÁP LUẬT TỰ ĐỘNG (LEGAL RECONNAISSANCE ENGINE)
+HỆ THỐNG TRINH SÁT & ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG 100% (ZERO-TOUCH LEGAL RECON)
 Chuyên ngành: Xây dựng, Đấu thầu, Quản lý chi phí và Đầu tư công Việt Nam
-Tác giả: Tự động hóa Hồ sơ Dự án
+Bản quyền & Thiết kế: Tự động hóa Hồ sơ Dự án
 =============================================================================
 """
 
@@ -14,13 +14,23 @@ import json
 import re
 import hashlib
 from datetime import datetime
+from typing import Dict, List, Any, Optional
 import feedparser
 import httpx
 from bs4 import BeautifulSoup
 import urllib3
 
-# Tắt cảnh báo SSL cho các cổng thông tin công vụ
+# Đảm bảo in tiếng Việt chuẩn trên mọi môi trường
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# Import các module cốt lõi
+from modules.legal_parser import LegalDocumentParser
+from modules.legal_diff import LegalDocumentDiffer
+from modules.ai_analyzer import LegalAIAnalyzer
+from modules.telegraph_publisher import TelegraphPublisher
 
 # Đường dẫn thư mục dữ liệu
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,9 +38,10 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 DATABASE_FILE = os.path.join(DATA_DIR, "known_documents.json")
 LOG_FILE = os.path.join(DATA_DIR, "nhat_ky_trinh_sat.log")
 
-# Cấu hình Token Telegram
+# Cấu hình Token & API
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8929996006:AAEkcgtKYRJihNtDZUPxymvAEIDBIlWzqIc")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Danh sách nguồn cấp tin chính thức của Nhà nước (RSS Feeds)
 RSS_SOURCES = [
@@ -51,7 +62,7 @@ RSS_SOURCES = [
     }
 ]
 
-# Bộ lọc từ khóa chuyên ngành Xây dựng, Đấu thầu và Đầu tư công
+# Bộ lọc từ khóa chuyên ngành
 KEYWORD_RULES = {
     "DAU_THAU": [
         r"đấu thầu", r"lựa chọn nhà thầu", r"chỉ định thầu", r"e-hsmt", r"e-hsyc",
@@ -76,6 +87,7 @@ KEYWORD_RULES = {
     ]
 }
 
+
 def log(msg: str):
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     formatted_msg = f"[{now_str}] {msg}"
@@ -87,11 +99,13 @@ def log(msg: str):
     except Exception:
         pass
 
+
 def init_storage():
     os.makedirs(DATA_DIR, exist_ok=True)
     if not os.path.exists(DATABASE_FILE):
         with open(DATABASE_FILE, "w", encoding="utf-8") as f:
             json.dump({}, f, ensure_ascii=False, indent=2)
+
 
 def load_known_documents() -> dict:
     try:
@@ -100,9 +114,11 @@ def load_known_documents() -> dict:
     except Exception:
         return {}
 
+
 def save_known_documents(data: dict):
     with open(DATABASE_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
 
 def clean_html_text(raw_html: str) -> str:
     if not raw_html:
@@ -111,8 +127,8 @@ def clean_html_text(raw_html: str) -> str:
     text = soup.get_text(separator=" ").strip()
     return re.sub(r"\s+", " ", text)
 
+
 def normalize_url(link: str) -> str:
-    """Chuẩn hóa đường link URL từ các cổng thông tin chính phủ"""
     link = link.strip()
     if link.startswith("http:moc.gov.vn"):
         link = link.replace("http:moc.gov.vn", "https://moc.gov.vn")
@@ -124,6 +140,7 @@ def normalize_url(link: str) -> str:
         link = "https://" + link
     return link
 
+
 def classify_document(title: str, summary: str) -> list:
     combined_text = f"{title} {summary}".lower()
     matched_categories = []
@@ -134,7 +151,11 @@ def classify_document(title: str, summary: str) -> list:
                 break
     return matched_categories
 
-def send_telegram_alert(item: dict) -> bool:
+
+def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_pub: TelegraphPublisher) -> bool:
+    """
+    Xử lý tự động toàn diện: AI Phân tích tác động -> Xuất bản Telegraph Instant View -> Bắn Telegram.
+    """
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         log("ℹ️ Không tìm thấy Token Telegram. Bỏ qua bước gửi tin nhắn.")
         return False
@@ -149,18 +170,53 @@ def send_telegram_alert(item: dict) -> bool:
     cats_str = "\n".join([f"• {cat_labels.get(c, c)}" for c in item.get("categories", [])])
     clean_link = normalize_url(item["link"])
 
-    message_text = (
-        f"🏛 <b>[PHÁT HIỆN VĂN BẢN XÂY DỰNG MỚI]</b>\n"
-        f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"📄 <b>Tiêu đề:</b> {item['title']}\n"
-        f"🏢 <b>Nguồn cấp:</b> {item['source_name']}\n"
-        f"📅 <b>Ngày phát hiện:</b> {item.get('published', 'Vừa cập nhật')}\n\n"
-        f"📂 <b>Lĩnh vực liên quan:</b>\n{cats_str}\n\n"
-        f"📝 <b>Trích yếu tóm tắt:</b>\n"
-        f"<i>{item.get('summary', 'Nhấn nút bên dưới để xem toàn văn')}</i>\n"
-        f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"👇 <b>Nhấn nút bấm bên dưới để mở toàn văn hoặc tải file:</b>"
+    # 1. Chạy AI Phân tích Tác động Toàn văn
+    log(f"🧠 Đang gọi AI phân tích tác động pháp lý cho: {item['title'][:50]}...")
+    doc_meta = {
+        "so_hieu": item["title"],
+        "co_quan": item["source_name"],
+        "ngay_ban_hanh": item.get("published", datetime.now().strftime("%d/%m/%Y"))
+    }
+    
+    # Nạp nội dung vào AI
+    ai_data = ai_analyzer.analyze_legal_impact(
+        old_doc_text=item.get("summary", ""),
+        new_doc_text=f"{item['title']}\n{item.get('summary', '')}",
+        doc_metadata=doc_meta
     )
+
+    # 2. Xuất bản bài viết toàn văn lên Telegraph (Instant View)
+    telegraph_url = telegraph_pub.publish_report(
+        title=f"BÁO CÁO PHÂN TÍCH PHÁP LÝ: {item['title']}",
+        ai_data=ai_data,
+        doc_meta=doc_meta
+    )
+
+    # 3. Định dạng bản tin Telegram tinh gọn + Nút Instant View
+    top3_bullets = "\n".join(ai_data.get("summary_top3", ["Đã đối chiếu với hệ thống pháp lý hiện hành."]))
+    
+    message_text = (
+        f"🏛 <b>[TRINH SÁT PHÁP LÝ: PHÁT HIỆN VĂN BẢN MỚI]</b>\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📄 <b>Văn bản:</b> {item['title']}\n"
+        f"🏢 <b>Nguồn cấp:</b> {item['source_name']}\n"
+        f"📅 <b>Thời gian:</b> {item.get('published', 'Vừa cập nhật')}\n\n"
+        f"📂 <b>Lĩnh vực liên quan:</b>\n{cats_str}\n\n"
+        f"🌟 <b>Top điểm cốt lõi cần lưu ý ngay:</b>\n"
+        f"<i>{top3_bullets}</i>\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"👇 <b>Bấm nút bên dưới để ĐỌC TOÀN VĂN INSTANT VIEW không giới hạn:</b>"
+    )
+
+    inline_buttons = []
+    if telegraph_url:
+        inline_buttons.append([
+            {"text": "📖 ĐỌC BÁO CÁO PHÂN TÍCH TOÀN VĂN (INSTANT VIEW)", "url": telegraph_url}
+        ])
+    
+    inline_buttons.append([
+        {"text": "📥 TẢI VĂN BẢN GỐC / XEM NGUỒN CHÍNH THỨC", "url": clean_link}
+    ])
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
@@ -168,18 +224,14 @@ def send_telegram_alert(item: dict) -> bool:
         "text": message_text,
         "parse_mode": "HTML",
         "reply_markup": {
-            "inline_keyboard": [
-                [
-                    {"text": "📥 BẤM VÀO ĐÂY ĐỂ XEM TOÀN VĂN & TẢI FILE", "url": clean_link}
-                ]
-            ]
+            "inline_keyboard": inline_buttons
         }
     }
 
     try:
-        response = httpx.post(url, json=payload, timeout=15)
+        response = httpx.post(url, json=payload, timeout=20)
         if response.status_code == 200:
-            log(f"✅ Đã gửi thông báo Telegram thành công: {item['title'][:60]}...")
+            log(f"✅ Đã gửi thông báo Telegram kèm Instant View thành công: {item['title'][:60]}...")
             return True
         else:
             log(f"❌ Gửi Telegram thất bại ({response.status_code}): {response.text}")
@@ -188,17 +240,23 @@ def send_telegram_alert(item: dict) -> bool:
         log(f"❌ Lỗi kết nối Telegram: {e}")
         return False
 
+
 def run_reconnaissance() -> int:
     init_storage()
     known_docs = load_known_documents()
     new_matched_count = 0
 
-    log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VĂN BẢN PHÁP LUẬT...")
+    log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG...")
+    
+    # Khởi tạo các module
+    ai_analyzer = LegalAIAnalyzer(api_key=GEMINI_API_KEY)
+    telegraph_pub = TelegraphPublisher()
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
     }
 
-    with httpx.Client(verify=False, headers=headers, follow_redirects=True, timeout=25.0) as client:
+    with httpx.Client(verify=False, headers=headers, follow_redirects=True, timeout=30.0) as client:
         for source in RSS_SOURCES:
             log(f"📡 Đang quét nguồn: {source['name']} ({source['url']})...")
             try:
@@ -233,13 +291,16 @@ def run_reconnaissance() -> int:
                             "id": doc_hash,
                             "title": title,
                             "link": link,
-                            "summary": summary[:400] + ("..." if len(summary) > 400 else ""),
+                            "summary": summary,
                             "published": published,
                             "source_name": source["name"],
                             "categories": categories,
                             "discovered_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
-                        send_telegram_alert(doc_item)
+                        
+                        # Chạy quy trình phân tích và gửi alert
+                        process_and_send_alert(doc_item, ai_analyzer, telegraph_pub)
+                        
                         known_docs[doc_hash] = doc_item
                         new_matched_count += 1
                     else:
@@ -255,6 +316,7 @@ def run_reconnaissance() -> int:
     save_known_documents(known_docs)
     log(f"🏁 HOÀN THÀNH CHU TRÌNH TRINH SÁT. Số văn bản mới phù hợp: {new_matched_count}")
     return new_matched_count
+
 
 if __name__ == "__main__":
     run_reconnaissance()

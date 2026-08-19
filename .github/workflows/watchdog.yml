@@ -6,6 +6,9 @@ on:
     - cron: '0 0 * * 1-5'
   workflow_dispatch: # Cho phép bấm nút chạy thủ công trên giao diện GitHub
 
+permissions:
+  contents: write
+
 jobs:
   recon_and_alert:
     runs-on: ubuntu-latest
@@ -21,12 +24,13 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install httpx feedparser beautifulsoup4 urllib3
+          pip install httpx feedparser beautifulsoup4 urllib3 pymupdf openpyxl
 
-      - name: Run Legal Reconnaissance Engine
+      - name: Run Legal Reconnaissance & AI Diff Engine
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python recon_pipeline.py
 
