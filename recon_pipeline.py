@@ -3,7 +3,11 @@
 """
 =============================================================================
 HỆ THỐNG TRINH SÁT & ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG 100% (ZERO-TOUCH LEGAL RECON)
-Bao quát toàn diện: File Trình tự 8 gói thầu + Đầu tư công + Kinh phí thường xuyên
+Bao quát toàn diện: 
+1. Luật, Nghị định, Thông tư Quốc gia (Xây dựng, Đấu thầu, Chi phí, Đầu tư công)
+2. Kinh phí Chi thường xuyên & Mua sắm tài sản công
+3. Hệ thống Thông tư Bộ Quốc phòng (Doanh trại, Doanh cụ, Công trình Quốc phòng, PK-KQ)
+4. Trọn bộ 8 Gói thầu theo file Trình tự
 Bản quyền & Thiết kế: Tự động hóa Hồ sơ Dự án
 =============================================================================
 """
@@ -72,16 +76,26 @@ RSS_SOURCES = [
     }
 ]
 
-# BỘ LỌC TỪ KHÓA CHUYÊN SÂU BAO QUÁT 100% FILE "TRÌNH TỰ" & NGUỒN VỐN THƯỜNG XUYÊN
+# BỘ TỪ KHÓA CHUYÊN SÂU TRA CỨU THỰC TẾ TRÊN TOÀN MẠNG INTERNET
 KEYWORD_RULES = {
-    # 1. KINH PHÍ CHI THƯỜNG XUYÊN & MUA SẮM SỬA CHỮA
+    # 1. BỘ QUỐC PHÒNG - DOANH TRẠI, DOANH CỤ & CÔNG TRÌNH QUỐC PHÒNG
+    "BQP_DOANH_TRAI_DOANH_CU": [
+        r"bộ quốc phòng", r"tt-bqp", r"vbhn-bqp", r"công tác doanh trại",
+        r"doanh trại", r"doanh cụ", r"công trình quốc phòng", r"công trình quân sự",
+        r"nhà ở lực lượng vũ trang", r"quân chủng pk-kq", r"pk-kq", r"cục doanh trại",
+        r"cục công trình quốc phòng", r"tổng cục hậu cần", r"định mức doanh cụ",
+        r"tiêu chuẩn trang thiết bị quân đội", r"thông tư 36/2023/tt-bqp",
+        r"thông tư 150/2018/tt-bqp", r"thông tư 101/2026/tt-bqp", r"thông tư 69/2026/tt-bqp"
+    ],
+
+    # 2. KINH PHÍ CHI THƯỜNG XUYÊN & MUA SẮM SỬA CHỮA TÀI SẢN CÔNG
     "KINH_PHI_THUONG_XUYEN": [
         r"chi thường xuyên", r"kinh phí thường xuyên", r"mua sắm thường xuyên",
         r"sửa chữa bảo trì", r"cải tạo nâng cấp", r"tài sản công", r"thông tư 65/2021",
         r"thông tư 68/2022", r"nghị định 138/2024", r"nguồn ngân sách thường xuyên"
     ],
 
-    # 2. ĐẤU THẦU & LỰA CHỌN NHÀ THẦU (8 GÓI THẦU TRÌNH TỰ: TV, XD, PTV)
+    # 3. ĐẤU THẦU & LỰA CHỌN NHÀ THẦU (8 GÓI THẦU TRÌNH TỰ: TV, XD, PTV)
     "DAU_THAU": [
         r"đấu thầu", r"lựa chọn nhà thầu", r"chỉ định thầu", r"chỉ định thầu rút gọn",
         r"e-hsmt", r"e-hsyc", r"hồ sơ yêu cầu", r"hồ sơ đề xuất", r"hsyc", r"hsđx",
@@ -90,14 +104,14 @@ KEYWORD_RULES = {
         r"thư mời tham gia", r"thương thảo hợp đồng", r"phê duyệt kết quả"
     ],
 
-    # 3. THIẾT KẾ, THẨM TRA, THẨM ĐỊNH & PHÊ DUYỆT (TV-04, TV-05, TV-06)
+    # 4. THIẾT KẾ, THẨM TRA, THẨM ĐỊNH & PHÊ DUYỆT (TV-04, TV-05, TV-06)
     "THIET_KE_THAM_TRA_THAM_DINH": [
         r"thiết kế bản vẽ thi công", r"bvtc", r"thẩm tra thiết kế", r"thẩm tra dự toán",
         r"thẩm định thiết kế", r"thẩm định dự toán", r"tổ thẩm định", r"nhiệm vụ và dự toán",
         r"báo cáo thẩm tra", r"báo cáo thẩm định", r"chỉ dẫn kỹ thuật", r"quy trình bảo trì"
     ],
 
-    # 4. QUẢN LÝ CHI PHÍ, ĐỊNH MỨC & DỰ TOÁN
+    # 5. QUẢN LÝ CHI PHÍ, ĐỊNH MỨC & DỰ TOÁN
     "QUAN_LY_CHI_PHI": [
         r"định mức dự toán", r"đơn giá nhân công", r"giá ca máy", r"chỉ số giá xây dựng",
         r"quản lý chi phí", r"tổng mức đầu tư", r"dự toán xây dựng", r"nghị định 10/2021",
@@ -105,14 +119,14 @@ KEYWORD_RULES = {
         r"chi phí quản lý dự án", r"chi phí tư vấn", r"suất vốn đầu tư", r"hợp đồng xây dựng"
     ],
 
-    # 5. KIỂM TOÁN, BẢO HIỂM, THÍ NGHIỆM & DOANH CỤ (TV-07, TV-09, PTV-01, XD-01)
+    # 6. KIỂM TOÁN, BẢO HIỂM, THÍ NGHIỆM & DOANH CỤ (TV-07, TV-09, PTV-01, XD-01)
     "KIEM_TOAN_BAO_HIEM_THI_NGHIEM": [
         r"kiểm toán độc lập", r"kiểm toán quyết toán", r"bảo hiểm công trình",
         r"bảo hiểm xây dựng", r"thí nghiệm nén tĩnh cọc", r"thí nghiệm cọc",
-        r"doanh cụ", r"lắp đặt thiết bị", r"bảo lãnh thực hiện hợp đồng", r"tạm ứng hợp đồng"
+        r"lắp đặt thiết bị", r"bảo lãnh thực hiện hợp đồng", r"tạm ứng hợp đồng"
     ],
 
-    # 6. GIÁM SÁT, THI CÔNG, NGHIỆM THU & QUYẾT TOÁN (TV-08, XD-01)
+    # 7. GIÁM SÁT, THI CÔNG, NGHIỆM THU & QUYẾT TOÁN (TV-08, XD-01)
     "GIAM_SAT_THI_CONG_NGHIEM_THU": [
         r"tư vấn giám sát", r"giám sát thi công", r"nhật ký thi công", r"bản vẽ hoàn công",
         r"hồ sơ chất lượng", r"nghiệm thu hoàn thành", r"nghiệm thu bàn giao",
@@ -120,7 +134,7 @@ KEYWORD_RULES = {
         r"nghị định 99/2021", r"thông tư 96/2021", r"báo cáo hoàn thành"
     ],
 
-    # 7. CHẤT LƯỢNG, TIÊU CHUẨN & PCCC
+    # 8. CHẤT LƯỢNG, TIÊU CHUẨN & PCCC
     "CHAT_LUONG_PCCC": [
         r"quản lý chất lượng", r"phòng cháy chữa cháy", r"pccc", r"thẩm duyệt pccc",
         r"qcvn", r"tcvn", r"giấy phép xây dựng", r"an toàn lao động", r"quy chuẩn kỹ thuật"
@@ -262,6 +276,7 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
         return False
 
     cat_labels = {
+        "BQP_DOANH_TRAI_DOANH_CU": "🎖️ BQP: Doanh trại, Doanh cụ & PK-KQ",
         "KINH_PHI_THUONG_XUYEN": "💵 Chi thường xuyên & Mua sắm sửa chữa",
         "DAU_THAU": "🏷️ Đấu thầu & Chỉ định thầu (8 gói)",
         "THIET_KE_THAM_TRA_THAM_DINH": "📐 Thiết kế BVTC, Thẩm tra & Thẩm định",
