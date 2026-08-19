@@ -24,7 +24,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install httpx feedparser beautifulsoup4 urllib3 pymupdf openpyxl
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run Legal Reconnaissance & AI Diff Engine
         env:
