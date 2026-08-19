@@ -43,37 +43,53 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8929996006:AAEkcgtKYRJihNt
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Danh sách nguồn cấp tin chính thức của Nhà nước
+# DANH SÁCH 5 CỔNG THÔNG TIN PHÁP LUẬT QUỐC GIA ĐƯỢC GIÁM SÁT 24/7
 RSS_SOURCES = [
+    # 1. CỔNG CÔNG BÁO CHÍNH PHỦ (Bao trùm toàn bộ Luật, Nghị định, Thông tư của tất cả các Bộ)
     {
-        "name": "Công báo Nước CHXHCN Việt Nam",
+        "name": "Công báo Nước CHXHCN Việt Nam (Văn bản mới)",
         "url": "https://congbao.chinhphu.vn/cac-van-ban-moi-ban-hanh.rss",
-        "type": "CONG_BAO"
+        "type": "CONG_BAO_VAN_BAN"
     },
     {
-        "name": "Bộ Xây dựng - Văn bản mới",
+        "name": "Công báo Nước CHXHCN Việt Nam (Số mới đăng)",
+        "url": "http://congbao.chinhphu.vn/cac-so-cong-bao-moi-dang.rss",
+        "type": "CONG_BAO_SO_DANG"
+    },
+
+    # 2. BỘ XÂY DỰNG (Định mức, Đơn giá, Quản lý dự án, Quy chuẩn xây dựng)
+    {
+        "name": "Bộ Xây dựng (Văn bản quy phạm pháp luật mới)",
         "url": "https://moc.gov.vn/rss/1196/gioi-thieu-van-ban-moi.rss",
-        "type": "BO_XAY_DUNG"
+        "type": "BO_XAY_DUNG_QPPL"
     },
     {
-        "name": "Bộ Xây dựng - Chỉ đạo điều hành",
+        "name": "Bộ Xây dựng (Chỉ đạo điều hành chuyên ngành)",
         "url": "https://moc.gov.vn/rss/1176/tin-chi-dao--dieu-hanh.rss",
         "type": "BO_XAY_DUNG_CHIDAO"
+    },
+
+    # 3. BỘ KẾ HOẠCH VÀ ĐẦU TƯ (Đấu thầu qua mạng, Đầu tư công, Mẫu HSMT)
+    {
+        "name": "Bộ Kế hoạch và Đầu tư (Văn bản & Tin tức Đấu thầu - Đầu tư công)",
+        "url": "https://www.mpi.gov.vn/Pages/rss.aspx",
+        "type": "BO_KE_HOACH_DAU_TU"
     }
 ]
 
-# Bộ lọc từ khóa chuyên ngành
+# BỘ LỌC TỪ KHÓA CHUYÊN NGÀNH XÂY DỰNG, ĐẤU THẦU & ĐẦU TƯ CÔNG
 KEYWORD_RULES = {
     "DAU_THAU": [
         r"đấu thầu", r"lựa chọn nhà thầu", r"chỉ định thầu", r"e-hsmt", r"e-hsyc",
         r"kế hoạch lựa chọn nhà thầu", r"mạng đấu thầu", r"bảo lãnh dự thầu",
-        r"luật đấu thầu", r"nghị định 24/2024", r"thông tư 06/2024", r"thông tư 08/2022"
+        r"luật đấu thầu", r"nghị định 24/2024", r"thông tư 06/2024", r"thông tư 08/2022",
+        r"thông tư 07/2024", r"mua sắm trực tiếp", r"chào hàng cạnh tranh"
     ],
     "QUAN_LY_CHI_PHI": [
         r"định mức dự toán", r"đơn giá nhân công", r"giá ca máy", r"chỉ số giá xây dựng",
         r"quản lý chi phí", r"tổng mức đầu tư", r"dự toán xây dựng", r"nghị định 10/2021",
         r"thông tư 11/2021", r"thông tư 12/2021", r"thông tư 13/2021", r"thông tư 14/2023",
-        r"chi phí quản lý dự án", r"chi phí tư vấn", r"suất vốn đầu tư"
+        r"chi phí quản lý dự án", r"chi phí tư vấn", r"suất vốn đầu tư", r"hợp đồng xây dựng"
     ],
     "DAU_TU_CONG": [
         r"đầu tư công", r"luật đầu tư công", r"vốn ngân sách", r"quyết toán dự án",
@@ -83,7 +99,7 @@ KEYWORD_RULES = {
     "CHAT_LUONG_PCCC": [
         r"quản lý chất lượng", r"nghiệm thu hoàn thành", r"phòng cháy chữa cháy",
         r"thẩm duyệt pccc", r"qcvn", r"tcvn", r"giấy phép xây dựng", r"an toàn lao động",
-        r"quy chuẩn kỹ thuật"
+        r"quy chuẩn kỹ thuật", r"tiêu chuẩn xây dựng"
     ]
 }
 
@@ -172,7 +188,6 @@ def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
             soup = BeautifulSoup(resp.text, "html.parser")
             pdf_link = None
 
-            # 1. Tìm thẻ <a> có đuôi .pdf hoặc chứa từ khóa download/tải về
             for a_tag in soup.find_all("a", href=True):
                 href = a_tag["href"].strip()
                 if ".pdf" in href.lower() or "datafiles.chinhphu.vn" in href.lower():
@@ -185,7 +200,6 @@ def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
             pdf_url = normalize_url(pdf_link)
             log(f"📥 Tìm thấy link PDF gốc: {pdf_url}")
 
-            # 2. Tải file PDF về thư mục downloads
             pdf_resp = client.get(pdf_url)
             if pdf_resp.status_code == 200 and len(pdf_resp.content) > 1000:
                 clean_filename = f"{doc_id[:16]}_van_ban_goc.pdf"
@@ -202,9 +216,6 @@ def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
 
 
 def send_telegram_document(pdf_path: str, caption: str) -> bool:
-    """
-    Gửi đính kèm file PDF gốc vào Telegram qua API sendDocument.
-    """
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         return False
 
@@ -225,13 +236,6 @@ def send_telegram_document(pdf_path: str, caption: str) -> bool:
 
 
 def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_pub: TelegraphPublisher) -> bool:
-    """
-    Xử lý tự động toàn diện:
-    1. Tải PDF gốc thật (nếu có).
-    2. AI Gemini thế hệ mới nhất phân tích tác động toàn văn & chống ảo giác.
-    3. Xuất bản Telegraph Instant View.
-    4. Gửi bản tin Telegram kèm nút Instant View và đính kèm trực tiếp file PDF gốc.
-    """
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         log("ℹ️ Không tìm thấy Token Telegram. Bỏ qua bước gửi tin nhắn.")
         return False
@@ -246,10 +250,8 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
     cats_str = "\n".join([f"• {cat_labels.get(c, c)}" for c in item.get("categories", [])])
     clean_link = normalize_url(item["link"])
 
-    # 1. Tải file PDF gốc thật nếu có
     pdf_file_path = extract_and_download_pdf(clean_link, item.get("id", "doc"))
 
-    # 2. Gọi AI Gemini phân tích tác động toàn văn
     log(f"🧠 Đang gọi AI Gemini phân tích tác động pháp lý cho: {item['title'][:60]}...")
     doc_meta = {
         "so_hieu": item["title"],
@@ -263,14 +265,12 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
         doc_metadata=doc_meta
     )
 
-    # 3. Xuất bản bài viết toàn văn lên Telegraph (Instant View)
     telegraph_url = telegraph_pub.publish_report(
         title=f"BÁO CÁO PHÂN TÍCH PHÁP LÝ: {item['title']}",
         ai_data=ai_data,
         doc_meta=doc_meta
     )
 
-    # 4. Gửi tin nhắn Telegram kèm nút Instant View
     top3_bullets = "\n".join(ai_data.get("summary_top3", ["Đã hoàn thành rà soát và đối chiếu toàn văn."]))
     
     message_text = (
@@ -317,7 +317,6 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
     except Exception as e:
         log(f"❌ Lỗi kết nối Telegram: {e}")
 
-    # 5. Nếu có file PDF gốc, gửi đính kèm file trực tiếp vào Telegram
     if pdf_file_path and os.path.exists(pdf_file_path):
         caption_text = f"📑 <b>File PDF gốc có dấu đỏ/chữ ký số:</b>\n<i>{item['title'][:200]}</i>"
         send_telegram_document(pdf_file_path, caption_text)
@@ -381,7 +380,6 @@ def run_reconnaissance() -> int:
                             "discovered_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
                         
-                        # Chạy quy trình phân tích và gửi alert thật 100%
                         process_and_send_alert(doc_item, ai_analyzer, telegraph_pub)
                         
                         known_docs[doc_hash] = doc_item
