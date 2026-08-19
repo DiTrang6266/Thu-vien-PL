@@ -11,13 +11,12 @@
 - **Giai đoạn 3 (Động cơ xuất Hồ sơ 1-chạm Word & Bat):** ✅ HOÀN THÀNH 100%
   - `xuat_ho_so_1cham.py` + `CHAY_TU_DONG.bat` đã sẵn sàng trên Desktop.
 - **Giai đoạn 4 (Hệ thống Trinh sát & Đối chiếu Pháp lý Tự động hóa 100% - Zero-Touch Redline AI):** ✅ HOÀN THÀNH 100%
-  - **Việc 1:** Xây dựng module đọc và bóc tách cấu trúc văn bản (`modules/legal_parser.py` & `modules/legal_diff.py`) $\rightarrow$ ✅ HOÀN THÀNH 100%.
-  - **Việc 2:** Xây dựng module AI phân tích tác động toàn văn & lớp kiểm tra chống ảo giác (`modules/ai_analyzer.py`) $\rightarrow$ ✅ HOÀN THÀNH 100%.
-  - **Việc 3:** Xây dựng module xuất bản báo cáo toàn văn qua Telegraph Instant View (`modules/telegraph_publisher.py`) $\rightarrow$ ✅ HOÀN THÀNH 100%.
-  - **Việc 4:** Tích hợp tổng thể vào `recon_pipeline.py`, nâng cấp `.github/workflows/watchdog.yml` và chạy kiểm thử toàn trình `tests/test_end_to_end.py` $\rightarrow$ ✅ HOÀN THÀNH 100%.
+  - Đã tích hợp Gemini 3.7 Flash & 3.1 Pro (Bản mới nhất tháng 8/2026).
+  - Đã bao quát 100% quy trình 8 gói thầu theo file `Trinh tu.pdf` (TV-04, TV-05, TV-06, TV-07, TV-09, PTV-01, XD-01, TV-08, PL03A).
+  - Đã tích hợp nguồn vốn Kinh phí chi thường xuyên & Hệ thống Thông tư Bộ Quốc phòng (Doanh trại, Doanh cụ, Công trình Quốc phòng, PK-KQ).
+  - Tự động xuất bản Telegraph Instant View không giới hạn ký tự và gửi đính kèm file PDF gốc thật.
 
 ---
 
-## 2. TRẠNG THÁI VẬN HÀNH & BƯỚC TIẾP THEO
-1. Hệ thống Trinh sát & Đối chiếu Pháp lý đã sẵn sàng tự động hóa 100% 24/7 trên Cloud (GitHub Actions) và cục bộ (Desktop).
-2. Khi bạn muốn đẩy các thay đổi mới nhất lên GitHub: Chạy lệnh `git push origin main` hoặc kích hoạt Workflow từ giao diện GitHub.
+## 2. TRẠNG THÁI VẬN HÀNH
+- Hệ thống hoạt động hoàn toàn tự động 24/7 trên GitHub Actions (Cloud 0 đồng) và cục bộ (Desktop).
