@@ -3,12 +3,11 @@
 """
 =============================================================================
 HỆ THỐNG TRINH SÁT & ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG 100% (ZERO-TOUCH LEGAL RECON)
-Bao quát toàn diện: 
-1. Đấu thầu qua mạng & Mạng Đấu thầu Quốc gia (E-HSMT, E-HSDT, E-TBMT...)
-2. Kinh phí Chi thường xuyên & Mua sắm tài sản công
-3. Hệ thống Thông tư Bộ Quốc phòng (Doanh trại, Doanh cụ, PK-KQ)
-4. Trọn bộ 8 Gói thầu theo file Trình tự
-Bản quyền & Thiết kế: Tự động hóa Hồ sơ Dự án
+Phân loại chuẩn hóa theo Luật Ban hành VBQPPL:
+1. LUẬT & NGHỊ QUYẾT QUỐC HỘI
+2. NGHỊ ĐỊNH & QUYẾT ĐỊNH CHÍNH PHỦ / THỦ TƯỚNG
+3. THÔNG TƯ (BXD, BKHĐT, BTC, BQP...)
+4. VĂN BẢN HƯỚNG DẪN, CÔNG VĂN & QUY CHUẨN KỸ THUẬT (QCVN/TCVN)
 =============================================================================
 """
 
@@ -29,25 +28,21 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Import các module cốt lõi
 from modules.legal_parser import LegalDocumentParser
 from modules.legal_diff import LegalDocumentDiffer
 from modules.ai_analyzer import LegalAIAnalyzer
 from modules.telegraph_publisher import TelegraphPublisher
 
-# Đường dẫn thư mục dữ liệu
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 DOWNLOAD_DIR = os.path.join(DATA_DIR, "downloads")
 DATABASE_FILE = os.path.join(DATA_DIR, "known_documents.json")
 LOG_FILE = os.path.join(DATA_DIR, "nhat_ky_trinh_sat.log")
 
-# Cấu hình Token & API
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8929996006:AAEkcgtKYRJihNtDZUPxymvAEIDBIlWzqIc")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# DANH SÁCH 5 CỔNG THÔNG TIN PHÁP LUẬT QUỐC GIA ĐƯỢC GIÁM SÁT 24/7
 RSS_SOURCES = [
     {
         "name": "Công báo Nước CHXHCN Việt Nam (Văn bản mới)",
@@ -76,82 +71,22 @@ RSS_SOURCES = [
     }
 ]
 
-# BỘ TỪ KHÓA CHUYÊN SÂU ĐÃ ĐƯỢC LỌC BỎ VÀ BỔ SUNG ĐẦY ĐỦ ĐẤU THẦU QUA MẠNG
-KEYWORD_RULES = {
-    # 1. ĐẤU THẦU QUA MẠNG & HỆ THỐNG MẠNG ĐẤU THẦU QUỐC GIA (E-GP / MUASAMCONG)
-    "DAU_THAU_QUA_MANG": [
-        r"đấu thầu qua mạng", r"mạng đấu thầu quốc gia", r"muasamcong",
-        r"e-hsmt", r"e-hsdt", r"e-tbmt", r"e-hsyc", r"e-hsdx", r"e-hsmst",
-        r"e-hsdst", r"e-hsmqt", r"e-hsqt", r"e-hsđxkt", r"e-hsđxtc", r"e-kqlcnt",
-        r"e-bcđg", r"bảo lãnh dự thầu điện tử", r"bảo lãnh điện tử", r"mở thầu qua mạng",
-        r"đóng thầu qua mạng", r"biên bản mở thầu qua mạng", r"làm rõ e-hsdt",
-        r"làm rõ e-hsmt", r"webform e-hsmt", r"chứng thư số đấu thầu",
-        r"thông tư 06/2024", r"thông tư 07/2024", r"cục quản lý đấu thầu",
-        r"đấu thầu rộng rãi qua mạng", r"chào hàng cạnh tranh qua mạng",
-        r"chỉ định thầu qua mạng", r"thương thảo hợp đồng trực tuyến"
-    ],
-
-    # 2. BỘ QUỐC PHÒNG - DOANH TRẠI, DOANH CỤ & PK-KQ
-    "BQP_DOANH_TRAI_DOANH_CU": [
-        r"bộ quốc phòng", r"tt-bqp", r"vbhn-bqp", r"công tác doanh trại",
-        r"doanh trại", r"doanh cụ", r"công trình quân sự",
-        r"nhà ở lực lượng vũ trang", r"quân chủng pk-kq", r"pk-kq", r"cục doanh trại",
-        r"tổng cục hậu cần", r"định mức doanh cụ", r"tiêu chuẩn trang thiết bị quân đội",
-        r"thông tư 36/2023/tt-bqp", r"thông tư 150/2018/tt-bqp", r"thông tư 101/2026/tt-bqp",
-        r"thông tư 69/2026/tt-bqp"
-    ],
-
-    # 3. KINH PHÍ CHI THƯỜNG XUYÊN & MUA SẮM SỬA CHỮA TÀI SẢN CÔNG
-    "KINH_PHI_THUONG_XUYEN": [
-        r"chi thường xuyên", r"kinh phí thường xuyên", r"mua sắm thường xuyên",
-        r"sửa chữa bảo trì", r"cải tạo nâng cấp", r"tài sản công",
-        r"nguồn ngân sách thường xuyên", r"kinh phí hoạt động thường xuyên"
-    ],
-
-    # 4. ĐẤU THẦU & LỰA CHỌN NHÀ THẦU (8 GÓI THẦU TRÌNH TỰ: TV, XD, PTV)
-    "DAU_THAU": [
-        r"đấu thầu", r"lựa chọn nhà thầu", r"chỉ định thầu", r"chỉ định thầu rút gọn",
-        r"hồ sơ yêu cầu", r"hồ sơ đề xuất", r"hsyc", r"hsđx",
-        r"kế hoạch lựa chọn nhà thầu", r"luật đấu thầu", r"nghị định 24/2024",
-        r"thư mời tham gia", r"thương thảo hợp đồng", r"phê duyệt kết quả"
-    ],
-
-    # 5. THIẾT KẾ, THẨM TRA, THẨM ĐỊNH & PHÊ DUYỆT (TV-04, TV-05, TV-06)
-    "THIET_KE_THAM_TRA_THAM_DINH": [
-        r"thiết kế bản vẽ thi công", r"bvtc", r"thẩm tra thiết kế", r"thẩm tra dự toán",
-        r"thẩm định thiết kế", r"thẩm định dự toán", r"tổ thẩm định", r"nhiệm vụ và dự toán",
-        r"báo cáo thẩm tra", r"báo cáo thẩm định", r"chỉ dẫn kỹ thuật", r"quy trình bảo trì"
-    ],
-
-    # 6. QUẢN LÝ CHI PHÍ, ĐỊNH MỨC & DỰ TOÁN
-    "QUAN_LY_CHI_PHI": [
-        r"định mức dự toán", r"đơn giá nhân công", r"giá ca máy", r"chỉ số giá xây dựng",
-        r"quản lý chi phí", r"tổng mức đầu tư", r"dự toán xây dựng", r"nghị định 10/2021",
-        r"thông tư 11/2021", r"thông tư 12/2021", r"thông tư 13/2021", r"thông tư 14/2023",
-        r"chi phí quản lý dự án", r"chi phí tư vấn", r"suất vốn đầu tư", r"hợp đồng xây dựng"
-    ],
-
-    # 7. KIỂM TOÁN, BẢO HIỂM, THÍ NGHIỆM & DOANH CỤ (TV-07, TV-09, PTV-01, XD-01)
-    "KIEM_TOAN_BAO_HIEM_THI_NGHIEM": [
-        r"kiểm toán độc lập", r"kiểm toán quyết toán", r"bảo hiểm công trình",
-        r"bảo hiểm xây dựng", r"thí nghiệm nén tĩnh cọc", r"thí nghiệm cọc",
-        r"lắp đặt thiết bị", r"bảo lãnh thực hiện hợp đồng", r"tạm ứng hợp đồng"
-    ],
-
-    # 8. GIÁM SÁT, THI CÔNG, NGHIỆM THU & QUYẾT TOÁN (TV-08, XD-01)
-    "GIAM_SAT_THI_CONG_NGHIEM_THU": [
-        r"tư vấn giám sát", r"giám sát thi công", r"nhật ký thi công", r"bản vẽ hoàn công",
-        r"hồ sơ chất lượng", r"nghiệm thu hoàn thành", r"nghiệm thu bàn giao",
-        r"khối lượng hoàn thành", r"thanh lý hợp đồng", r"quyết toán dự án",
-        r"nghị định 99/2021", r"thông tư 96/2021", r"báo cáo hoàn thành"
-    ],
-
-    # 9. CHẤT LƯỢNG, TIÊU CHUẨN & PCCC
-    "CHAT_LUONG_PCCC": [
-        r"quản lý chất lượng", r"phòng cháy chữa cháy", r"pccc", r"thẩm duyệt pccc",
-        r"qcvn", r"tcvn", r"giấy phép xây dựng", r"an toàn lao động", r"quy chuẩn kỹ thuật"
-    ]
-}
+# BỘ LỌC CHUYÊN NGÀNH: XÂY DỰNG, ĐẤU THẦU QUA MẠNG, ĐẦU TƯ CÔNG, CHI THƯỜNG XUYÊN, DOANH TRẠI BQP
+DOMAIN_KEYWORDS = [
+    r"đấu thầu", r"lựa chọn nhà thầu", r"chỉ định thầu", r"mạng đấu thầu", r"muasamcong",
+    r"e-hsmt", r"e-hsdt", r"e-tbmt", r"e-hsyc", r"e-hsdx", r"bảo lãnh dự thầu",
+    r"quản lý chi phí", r"định mức dự toán", r"đơn giá nhân công", r"giá ca máy",
+    r"chi phí quản lý dự án", r"chi phí tư vấn", r"suất vốn đầu tư", r"hợp đồng xây dựng",
+    r"đầu tư công", r"quản lý dự án", r"báo cáo nghiên cứu khả thi", r"báo cáo kinh tế - kỹ thuật",
+    r"thiết kế bản vẽ thi công", r"bvtc", r"thẩm tra thiết kế", r"thẩm tra dự toán",
+    r"thẩm định thiết kế", r"thẩm định dự toán", r"tư vấn giám sát", r"thi công xây dựng",
+    r"nhật ký thi công", r"bản vẽ hoàn công", r"nghiệm thu hoàn thành", r"quyết toán dự án",
+    r"kiểm toán độc lập", r"bảo hiểm công trình", r"thí nghiệm nén tĩnh cọc",
+    r"chi thường xuyên", r"kinh phí thường xuyên", r"tài sản công", r"sửa chữa bảo trì",
+    r"bộ quốc phòng", r"tt-bqp", r"doanh trại", r"doanh cụ", r"công tác doanh trại",
+    r"quân chủng pk-kq", r"công trình quân sự", r"định mức doanh cụ",
+    r"quản lý chất lượng", r"phòng cháy chữa cháy", r"pccc", r"qcvn", r"tcvn"
+]
 
 
 def log(msg: str):
@@ -208,15 +143,39 @@ def normalize_url(link: str) -> str:
     return link
 
 
-def classify_document(title: str, summary: str) -> list:
+def is_relevant_document(title: str, summary: str) -> bool:
     combined_text = f"{title} {summary}".lower()
-    matched_categories = []
-    for cat, patterns in KEYWORD_RULES.items():
-        for pattern in patterns:
-            if re.search(pattern, combined_text, re.IGNORECASE):
-                matched_categories.append(cat)
-                break
-    return matched_categories
+    for pattern in DOMAIN_KEYWORDS:
+        if re.search(pattern, combined_text, re.IGNORECASE):
+            return True
+    return False
+
+
+def classify_document_type(title: str) -> Tuple[str, str]:
+    """
+    Phân loại chuẩn hóa theo đúng 4 nhóm hình thức văn bản pháp lý:
+    1. LUẬT / NGHỊ QUYẾT QUỐC HỘI
+    2. NGHỊ ĐỊNH / QUYẾT ĐỊNH CHÍNH PHỦ
+    3. THÔNG TƯ
+    4. VĂN BẢN HƯỚNG DẪN / CÔNG VĂN / QUY CHUẨN
+    """
+    title_lower = title.lower()
+
+    if re.search(r"\bluật\b|\bbộ luật\b|nghị quyết.*quốc hội|/qh", title_lower):
+        return ("🏛️ LUẬT & NGHỊ QUYẾT QUỐC HỘI", "LUAT")
+    
+    if re.search(r"\bnghị định\b|/nđ-cp|\bquyết định.*thủ tướng|/qđ-ttg", title_lower):
+        return ("📜 NGHỊ ĐỊNH & QUYẾT ĐỊNH CHÍNH PHỦ", "NGHI_DINH")
+    
+    if re.search(r"\bthông tư\b|/tt-|/vbhn-", title_lower):
+        if "bqp" in title_lower or "quốc phòng" in title_lower:
+            return ("🎖️ THÔNG TƯ BỘ QUỐC PHÒNG", "THONG_TU_BQP")
+        return ("📑 THÔNG TƯ CÁC BỘ (BXD, BKHĐT, BTC...)", "THONG_TU")
+    
+    if re.search(r"\bqcvn\b|\btcvn\b|quy chuẩn|tiêu chuẩn", title_lower):
+        return ("📐 QUY CHUẨN & TIÊU CHUẨN KỸ THUẬT", "QUY_CHUAN")
+
+    return ("📌 VĂN BẢN HƯỚNG DẪN, CHỈ ĐẠO & CÔNG VĂN", "HUONG_DAN")
 
 
 def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
@@ -287,19 +246,7 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
         log("ℹ️ Không tìm thấy Token Telegram. Bỏ qua bước gửi tin nhắn.")
         return False
 
-    cat_labels = {
-        "DAU_THAU_QUA_MANG": "🌐 Đấu thầu qua mạng (E-HSMT / E-HSDT)",
-        "BQP_DOANH_TRAI_DOANH_CU": "🎖️ BQP: Doanh trại, Doanh cụ & PK-KQ",
-        "KINH_PHI_THUONG_XUYEN": "💵 Chi thường xuyên & Mua sắm sửa chữa",
-        "DAU_THAU": "🏷️ Đấu thầu & Chỉ định thầu (8 gói)",
-        "THIET_KE_THAM_TRA_THAM_DINH": "📐 Thiết kế BVTC, Thẩm tra & Thẩm định",
-        "QUAN_LY_CHI_PHI": "💰 Quản lý chi phí & Định mức dự toán",
-        "KIEM_TOAN_BAO_HIEM_THI_NGHIEM": "📑 Kiểm toán, Bảo hiểm & Nén tĩnh cọc",
-        "GIAM_SAT_THI_CONG_NGHIEM_THU": "🏗️ Giám sát, Thi công & Nghiệm thu",
-        "CHAT_LUONG_PCCC": "🛡️ Quản lý chất lượng & PCCC"
-    }
-
-    cats_str = "\n".join([f"• {cat_labels.get(c, c)}" for c in item.get("categories", [])])
+    type_label, type_code = classify_document_type(item["title"])
     clean_link = normalize_url(item["link"])
 
     pdf_file_path = extract_and_download_pdf(clean_link, item.get("id", "doc"))
@@ -308,6 +255,7 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
     doc_meta = {
         "so_hieu": item["title"],
         "co_quan": item["source_name"],
+        "loai_van_ban": type_label,
         "ngay_ban_hanh": item.get("published", datetime.now().strftime("%d/%m/%Y"))
     }
     
@@ -318,24 +266,25 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
     )
 
     telegraph_url = telegraph_pub.publish_report(
-        title=f"BÁO CÁO PHÂN TÍCH PHÁP LÝ: {item['title']}",
+        title=f"BÁO CÁO PHÂN TÍCH: {item['title']}",
         ai_data=ai_data,
         doc_meta=doc_meta
     )
 
     top3_bullets = "\n".join(ai_data.get("summary_top3", ["Đã hoàn thành rà soát và đối chiếu toàn văn."]))
     
+    # CẤU TRÚC TIN NHẮN CHUẨN HÓA RÕ RÀNG
     message_text = (
         f"🏛 <b>[TRINH SÁT PHÁP LÝ: PHÁT HIỆN VĂN BẢN MỚI]</b>\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📂 <b>Phân loại:</b> <b>{type_label}</b>\n"
         f"📄 <b>Văn bản:</b> {item['title']}\n"
-        f"🏢 <b>Nguồn cấp:</b> {item['source_name']}\n"
+        f"🏢 <b>Cơ quan ban hành:</b> {item['source_name']}\n"
         f"📅 <b>Thời gian:</b> {item.get('published', 'Vừa cập nhật')}\n\n"
-        f"📂 <b>Lĩnh vực liên quan:</b>\n{cats_str}\n\n"
-        f"🌟 <b>Top điểm cốt lõi cần lưu ý ngay:</b>\n"
+        f"🌟 <b>Top điểm cốt lõi thay đổi:</b>\n"
         f"<i>{top3_bullets}</i>\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"👇 <b>Bấm nút bên dưới để ĐỌC TOÀN VĂN INSTANT VIEW không giới hạn:</b>"
+        f"👇 <b>Bấm nút bên dưới để ĐỌC TOÀN VĂN BÁO CÁO (Instant View):</b>"
     )
 
     inline_buttons = []
@@ -417,9 +366,7 @@ def run_reconnaissance() -> int:
                     if doc_hash in known_docs:
                         continue
 
-                    categories = classify_document(title, summary)
-
-                    if categories:
+                    if is_relevant_document(title, summary):
                         log(f"🎯 PHÁT HIỆN VĂN BẢN ĐÚNG NGÀNH: {title}")
                         doc_item = {
                             "id": doc_hash,
@@ -428,7 +375,6 @@ def run_reconnaissance() -> int:
                             "summary": summary,
                             "published": published,
                             "source_name": source["name"],
-                            "categories": categories,
                             "discovered_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
                         
