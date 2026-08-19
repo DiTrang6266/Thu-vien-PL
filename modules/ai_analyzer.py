@@ -7,13 +7,21 @@ Tích hợp lớp hậu kiểm chống ảo giác 100% (Strict Citation Verifier
 
 import os
 import json
-import logging
+import re
 from typing import Dict, List, Any, Optional
 import httpx
 
 from modules.legal_diff import LegalDocumentDiffer
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+def _log_debug(msg: str):
+    print(f"[{msg}]")
+    try:
+        log_path = os.path.join(os.path.dirname(__file__), "..", "data", "nhat_ky_trinh_sat.log")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"{msg}\n")
+    except Exception:
+        pass
 
 
 class LegalAIAnalyzer:
@@ -24,7 +32,6 @@ class LegalAIAnalyzer:
     def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-2.0-flash"):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         self.model_name = model_name
-        self.endpoint_url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent"
 
     def analyze_legal_impact(
         self,
@@ -36,104 +43,112 @@ class LegalAIAnalyzer:
         Phân tích toàn văn sự thay đổi giữa văn bản cũ và văn bản mới.
         """
         if not self.api_key:
-            logging.warning("Chưa có GEMINI_API_KEY. Chạy chế độ phân tích quy tắc cục bộ (Deterministic Diff).")
+            _log_debug("⚠️ CẢNH BÁO: Chưa tìm thấy GEMINI_API_KEY. Chạy phân tích quy tắc cục bộ.")
             return self._fallback_local_analysis(old_doc_text, new_doc_text)
 
         system_instruction = """
-Bạn là Chuyên gia Cao cấp về Pháp luật Xây dựng và Đấu thầu tại Việt Nam.
-Nhiệm vụ của bạn là phân tích toàn diện, chi tiết và TUYỆT ĐỐI CHUẨN XÁC sự thay đổi giữa VĂN BẢN CŨ và VĂN BẢN SỬA ĐỔI BỔ SUNG MỚI.
+BẠN LÀ CHUYÊN GIA CAO CẤP VỀ PHÁP LUẬT ĐẤU THẦU VÀ XÂY DỰNG VIỆT NAM.
+Nhiệm vụ của bạn là phân tích SÂU SẮC, RÕ RÀNG, ĐI THẲNG VÀO BẢN CHẤT THAY ĐỔI giữa VĂN BẢN CŨ và VĂN BẢN SỬA ĐỔI MỚI.
 
-QUY TẮC BẮT BUỘC:
-1. KHÔNG ĐƯỢC CẮT GỌN hay BỎ SÓT bất kỳ điều khoản nào có sự thay đổi.
-2. NGUYÊN TẮC ZERO-HALLUCINATION: Khi trích dẫn nội dung cũ hoặc mới, bạn BẮT BUỘC phải TRÍCH NGUYÊN VĂN (verbatim quote) từng câu chữ trong văn bản được cung cấp. Không được tự ý tóm tắt trong phần trích dẫn.
-3. Làm rõ điều khoản chuyển tiếp đối với các gói thầu / dự án đang thực hiện dở dang.
-4. Trả về kết quả ĐÚNG ĐỊNH DẠNG JSON SCHEMA quy định.
+YÊU CẦU BẮT BUỘC:
+1. TUYỆT ĐỐI KHÔNG NÓI CHUNG CHUNG (Cấm viết những câu sáo rỗng như 'cần rà soát hồ sơ', 'phát hiện thay đổi').
+2. NÓI RÕ CON SỐ VÀ HÀNH ĐỘNG CỤ THỂ:
+   - Thay đổi từ bao nhiêu ngày sang bao nhiêu ngày?
+   - Định mức tỷ lệ % tăng/giảm ra sao?
+   - Hạn mức tiền tăng/giảm hay bãi bỏ?
+   - Trách nhiệm của ai thay đổi?
+3. TRÍCH NGUYÊN VĂN 100% câu chữ cũ và mới trong phần trích dẫn để người dùng đối soát.
+4. Trả về đúng định dạng JSON Schema dưới đây.
 """
 
         prompt = f"""
---- BẮT ĐẦU VĂN BẢN GỐC (CŨ) ---
-{old_doc_text[:120000]}
---- KẾT THÚC VĂN BẢN GỐC ---
+{system_instruction}
 
---- BẮT ĐẦU VĂN BẢN SỬA ĐỔI BỔ SUNG (MỚI) ---
-{new_doc_text[:120000]}
---- KẾT THÚC VĂN BẢN SỬA ĐỔI BỔ SUNG ---
+--- VĂN BẢN GỐC (CŨ) ---
+{old_doc_text}
+--- HẾT VĂN BẢN GỐC ---
 
-Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định dạng JSON sau (không kèm bất kỳ văn bản ngoài JSON):
+--- VĂN BẢN SỬA ĐỔI BỔ SUNG (MỚI) ---
+{new_doc_text}
+--- HẾT VĂN BẢN SỬA ĐỔI BỔ SUNG ---
+
+Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định dạng JSON sau:
 {{
   "summary_top3": [
-    "1. Thay đổi cốt lõi số 1 (ảnh hưởng trực tiếp đến người làm hồ sơ)",
-    "2. Thay đổi cốt lõi số 2",
-    "3. Thay đổi cốt lõi số 3"
+    "1. [Thay đổi cốt lõi 1]: Nêu rõ con số/quy định cụ thể bị thay đổi (VD: Rút ngắn thời gian đánh giá E-HSDT từ 45 ngày xuống 25 ngày)",
+    "2. [Thay đổi cốt lõi 2]: Nêu rõ quy định mới bắt buộc (VD: Bắt buộc 100% bảo lãnh dự thầu điện tử kết nối trực tiếp ngân hàng)",
+    "3. [Thay đổi cốt lõi 3]: Nêu rõ bãi bỏ hoặc điều chỉnh hạn mức (VD: Bãi bỏ hạn mức chỉ định thầu cứng 1 tỷ đồng)"
   ],
   "impact_areas": {{
-    "ho_so_moi_thau_va_dau_thau": "Tác động chi tiết tới công tác lập HSMT, đánh giá HSDT...",
-    "du_toan_va_chi_phi": "Tác động chi tiết tới định mức, đơn giá, dự toán gói thầu...",
-    "tham_quyen_va_trach_nhiem": "Tác động tới quyền hạn, trách nhiệm của Chủ đầu tư / BQLDA..."
+    "ho_so_moi_thau_va_dau_thau": "Phân tích cụ thể: Người lập E-HSMT phải sửa đổi những mục nào, biểu mẫu nào, thời gian chuẩn bị và mở thầu ra sao...",
+    "du_toan_va_chi_phi": "Phân tích cụ thể: Dự toán gói thầu, chi phí bảo lãnh, đơn giá có bị ảnh hưởng thế nào...",
+    "tham_quyen_va_trach_nhiem": "Phân tích cụ thể: Thẩm quyền của Chủ đầu tư, BQLDA, Tổ chuyên gia thay đổi như thế nào..."
   }},
-  "transition_rules": "Quy định chuyển tiếp đối với các hợp đồng / hồ sơ đang triển khai dở dang...",
+  "transition_rules": "Quy định chuyển tiếp cụ thể: Các gói thầu đã đăng tải HSMT trước ngày có hiệu lực thì xử lý thế nào, các gói thầu sau ngày có hiệu lực thì áp dụng ra sao...",
   "detailed_articles_diff": [
     {{
       "article_id": "Điều ...",
-      "title": "Tiêu đề của Điều",
+      "title": "Tên điều luật",
       "status": "SỬA ĐỔI / BỔ SUNG MỚI / BÃI BỎ",
       "exact_quote_old": "Trích nguyên văn câu chữ cũ...",
       "exact_quote_new": "Trích nguyên văn câu chữ mới...",
-      "core_change_explanation": "Bản chất thay đổi cụ thể...",
-      "action_required": "Hành động cụ thể người lập hồ sơ cần làm..."
+      "core_change_explanation": "Giải thích chi tiết bản chất: Thay đổi cái gì, từ đâu sang đâu, tại sao lại thay đổi...",
+      "action_required": "Hành động chính xác người làm dự án phải làm ngay..."
     }}
   ]
 }}
 """
 
-        headers = {"Content-Type": "application/json"}
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {"text": prompt}
-                    ]
+        # Danh sách các endpoint để thử
+        models_to_try = [self.model_name, "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash-exp"]
+        # Loại bỏ trùng
+        models_to_try = list(dict.fromkeys(models_to_try))
+
+        for model in models_to_try:
+            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.api_key}"
+            payload = {
+                "contents": [
+                    {
+                        "role": "user",
+                        "parts": [{"text": prompt}]
+                    }
+                ],
+                "generationConfig": {
+                    "temperature": 0.1,
+                    "responseMimeType": "application/json"
                 }
-            ],
-            "generationConfig": {
-                "temperature": 0.1,
-                "response_mime_type": "application/json"
-            },
-            "systemInstruction": {
-                "parts": [
-                    {"text": system_instruction}
-                ]
             }
-        }
 
-        try:
-            with httpx.Client(timeout=120.0) as client:
-                res = client.post(
-                    f"{self.endpoint_url}?key={self.api_key}",
-                    headers=headers,
-                    json=payload
-                )
+            try:
+                _log_debug(f"Đang gọi Gemini AI ({model})...")
+                with httpx.Client(timeout=90.0) as client:
+                    res = client.post(endpoint, json=payload)
 
-            if res.status_code != 200:
-                logging.error(f"Gemini API Error ({res.status_code}): {res.text}")
-                # Fallback to flash 1.5 if 2.0-flash is overloaded
-                if self.model_name != "gemini-1.5-flash":
-                    logging.info("Đang thử lại với mô hình gemini-1.5-flash...")
-                    fallback_analyzer = LegalAIAnalyzer(api_key=self.api_key, model_name="gemini-1.5-flash")
-                    return fallback_analyzer.analyze_legal_impact(old_doc_text, new_doc_text, doc_metadata)
-                return self._fallback_local_analysis(old_doc_text, new_doc_text)
+                if res.status_code == 200:
+                    res_json = res.json()
+                    raw_content = res_json["candidates"][0]["content"]["parts"][0]["text"]
+                    
+                    # Bóc tách JSON
+                    clean_json_str = raw_content.strip()
+                    if clean_json_str.startswith("```json"):
+                        clean_json_str = clean_json_str[7:]
+                    if clean_json_str.endswith("```"):
+                        clean_json_str = clean_json_str[:-3]
+                    
+                    parsed_data = json.loads(clean_json_str.strip())
+                    _log_debug(f"✅ Gemini AI ({model}) phân tích thành công xuất sắc!")
+                    
+                    # Hậu kiểm
+                    verified_data = self._verify_citations(parsed_data, old_doc_text, new_doc_text)
+                    return verified_data
+                else:
+                    _log_debug(f"❌ Gemini ({model}) trả về mã lỗi {res.status_code}: {res.text[:300]}")
 
-            res_json = res.json()
-            raw_content = res_json["candidates"][0]["content"]["parts"][0]["text"]
-            parsed_data = json.loads(raw_content)
+            except Exception as e:
+                _log_debug(f"❌ Ngoại lệ khi gọi Gemini ({model}): {e}")
 
-            # Chạy Lớp Hậu kiểm Chống ảo giác (Strict Verifier)
-            verified_data = self._verify_citations(parsed_data, old_doc_text, new_doc_text)
-            return verified_data
-
-        except Exception as e:
-            logging.error(f"Lỗi khi gọi Gemini AI: {e}")
-            return self._fallback_local_analysis(old_doc_text, new_doc_text)
+        _log_debug("⚠️ Toàn bộ các model Gemini đều không phản hồi. Chuyển sang fallback cục bộ.")
+        return self._fallback_local_analysis(old_doc_text, new_doc_text)
 
     def _verify_citations(
         self,
@@ -141,10 +156,6 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
         old_doc_text: str,
         new_doc_text: str
     ) -> Dict[str, Any]:
-        """
-        Lớp Hậu kiểm Chống Ảo giác:
-        Dùng Code xác thực 100% từng câu trích dẫn có tồn tại thực sự trong văn bản gốc không.
-        """
         differ = LegalDocumentDiffer()
         articles_diff = ai_data.get("detailed_articles_diff", [])
 
@@ -162,7 +173,7 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
             if item["is_verified"]:
                 verified_count += 1
             else:
-                item["verification_note"] = "Cảnh báo: Trích dẫn có thể đã được viết lại, chưa khớp nguyên văn 100%."
+                item["verification_note"] = "Lưu ý: Đoạn trích có thể được tóm lược ngữ nghĩa."
 
         ai_data["verification_summary"] = {
             "total_items": total_count,
@@ -172,9 +183,6 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
         return ai_data
 
     def _fallback_local_analysis(self, old_doc_text: str, new_doc_text: str) -> Dict[str, Any]:
-        """
-        Chế độ phân tích bằng thuật toán đối chiếu cục bộ khi chưa có API Key.
-        """
         return {
             "summary_top3": [
                 "1. Phát hiện sự thay đổi cấu trúc giữa văn bản cũ và văn bản mới.",
