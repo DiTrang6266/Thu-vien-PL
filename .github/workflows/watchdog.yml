@@ -1,0 +1,43 @@
+name: Legal Reconnaissance Watchdog 24/7
+
+on:
+  schedule:
+    # Chạy tự động mỗi sáng lúc 07:00 (Giờ VN = 00:00 UTC) từ Thứ 2 đến Thứ 6
+    - cron: '0 0 * * 1-5'
+  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên giao diện GitHub
+
+jobs:
+  recon_and_alert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install httpx feedparser beautifulsoup4 urllib3
+
+      - name: Run Legal Reconnaissance Engine
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python recon_pipeline.py
+
+      - name: Commit and Save State
+        run: |
+          git config --global user.name "LegalReconBot"
+          git config --global user.email "bot@legal-recon.local"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No new documents to commit."
+          else
+            git commit -m "Auto-update: New legal documents [skip ci]"
+            git push
+          fi
