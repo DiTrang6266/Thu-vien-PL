@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Module: ai_analyzer.py
-Mục đích: Bộ não AI phân tích tác động pháp lý toàn văn (Zero-Chunking) với Gemini 2.0 / 1.5 Pro / Flash.
-Tích hợp lớp hậu kiểm chống ảo giác 100% (Strict Citation Verifier).
+Mục đích: Bộ não AI phân tích tác động pháp lý toàn văn (Zero-Chunking) với các dòng Gemini mới nhất:
+Gemini 3.7 Flash, Gemini 3.1 Pro, Gemini 3.6 Flash, Gemini 2.0 Flash, Gemini 1.5 Pro/Flash.
 """
 
 import os
@@ -26,12 +26,23 @@ def _log_debug(msg: str):
 
 class LegalAIAnalyzer:
     """
-    Bộ phân tích tác động pháp lý toàn văn bằng Gemini API.
+    Bộ phân tích tác động pháp lý toàn văn bằng Gemini API thế hệ mới nhất.
     """
 
-    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-2.0-flash"):
+    # Danh sách các dòng mô hình Gemini mới nhất theo thứ tự ưu tiên
+    LATEST_GEMINI_MODELS = [
+        "gemini-3.7-flash",       # Bản mới nhất, xử lý suy luận logic & bóc tách cực mạnh
+        "gemini-3.1-pro",         # Bản cao cấp suy luận chuyên sâu
+        "gemini-3.6-flash",       # Bản ổn định hiệu năng cao
+        "gemini-2.0-flash",       # Bản Flash thế hệ 2
+        "gemini-2.0-flash-exp",   # Bản thử nghiệm
+        "gemini-1.5-pro",         # Bản 1.5 Pro kinh điển
+        "gemini-1.5-flash"        # Bản 1.5 Flash dự phòng
+    ]
+
+    def __init__(self, api_key: Optional[str] = None, preferred_model: Optional[str] = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
-        self.model_name = model_name
+        self.preferred_model = preferred_model
 
     def analyze_legal_impact(
         self,
@@ -99,12 +110,15 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
 }}
 """
 
-        # Danh sách các endpoint để thử
-        models_to_try = [self.model_name, "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash-exp"]
-        # Loại bỏ trùng
-        models_to_try = list(dict.fromkeys(models_to_try))
+        # Xây dựng danh sách model thử nghiệm theo ưu tiên
+        models_queue = []
+        if self.preferred_model:
+            models_queue.append(self.preferred_model)
+        for m in self.LATEST_GEMINI_MODELS:
+            if m not in models_queue:
+                models_queue.append(m)
 
-        for model in models_to_try:
+        for model in models_queue:
             endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.api_key}"
             payload = {
                 "contents": [
@@ -120,7 +134,7 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
             }
 
             try:
-                _log_debug(f"Đang gọi Gemini AI ({model})...")
+                _log_debug(f"Đang gọi mô hình mới: {model}...")
                 with httpx.Client(timeout=90.0) as client:
                     res = client.post(endpoint, json=payload)
 
@@ -136,18 +150,18 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
                         clean_json_str = clean_json_str[:-3]
                     
                     parsed_data = json.loads(clean_json_str.strip())
-                    _log_debug(f"✅ Gemini AI ({model}) phân tích thành công xuất sắc!")
+                    _log_debug(f"✅ Mô hình [{model}] phân tích thành công xuất sắc!")
                     
                     # Hậu kiểm
                     verified_data = self._verify_citations(parsed_data, old_doc_text, new_doc_text)
                     return verified_data
                 else:
-                    _log_debug(f"❌ Gemini ({model}) trả về mã lỗi {res.status_code}: {res.text[:300]}")
+                    _log_debug(f"❌ Mô hình [{model}] trả về ({res.status_code}): {res.text[:200]}")
 
             except Exception as e:
-                _log_debug(f"❌ Ngoại lệ khi gọi Gemini ({model}): {e}")
+                _log_debug(f"❌ Ngoại lệ với [{model}]: {e}")
 
-        _log_debug("⚠️ Toàn bộ các model Gemini đều không phản hồi. Chuyển sang fallback cục bộ.")
+        _log_debug("⚠️ Tất cả các model đều không phản hồi. Chuyển sang fallback cục bộ.")
         return self._fallback_local_analysis(old_doc_text, new_doc_text)
 
     def _verify_citations(
