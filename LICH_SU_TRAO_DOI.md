@@ -13,7 +13,7 @@
 * **Kho GitHub lưu trữ tự động hóa Cloud 0 đồng:**
   - Đường dẫn Repo: `https://github.com/DiTrang6266/Thu-vien-PL` (Chế độ: Private)
   - GitHub Actions Workflow: `.github/workflows/watchdog.yml`
-  - Đã cấu hình 2 biến bảo mật (Repository Secrets): `TELEGRAM_BOT_TOKEN` và `TELEGRAM_CHAT_ID`.
+  - Đã cấu hình 3 biến bảo mật (Repository Secrets): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, và `GEMINI_API_KEY`.
 
 ---
 
@@ -76,6 +76,10 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 * **Triển khai Việc 1:**
   - Đã hoàn thành `modules/legal_parser.py` và `modules/legal_diff.py`.
   - Đã chạy kiểm thử tự động `tests/test_parser_diff.py` đạt 100% (nhận diện chính xác Điều bị Sửa đổi, Bổ sung mới, Bãi bỏ và trích dẫn chuẩn xác).
+* **Triển khai Việc 2:**
+  - Người dùng đã tạo `GEMINI_API_KEY` từ Google AI Studio và lưu vào Repository Secrets trên GitHub.
+  - Đã hoàn thành `modules/ai_analyzer.py` tích hợp gọi trực tiếp REST API siêu nhẹ (Gemini 2.0 / 1.5 Pro / Flash), bóc tách Top 3 thay đổi cốt lõi, tác động HSMT/dự toán/thẩm quyền, quy định chuyển tiếp và lớp hậu kiểm đối soát trích dẫn gốc chống ảo giác.
+  - Đã chạy kiểm thử tự động `tests/test_ai_analyzer.py` đạt 100%.
 
 ---
 
@@ -93,7 +97,8 @@ Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ d�
 8. 📑 **`01` $\rightarrow$ `08` biểu mẫu Markdown:** Bộ mẫu Tờ trình, Báo cáo thẩm định, Thư mời thầu, Quyết định...
 9. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $\rightarrow$ Điều $\rightarrow$ Khoản $\rightarrow$ Điểm kèm số trang.
 10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
-11. 🧪 **`tests/test_parser_diff.py`:** Script kiểm thử tự động cho Parser và Diff.
+11. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn (Gemini Flash/Pro) + Kiểm tra trích dẫn 100%.
+12. 🧪 **`tests/test_parser_diff.py` & `tests/test_ai_analyzer.py`:** Bộ kịch bản kiểm thử tự động.
 
 ---
 
