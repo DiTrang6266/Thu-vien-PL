@@ -28,7 +28,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 DATABASE_FILE = os.path.join(DATA_DIR, "known_documents.json")
 LOG_FILE = os.path.join(DATA_DIR, "nhat_ky_trinh_sat.log")
 
-# Cấu hình Token Telegram (Ưu tiên lấy từ biến môi trường, fallback về mã mặc định của anh Duy)
+# Cấu hình Token Telegram
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8929996006:AAEkcgtKYRJihNtDZUPxymvAEIDBIlWzqIc")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
 
@@ -111,6 +111,19 @@ def clean_html_text(raw_html: str) -> str:
     text = soup.get_text(separator=" ").strip()
     return re.sub(r"\s+", " ", text)
 
+def normalize_url(link: str) -> str:
+    """Chuẩn hóa đường link URL từ các cổng thông tin chính phủ"""
+    link = link.strip()
+    if link.startswith("http:moc.gov.vn"):
+        link = link.replace("http:moc.gov.vn", "https://moc.gov.vn")
+    elif link.startswith("http:") and not link.startswith("http://"):
+        link = link.replace("http:", "https://")
+    elif link.startswith("/"):
+        link = "https://moc.gov.vn" + link
+    elif not link.startswith("http://") and not link.startswith("https://"):
+        link = "https://" + link
+    return link
+
 def classify_document(title: str, summary: str) -> list:
     combined_text = f"{title} {summary}".lower()
     matched_categories = []
@@ -134,6 +147,7 @@ def send_telegram_alert(item: dict) -> bool:
     }
 
     cats_str = "\n".join([f"• {cat_labels.get(c, c)}" for c in item.get("categories", [])])
+    clean_link = normalize_url(item["link"])
 
     message_text = (
         f"🏛 <b>[PHÁT HIỆN VĂN BẢN XÂY DỰNG MỚI]</b>\n"
@@ -143,9 +157,9 @@ def send_telegram_alert(item: dict) -> bool:
         f"📅 <b>Ngày phát hiện:</b> {item.get('published', 'Vừa cập nhật')}\n\n"
         f"📂 <b>Lĩnh vực liên quan:</b>\n{cats_str}\n\n"
         f"📝 <b>Trích yếu tóm tắt:</b>\n"
-        f"<i>{item.get('summary', 'Nhấn link bên dưới để xem toàn văn')}</i>\n"
+        f"<i>{item.get('summary', 'Nhấn nút bên dưới để xem toàn văn')}</i>\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"🔗 <a href='{item['link']}'>👉 Xem toàn văn & Tải file PDF bản gốc</a>"
+        f"👇 <b>Nhấn nút bấm bên dưới để mở toàn văn hoặc tải file:</b>"
     )
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -153,7 +167,13 @@ def send_telegram_alert(item: dict) -> bool:
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message_text,
         "parse_mode": "HTML",
-        "disable_web_page_preview": False
+        "reply_markup": {
+            "inline_keyboard": [
+                [
+                    {"text": "📥 BẤM VÀO ĐÂY ĐỂ XEM TOÀN VĂN & TẢI FILE", "url": clean_link}
+                ]
+            ]
+        }
     }
 
     try:
