@@ -48,12 +48,12 @@ NGHỊ ĐỊNH SỐ 24/2024/NĐ-CP: QUY ĐỊNH CHI TIẾT THI HÀNH MỘT SỐ 
     item = {
         "id": "live_test_nd24_vs_nd63_official",
         "title": "Nghị định số 24/2024/NĐ-CP của Chính phủ: Quy định chi tiết thi hành Luật Đấu thầu về lựa chọn nhà thầu",
-        "link": "https://congbao.chinhphu.vn/noi-dung-van-ban-so-24-2024-nd-cp-40545",
+        "link": "https://thuvienphapluat.vn/van-ban/Dau-tu/Nghi-dinh-24-2024-ND-CP-huong-dan-Luat-Dau-thau-ve-lua-chon-nha-thau-578020.aspx",
         "old_text": old_text,
         "new_text": new_text,
         "summary": "Quy định chi tiết thi hành Luật Đấu thầu năm 2023, thay thế toàn bộ Nghị định số 63/2014/NĐ-CP.",
         "published": "27/02/2024",
-        "source_name": "Công báo Nước CHXHCN Việt Nam (congbao.chinhphu.vn)",
+        "source_name": "Cơ sở dữ liệu Pháp luật Việt Nam",
         "categories": ["DAU_THAU", "QUAN_LY_CHI_PHI", "DAU_TU_CONG"]
     }
 
