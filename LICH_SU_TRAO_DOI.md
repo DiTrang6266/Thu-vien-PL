@@ -60,11 +60,7 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 * **Quyết định chốt:** Xây dựng Pipeline tự động 4 bước:
   - *Bước 1:* Crawler tự động tải file PDF văn bản mới.
   - *Bước 2:* Tự động lấy file PDF văn bản cũ bị sửa đổi từ kho dữ liệu.
-  - *Bước 3:* Đẩy cả 2 file PDF vào Gemini API (Source-Grounded AI) để bóc tách:
-    + Top 3 thay đổi cốt lõi ảnh hưởng hồ sơ dự án.
-    + Bảng so sánh 3 cột: `[Điều khoản]` - `[Quy định cũ]` - `[Quy định mới]`.
-    + Điều khoản chuyển tiếp cho các hồ sơ đang làm dở.
-    + Trích dẫn nguyên văn số trang và số Điều, Khoản (Zero-Hallucination).
+  - *Bước 3:* Đẩy cả 2 file PDF vào Gemini API (Source-Grounded AI) để bóc tách.
   - *Bước 4:* Tự động gửi file PDF + Bản tin đối chiếu vào Telegram và cập nhật Sổ cái Excel.
 
 ### Buổi 4: Đột phá Giải pháp Tự động hóa 100% & Báo cáo Toàn văn Không Giới Hạn (Telegraph Instant View)
@@ -73,16 +69,11 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
   1. *Subagent 1 (Parsing & Long Context):* Loại bỏ RAG cắt vụn (Chunking). Áp dụng **Full-Document (Zero-Chunking)** với cửa sổ ngữ cảnh 1M–2M token của Gemini Flash/Pro để AI nhìn thấy trọn vẹn toàn bộ văn bản.
   2. *Subagent 2 (Legal Diff & Redline):* Áp dụng thuật toán bóc tách phân cấp Điều/Khoản (`Docling` / `PyMuPDF`) kết hợp so khớp từng từ ngữ (`python-redlines` / `diff-match-patch`) để sinh chuỗi Redline Track Changes và lớp kiểm tra trích dẫn gốc chống ảo giác 100%.
   3. *Subagent 3 (Kiến trúc & Phân phối Toàn văn):* Dùng **Telegraph API** tạo báo cáo Instant View tức thì không giới hạn ký tự (vượt qua mốc 4.096 ký tự của Telegram), chi phí 0đ trên GitHub Actions.
-* **Triển khai Việc 1:**
-  - Đã hoàn thành `modules/legal_parser.py` và `modules/legal_diff.py`.
-  - Đã chạy kiểm thử tự động `tests/test_parser_diff.py` đạt 100% (nhận diện chính xác Điều bị Sửa đổi, Bổ sung mới, Bãi bỏ và trích dẫn chuẩn xác).
-* **Triển khai Việc 2:**
-  - Người dùng đã tạo `GEMINI_API_KEY` từ Google AI Studio và lưu vào Repository Secrets trên GitHub.
-  - Đã hoàn thành `modules/ai_analyzer.py` tích hợp gọi trực tiếp REST API siêu nhẹ (Gemini 2.0 / 1.5 Pro / Flash), bóc tách Top 3 thay đổi cốt lõi, tác động HSMT/dự toán/thẩm quyền, quy định chuyển tiếp và lớp hậu kiểm đối soát trích dẫn gốc chống ảo giác.
-  - Đã chạy kiểm thử tự động `tests/test_ai_analyzer.py` đạt 100%.
-* **Triển khai Việc 3:**
-  - Đã hoàn thành `modules/telegraph_publisher.py` tự động xuất bản báo cáo phân tích toàn văn lên Telegraph.
-  - Đã chạy kiểm thử tự động `tests/test_telegraph.py` đạt 100% (tạo thành công link Instant View đọc tức thì trong Telegram).
+* **Triển khai Trọn bộ 4 Việc:**
+  - **Việc 1:** Hoàn thành `modules/legal_parser.py` và `modules/legal_diff.py`.
+  - **Việc 2:** Hoàn thành `modules/ai_analyzer.py` tích hợp Gemini Pro/Flash và lớp hậu kiểm đối soát trích dẫn gốc chống ảo giác.
+  - **Việc 3:** Hoàn thành `modules/telegraph_publisher.py` tự động xuất bản bài viết Instant View.
+  - **Việc 4:** Hoàn thành nâng cấp `recon_pipeline.py`, `.github/workflows/watchdog.yml` và chạy kiểm thử toàn trình `tests/test_end_to_end.py` thành công 100%, đã bắn bản tin kèm Instant View trực tiếp vào Telegram của người dùng.
 
 ---
 
@@ -90,8 +81,8 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 
 Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ dự án\`
 
-1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát pháp luật tự động đọc RSS, lọc từ khóa, tải PDF và gửi Telegram.
-2. ⚙️ **`.github/workflows/watchdog.yml`:** Kịch bản hẹn giờ tự động chạy 07:00 sáng trên GitHub Actions.
+1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát & đối chiếu pháp luật tự động toàn trình (Crawler + AI Diff + Telegraph + Telegram).
+2. ⚙️ **`.github/workflows/watchdog.yml`:** Kịch bản hẹn giờ tự động chạy 07:00 sáng trên GitHub Actions tích hợp `GEMINI_API_KEY`.
 3. 📊 **`Kho_Can_Cu_Phap_Ly.xlsx`:** Sổ cái pháp lý 15 văn bản sống cốt lõi ngành xây dựng.
 4. 📋 **`Du_lieu_mau_du_an.xlsx`:** Bảng điều khiển dự án 4 sheet (`Chan_doan_quy_trinh`, `Thong_tin_chung`, `Danh_muc_goi_thau`, `Bang_du_toan`).
 5. 🚀 **`xuat_ho_so_1cham.py`:** Động cơ đọc Excel và đúc trọn bộ file Word cho từng gói thầu.
@@ -102,7 +93,7 @@ Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ d�
 10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
 11. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn (Gemini Flash/Pro) + Kiểm tra trích dẫn 100%.
 12. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản báo cáo Instant View không giới hạn ký tự trên Telegraph.
-13. 🧪 **`tests/`:** Bộ kiểm thử tự động `test_parser_diff.py`, `test_ai_analyzer.py`, `test_telegraph.py`.
+13. 🧪 **`tests/`:** Bộ kiểm thử tự động toàn diện (`test_parser_diff.py`, `test_ai_analyzer.py`, `test_telegraph.py`, `test_end_to_end.py`).
 
 ---
 
