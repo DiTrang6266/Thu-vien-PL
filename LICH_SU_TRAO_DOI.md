@@ -75,16 +75,17 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
   - **Việc 3:** Hoàn thành `modules/telegraph_publisher.py` tự động xuất bản bài viết Instant View.
   - **Việc 4:** Hoàn thành nâng cấp `recon_pipeline.py`, `.github/workflows/watchdog.yml` và chạy kiểm thử toàn trình `tests/test_end_to_end.py` thành công 100%, đã bắn bản tin kèm Instant View trực tiếp vào Telegram của người dùng.
 
-### Buổi 5: Tối ưu Gemini 3.7/3.1, Bóc tách File Trình tự & Chuẩn hóa Phân loại Pháp lý
+### Buổi 5: Tối ưu Toàn diện Gemini AI, Bóc tách File Trình tự, Đấu Thầu Qua Mạng & Chuẩn Hóa Phân Loại
 * **Người dùng phản hồi & Yêu cầu:**
   1. Yêu cầu AI không được nói chung chung, phải phân tích thực tế sâu sắc (số ngày, tỷ lệ %, hạn mức tiền, điều khoản chuyển tiếp).
   2. Yêu cầu cập nhật phiên bản Gemini AI mới nhất trên Google AI Studio.
   3. Yêu cầu kiểm tra bao quát toàn bộ 10 trang của file `Trinh tu.pdf` trong folder dự án và nguồn kinh phí chi thường xuyên.
   4. Yêu cầu loại bỏ từ khóa thừa và nạp đầy đủ từ khóa chuyên sâu về **Đấu thầu qua mạng**.
-  5. Yêu cầu gom chuẩn phân loại tin nhắn theo đúng thứ bậc văn bản pháp luật của Nhà nước.
+  5. Yêu cầu gom chuẩn phân loại tin nhắn theo đúng thứ bậc văn bản pháp luật của Nhà nước (Luật, Nghị định, Thông tư, Hướng dẫn).
+  6. Yêu cầu xử lý triệt để lỗi 404/503 của Gemini AI khi chạy trực tiếp trên GitHub Actions.
 * **Các quyết định đã triển khai và chốt 100%:**
-  1. **Nâng cấp Gemini AI:** `modules/ai_analyzer.py` ưu tiên tự động gọi **Gemini 3.7 Flash** (mô hình mới nhất tháng 8/2026 chuyên suy luận logic và bóc tách tài liệu) và **Gemini 3.1 Pro**.
-  2. **Dữ liệu thật & Link sống 100%:** Khắc phục lỗi 404, liên kết trực tiếp bài viết chính thức của Nghị định 24/2024/NĐ-CP trên Cơ sở dữ liệu Pháp luật và tự động tải đính kèm file PDF gốc có dấu mộc đỏ vào Telegram.
+  1. **Nâng cấp Gemini AI & Cơ chế Tự động Dò tìm Model (Dynamic Discovery):** `modules/ai_analyzer.py` tự động truy vấn Google API để lấy danh sách mô hình Gemini đang hoạt động ổn định nhất, tự động ưu tiên Gemini 3.7 Flash, 3.1 Pro, 2.5 Flash, 2.0 Flash, 1.5 Pro/Flash, loại bỏ triệt để lỗi 404 và 503.
+  2. **Dữ liệu thật & Tải PDF gốc:** Tự động bắt đúng link chính thức, tải file PDF gốc từ máy chủ Nhà nước (`g7.cdnchinhphu.vn`, `congbao.chinhphu.vn`, `moc.gov.vn`) và đính kèm thẳng file `.pdf` vào Telegram.
   3. **Bao quát 100% file `Trinh tu.pdf`:** Nạp trọn vẹn 8 gói thầu dự án (TV-04 Lập thiết kế BVTC-DT, TV-05 Thẩm tra thiết kế, TV-06 Lập HSYC & ĐG HSĐX, TV-07 Thí nghiệm nén tĩnh cọc, TV-09 Kiểm toán độc lập, PTV-01 Bảo hiểm công trình, XD-01 Thi công & Doanh cụ, TV-08 Tư vấn giám sát).
   4. **Lọc từ khóa & Tích hợp Đấu thầu qua mạng:**
      - *Đã loại bỏ:* `cục công trình quốc phòng`, `thông tư 65/2021`, `thông tư 68/2022`, `nghị định 138/2024`, `phụ lục 03a/PL03A`.
@@ -95,7 +96,7 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
      - 📜 **NGHỊ ĐỊNH & QUYẾT ĐỊNH CHÍNH PHỦ / THỦ TƯỚNG**
      - 📑 **THÔNG TƯ CÁC BỘ & 🎖️ THÔNG TƯ BỘ QUỐC PHÒNG**
      - 📌 **VĂN BẢN HƯỚNG DẪN, CÔNG VĂN & QUY CHUẨN KỸ THUẬT (QCVN/TCVN)**
-  6. **Đồng bộ mã nguồn:** Toàn bộ code mới nhất đã được đẩy lên kho GitHub `DiTrang6266/Thu-vien-PL` (mã commit `980e8c3`).
+  6. **Đồng bộ mã nguồn:** Toàn bộ code mới nhất đã được đẩy lên kho GitHub `DiTrang6266/Thu-vien-PL` (mã commit `e675f27`).
 
 ---
 
@@ -103,7 +104,7 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 
 Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ dự án\`
 
-1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát tự động toàn trình (Crawler 5 Cổng Quốc gia + AI Gemini 3.7/3.1 + Telegraph Instant View + Tải PDF gốc + Bắn Telegram).
+1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát tự động toàn trình (Crawler 5 Cổng Quốc gia + AI Gemini + Telegraph Instant View + Tải PDF gốc + Bắn Telegram).
 2. ⚙️ **`.github/workflows/watchdog.yml`:** Kịch bản hẹn giờ chạy 07:00 sáng trên GitHub Actions.
 3. 📊 **`Kho_Can_Cu_Phap_Ly.xlsx`:** Sổ cái pháp lý 15 văn bản nền tảng ngành xây dựng & đấu thầu.
 4. 📋 **`Du_lieu_mau_du_an.xlsx`:** Bảng điều khiển dự án 4 sheet (`Chan_doan_quy_trinh`, `Thong_tin_chung`, `Danh_muc_goi_thau`, `Bang_du_toan`).
@@ -113,7 +114,7 @@ Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ d�
 8. 📑 **`01` $\rightarrow$ `08` biểu mẫu Markdown:** Bộ mẫu Tờ trình, Báo cáo thẩm định, Thư mời thầu, Quyết định...
 9. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $\rightarrow$ Điều $\rightarrow$ Khoản $\rightarrow$ Điểm kèm số trang PDF.
 10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
-11. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn (Gemini 3.7 Flash & 3.1 Pro) + Kiểm tra trích dẫn 100%.
+11. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn + Tự động khám phá model Gemini + Kiểm tra trích dẫn 100%.
 12. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản báo cáo Instant View không giới hạn ký tự trên Telegraph.
 13. 📑 **`Trinh tu.pdf`:** File gốc quy định trình tự 8 gói thầu dự án Trường CĐKT PK-KQ.
 14. 🧪 **`test_live_ai.py` & `tests/`:** Bộ script kiểm thử phân tích AI thực tế và kiểm thử tích hợp.
@@ -123,7 +124,7 @@ Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ d�
 ## 🚀 5. HƯỚNG DẪN KHI BẬT MÁY MỚI HOẶC BẮT ĐẦU PHIÊN MỚI
 
 Khi bạn chuyển sang máy tính mới hoặc mở lại phiên làm việc:
-1. Clone hoặc mở thư mục repo: `https://github.com/DiTrang6266/Thu-vien-PL`.
+1. Tải (hoặc clone) thư mục dự án từ GitHub: `https://github.com/DiTrang6266/Thu-vien-PL`.
 2. Mở file này (`LICH_SU_TRAO_DOI.md`) và file `TIEN_DO.md` để nắm toàn bộ bối cảnh và các quyết định đã chốt.
 3. Cài đặt các thư viện cần thiết: `pip install -r requirements.txt`.
 4. Chỉ cần nói với AI: *"Hãy tiếp tục thực hiện theo file LICH_SU_TRAO_DOI.md"* là AI sẽ hiểu 100% toàn bộ hệ thống ngay lập tức mà bạn không cần phải giải thích lại một lời nào!
