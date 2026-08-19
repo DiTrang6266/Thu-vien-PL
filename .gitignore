@@ -1,3 +1,17 @@
 __pycache__/
 *.pyc
 .env
+
+# Bỏ qua các file hồ sơ mẫu và template nội bộ trên máy tính
+*.docx
+*.xlsx
+*.pdf
+*.png
+*.bat
+xuat_ho_so_1cham.py
+0[0-9]_*.md
+To_trinh_*.md
+Bao_cao_*.md
+QUY_CHUAN_DINH_DANG.md
+README_Huong_dan_su_dung_bo_bieu_mau.md
+
