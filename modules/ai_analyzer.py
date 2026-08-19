@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Module: ai_analyzer.py
-Mục đích: Bộ não AI phân tích tác động pháp lý toàn văn (Zero-Chunking) với các dòng Gemini mới nhất:
-Gemini 3.7 Flash, Gemini 3.1 Pro, Gemini 3.6 Flash, Gemini 2.0 Flash, Gemini 1.5 Pro/Flash.
+Mục đích: Bộ não AI phân tích tác động pháp lý toàn văn (Zero-Chunking)
+Tự động khám phá mô hình Gemini đang hoạt động (Dynamic Model Discovery) để tránh 404/503.
 """
 
 import os
@@ -29,20 +29,55 @@ class LegalAIAnalyzer:
     Bộ phân tích tác động pháp lý toàn văn bằng Gemini API thế hệ mới nhất.
     """
 
-    # Danh sách các dòng mô hình Gemini mới nhất theo thứ tự ưu tiên
-    LATEST_GEMINI_MODELS = [
-        "gemini-3.7-flash",       # Bản mới nhất, xử lý suy luận logic & bóc tách cực mạnh
-        "gemini-3.1-pro",         # Bản cao cấp suy luận chuyên sâu
-        "gemini-3.6-flash",       # Bản ổn định hiệu năng cao
-        "gemini-2.0-flash",       # Bản Flash thế hệ 2
-        "gemini-2.0-flash-exp",   # Bản thử nghiệm
-        "gemini-1.5-pro",         # Bản 1.5 Pro kinh điển
-        "gemini-1.5-flash"        # Bản 1.5 Flash dự phòng
-    ]
-
     def __init__(self, api_key: Optional[str] = None, preferred_model: Optional[str] = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         self.preferred_model = preferred_model
+
+    def get_available_models(self) -> List[str]:
+        """
+        Tự động lấy danh sách chính xác các model Gemini đang hoạt động từ Google API Key.
+        """
+        if not self.api_key:
+            return ["gemini-1.5-flash", "gemini-1.5-pro"]
+
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models?key={self.api_key}"
+            with httpx.Client(timeout=15.0) as client:
+                res = client.get(url)
+                if res.status_code == 200:
+                    models_data = res.json().get("models", [])
+                    # Lọc các model hỗ trợ generateContent
+                    active_models = [
+                        m["name"].replace("models/", "")
+                        for m in models_data
+                        if "generateContent" in m.get("supportedGenerationMethods", [])
+                    ]
+                    # Sắp xếp ưu tiên: flash/pro mới nhất lên đầu
+                    def sort_key(name: str):
+                        score = 0
+                        if "3.7" in name or "3.1" in name or "3.6" in name: score += 50
+                        elif "2.5" in name or "2.0" in name: score += 30
+                        elif "1.5" in name: score += 10
+                        if "pro" in name: score += 5
+                        if "flash" in name: score += 4
+                        if "exp" in name: score -= 2
+                        return -score
+
+                    active_models.sort(key=sort_key)
+                    if active_models:
+                        _log_debug(f"🔍 Danh sách model khả dụng từ Google: {active_models[:5]}")
+                        return active_models
+        except Exception as e:
+            _log_debug(f"⚠️ Không thể lấy danh sách model động: {e}")
+
+        # Fallback danh sách mặc định nếu không gọi được
+        return [
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-2.0-flash",
+            "gemini-2.5-flash",
+            "gemini-1.5-flash-latest"
+        ]
 
     def analyze_legal_impact(
         self,
@@ -62,12 +97,8 @@ BẠN LÀ CHUYÊN GIA CAO CẤP VỀ PHÁP LUẬT ĐẤU THẦU VÀ XÂY DỰNG 
 Nhiệm vụ của bạn là phân tích SÂU SẮC, RÕ RÀNG, ĐI THẲNG VÀO BẢN CHẤT THAY ĐỔI giữa VĂN BẢN CŨ và VĂN BẢN SỬA ĐỔI MỚI.
 
 YÊU CẦU BẮT BUỘC:
-1. TUYỆT ĐỐI KHÔNG NÓI CHUNG CHUNG (Cấm viết những câu sáo rỗng như 'cần rà soát hồ sơ', 'phát hiện thay đổi').
-2. NÓI RÕ CON SỐ VÀ HÀNH ĐỘNG CỤ THỂ:
-   - Thay đổi từ bao nhiêu ngày sang bao nhiêu ngày?
-   - Định mức tỷ lệ % tăng/giảm ra sao?
-   - Hạn mức tiền tăng/giảm hay bãi bỏ?
-   - Trách nhiệm của ai thay đổi?
+1. TUYỆT ĐỐI KHÔNG NÓI CHUNG CHUNG.
+2. NÓI RÕ CON SỐ VÀ HÀNH ĐỘNG CỤ THỂ (số ngày, hạn mức tiền, tỷ lệ %, trách nhiệm).
 3. TRÍCH NGUYÊN VĂN 100% câu chữ cũ và mới trong phần trích dẫn để người dùng đối soát.
 4. Trả về đúng định dạng JSON Schema dưới đây.
 """
@@ -110,11 +141,13 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
 }}
 """
 
-        # Xây dựng danh sách model thử nghiệm theo ưu tiên
         models_queue = []
         if self.preferred_model:
             models_queue.append(self.preferred_model)
-        for m in self.LATEST_GEMINI_MODELS:
+        
+        # Lấy danh sách model thực tế từ tài khoản
+        available_models = self.get_available_models()
+        for m in available_models:
             if m not in models_queue:
                 models_queue.append(m)
 
@@ -134,7 +167,7 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
             }
 
             try:
-                _log_debug(f"Đang gọi mô hình mới: {model}...")
+                _log_debug(f"Đang gọi mô hình: {model}...")
                 with httpx.Client(timeout=90.0) as client:
                     res = client.post(endpoint, json=payload)
 
@@ -142,7 +175,6 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
                     res_json = res.json()
                     raw_content = res_json["candidates"][0]["content"]["parts"][0]["text"]
                     
-                    # Bóc tách JSON
                     clean_json_str = raw_content.strip()
                     if clean_json_str.startswith("```json"):
                         clean_json_str = clean_json_str[7:]
@@ -152,16 +184,15 @@ Hãy phân tích toàn bộ và trả về kết quả bằng ĐÚNG định d�
                     parsed_data = json.loads(clean_json_str.strip())
                     _log_debug(f"✅ Mô hình [{model}] phân tích thành công xuất sắc!")
                     
-                    # Hậu kiểm
                     verified_data = self._verify_citations(parsed_data, old_doc_text, new_doc_text)
                     return verified_data
                 else:
-                    _log_debug(f"❌ Mô hình [{model}] trả về ({res.status_code}): {res.text[:200]}")
+                    _log_debug(f"⚠️ Mô hình [{model}] trả về ({res.status_code}). Chuyển sang model kế tiếp.")
 
             except Exception as e:
-                _log_debug(f"❌ Ngoại lệ với [{model}]: {e}")
+                _log_debug(f"⚠️ Ngoại lệ với [{model}]: {e}")
 
-        _log_debug("⚠️ Tất cả các model đều không phản hồi. Chuyển sang fallback cục bộ.")
+        _log_debug("⚠️ Chuyển sang phân tích quy tắc dự phòng.")
         return self._fallback_local_analysis(old_doc_text, new_doc_text)
 
     def _verify_citations(
