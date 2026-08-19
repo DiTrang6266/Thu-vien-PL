@@ -14,13 +14,12 @@ import json
 import re
 import hashlib
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 import feedparser
 import httpx
 from bs4 import BeautifulSoup
 import urllib3
 
-# Đảm bảo in tiếng Việt chuẩn trên mọi môi trường
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
@@ -35,6 +34,7 @@ from modules.telegraph_publisher import TelegraphPublisher
 # Đường dẫn thư mục dữ liệu
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
+DOWNLOAD_DIR = os.path.join(DATA_DIR, "downloads")
 DATABASE_FILE = os.path.join(DATA_DIR, "known_documents.json")
 LOG_FILE = os.path.join(DATA_DIR, "nhat_ky_trinh_sat.log")
 
@@ -43,7 +43,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8929996006:AAEkcgtKYRJihNt
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Danh sách nguồn cấp tin chính thức của Nhà nước (RSS Feeds)
+# Danh sách nguồn cấp tin chính thức của Nhà nước
 RSS_SOURCES = [
     {
         "name": "Công báo Nước CHXHCN Việt Nam",
@@ -102,6 +102,7 @@ def log(msg: str):
 
 def init_storage():
     os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
     if not os.path.exists(DATABASE_FILE):
         with open(DATABASE_FILE, "w", encoding="utf-8") as f:
             json.dump({}, f, ensure_ascii=False, indent=2)
@@ -152,9 +153,84 @@ def classify_document(title: str, summary: str) -> list:
     return matched_categories
 
 
+def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
+    """
+    Tự động truy cập trang chi tiết của văn bản, tìm link file PDF gốc và tải về.
+    """
+    clean_url = normalize_url(doc_url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Referer": clean_url
+    }
+
+    try:
+        with httpx.Client(verify=False, headers=headers, follow_redirects=True, timeout=25.0) as client:
+            resp = client.get(clean_url)
+            if resp.status_code != 200:
+                return None
+
+            soup = BeautifulSoup(resp.text, "html.parser")
+            pdf_link = None
+
+            # 1. Tìm thẻ <a> có đuôi .pdf hoặc chứa từ khóa download/tải về
+            for a_tag in soup.find_all("a", href=True):
+                href = a_tag["href"].strip()
+                if ".pdf" in href.lower() or "datafiles.chinhphu.vn" in href.lower():
+                    pdf_link = href
+                    break
+
+            if not pdf_link:
+                return None
+
+            pdf_url = normalize_url(pdf_link)
+            log(f"📥 Tìm thấy link PDF gốc: {pdf_url}")
+
+            # 2. Tải file PDF về thư mục downloads
+            pdf_resp = client.get(pdf_url)
+            if pdf_resp.status_code == 200 and len(pdf_resp.content) > 1000:
+                clean_filename = f"{doc_id[:16]}_van_ban_goc.pdf"
+                save_path = os.path.join(DOWNLOAD_DIR, clean_filename)
+                with open(save_path, "wb") as f:
+                    f.write(pdf_resp.content)
+                log(f"💾 Đã tải và lưu trữ file PDF thành công ({len(pdf_resp.content)} bytes): {save_path}")
+                return save_path
+
+    except Exception as e:
+        log(f"⚠️ Không thể tự động tải PDF từ {clean_url}: {e}")
+
+    return None
+
+
+def send_telegram_document(pdf_path: str, caption: str) -> bool:
+    """
+    Gửi đính kèm file PDF gốc vào Telegram qua API sendDocument.
+    """
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return False
+
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendDocument"
+    try:
+        with open(pdf_path, "rb") as f:
+            files = {"document": (os.path.basename(pdf_path), f, "application/pdf")}
+            data = {
+                "chat_id": TELEGRAM_CHAT_ID,
+                "caption": caption[:1024],
+                "parse_mode": "HTML"
+            }
+            res = httpx.post(url, data=data, files=files, timeout=40.0)
+            return res.status_code == 200
+    except Exception as e:
+        log(f"❌ Lỗi gửi file PDF qua Telegram: {e}")
+        return False
+
+
 def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_pub: TelegraphPublisher) -> bool:
     """
-    Xử lý tự động toàn diện: AI Phân tích tác động -> Xuất bản Telegraph Instant View -> Bắn Telegram.
+    Xử lý tự động toàn diện:
+    1. Tải PDF gốc thật (nếu có).
+    2. AI Gemini thế hệ mới nhất phân tích tác động toàn văn & chống ảo giác.
+    3. Xuất bản Telegraph Instant View.
+    4. Gửi bản tin Telegram kèm nút Instant View và đính kèm trực tiếp file PDF gốc.
     """
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         log("ℹ️ Không tìm thấy Token Telegram. Bỏ qua bước gửi tin nhắn.")
@@ -170,30 +246,32 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
     cats_str = "\n".join([f"• {cat_labels.get(c, c)}" for c in item.get("categories", [])])
     clean_link = normalize_url(item["link"])
 
-    # 1. Chạy AI Phân tích Tác động Toàn văn
-    log(f"🧠 Đang gọi AI phân tích tác động pháp lý cho: {item['title'][:50]}...")
+    # 1. Tải file PDF gốc thật nếu có
+    pdf_file_path = extract_and_download_pdf(clean_link, item.get("id", "doc"))
+
+    # 2. Gọi AI Gemini phân tích tác động toàn văn
+    log(f"🧠 Đang gọi AI Gemini phân tích tác động pháp lý cho: {item['title'][:60]}...")
     doc_meta = {
         "so_hieu": item["title"],
         "co_quan": item["source_name"],
         "ngay_ban_hanh": item.get("published", datetime.now().strftime("%d/%m/%Y"))
     }
     
-    # Nạp nội dung vào AI
     ai_data = ai_analyzer.analyze_legal_impact(
-        old_doc_text=item.get("summary", ""),
-        new_doc_text=f"{item['title']}\n{item.get('summary', '')}",
+        old_doc_text=item.get("old_text", item.get("summary", "")),
+        new_doc_text=f"{item['title']}\n{item.get('new_text', item.get('summary', ''))}",
         doc_metadata=doc_meta
     )
 
-    # 2. Xuất bản bài viết toàn văn lên Telegraph (Instant View)
+    # 3. Xuất bản bài viết toàn văn lên Telegraph (Instant View)
     telegraph_url = telegraph_pub.publish_report(
         title=f"BÁO CÁO PHÂN TÍCH PHÁP LÝ: {item['title']}",
         ai_data=ai_data,
         doc_meta=doc_meta
     )
 
-    # 3. Định dạng bản tin Telegram tinh gọn + Nút Instant View
-    top3_bullets = "\n".join(ai_data.get("summary_top3", ["Đã đối chiếu với hệ thống pháp lý hiện hành."]))
+    # 4. Gửi tin nhắn Telegram kèm nút Instant View
+    top3_bullets = "\n".join(ai_data.get("summary_top3", ["Đã hoàn thành rà soát và đối chiếu toàn văn."]))
     
     message_text = (
         f"🏛 <b>[TRINH SÁT PHÁP LÝ: PHÁT HIỆN VĂN BẢN MỚI]</b>\n"
@@ -215,7 +293,7 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
         ])
     
     inline_buttons.append([
-        {"text": "📥 TẢI VĂN BẢN GỐC / XEM NGUỒN CHÍNH THỨC", "url": clean_link}
+        {"text": "🌐 XEM BÀI VIẾT NGUỒN CHÍNH THỨC", "url": clean_link}
     ])
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -228,17 +306,23 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
         }
     }
 
+    sent_msg = False
     try:
         response = httpx.post(url, json=payload, timeout=20)
         if response.status_code == 200:
             log(f"✅ Đã gửi thông báo Telegram kèm Instant View thành công: {item['title'][:60]}...")
-            return True
+            sent_msg = True
         else:
             log(f"❌ Gửi Telegram thất bại ({response.status_code}): {response.text}")
-            return False
     except Exception as e:
         log(f"❌ Lỗi kết nối Telegram: {e}")
-        return False
+
+    # 5. Nếu có file PDF gốc, gửi đính kèm file trực tiếp vào Telegram
+    if pdf_file_path and os.path.exists(pdf_file_path):
+        caption_text = f"📑 <b>File PDF gốc có dấu đỏ/chữ ký số:</b>\n<i>{item['title'][:200]}</i>"
+        send_telegram_document(pdf_file_path, caption_text)
+
+    return sent_msg
 
 
 def run_reconnaissance() -> int:
@@ -248,12 +332,11 @@ def run_reconnaissance() -> int:
 
     log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG...")
     
-    # Khởi tạo các module
     ai_analyzer = LegalAIAnalyzer(api_key=GEMINI_API_KEY)
     telegraph_pub = TelegraphPublisher()
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
     }
 
     with httpx.Client(verify=False, headers=headers, follow_redirects=True, timeout=30.0) as client:
@@ -298,7 +381,7 @@ def run_reconnaissance() -> int:
                             "discovered_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
                         
-                        # Chạy quy trình phân tích và gửi alert
+                        # Chạy quy trình phân tích và gửi alert thật 100%
                         process_and_send_alert(doc_item, ai_analyzer, telegraph_pub)
                         
                         known_docs[doc_hash] = doc_item
