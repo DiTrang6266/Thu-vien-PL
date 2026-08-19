@@ -67,11 +67,21 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
     + Trích dẫn nguyên văn số trang và số Điều, Khoản (Zero-Hallucination).
   - *Bước 4:* Tự động gửi file PDF + Bản tin đối chiếu vào Telegram và cập nhật Sổ cái Excel.
 
+### Buổi 4: Đột phá Giải pháp Tự động hóa 100% & Báo cáo Toàn văn Không Giới Hạn (Telegraph Instant View)
+* **Người dùng yêu cầu:** Phân chia Subagent nghiên cứu các phương án khả thi hơn từ mã nguồn mở và mạng xã hội, đảm bảo tự động 100%, không bị tóm tắt cắt gọt làm mất ý nghĩa pháp lý.
+* **Kết quả nghiên cứu của 3 Subagent:**
+  1. *Subagent 1 (Parsing & Long Context):* Loại bỏ RAG cắt vụn (Chunking). Áp dụng **Full-Document (Zero-Chunking)** với cửa sổ ngữ cảnh 1M–2M token của Gemini Flash/Pro để AI nhìn thấy trọn vẹn toàn bộ văn bản.
+  2. *Subagent 2 (Legal Diff & Redline):* Áp dụng thuật toán bóc tách phân cấp Điều/Khoản (`Docling` / `PyMuPDF`) kết hợp so khớp từng từ ngữ (`python-redlines` / `diff-match-patch`) để sinh chuỗi Redline Track Changes và lớp kiểm tra trích dẫn gốc chống ảo giác 100%.
+  3. *Subagent 3 (Kiến trúc & Phân phối Toàn văn):* Dùng **Telegraph API** tạo báo cáo Instant View tức thì không giới hạn ký tự (vượt qua mốc 4.096 ký tự của Telegram), chi phí 0đ trên GitHub Actions.
+* **Triển khai Việc 1:**
+  - Đã hoàn thành `modules/legal_parser.py` và `modules/legal_diff.py`.
+  - Đã chạy kiểm thử tự động `tests/test_parser_diff.py` đạt 100% (nhận diện chính xác Điều bị Sửa đổi, Bổ sung mới, Bãi bỏ và trích dẫn chuẩn xác).
+
 ---
 
 ## 📂 4. DANH MỤC CÁC FILE ĐÃ HOÀN THIỆN TRONG THƯ MỤC DỰ ÁN
 
-Thư mục làm việc chính: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\`
+Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ dự án\`
 
 1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát pháp luật tự động đọc RSS, lọc từ khóa, tải PDF và gửi Telegram.
 2. ⚙️ **`.github/workflows/watchdog.yml`:** Kịch bản hẹn giờ tự động chạy 07:00 sáng trên GitHub Actions.
@@ -81,6 +91,9 @@ Thư mục làm việc chính: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ
 6. ⚡ **`CHAY_TU_DONG.bat`:** File 1-click click đúp chuột trên Desktop để xuất hồ sơ.
 7. 📄 **`Template_01_To_trinh_mau.docx`:** Phôi Word Tờ trình số 01 chuẩn thể thức 13pt/14pt.
 8. 📑 **`01` $\rightarrow$ `08` biểu mẫu Markdown:** Bộ mẫu Tờ trình, Báo cáo thẩm định, Thư mời thầu, Quyết định...
+9. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $\rightarrow$ Điều $\rightarrow$ Khoản $\rightarrow$ Điểm kèm số trang.
+10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
+11. 🧪 **`tests/test_parser_diff.py`:** Script kiểm thử tự động cho Parser và Diff.
 
 ---
 
@@ -88,5 +101,5 @@ Thư mục làm việc chính: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ
 
 Khi bạn chuyển sang máy tính mới hoặc mở lại phiên làm việc:
 1. Mở file này (`LICH_SU_TRAO_DOI.md`) và file `TIEN_DO.md` để xem lại toàn bộ bối cảnh.
-2. Kiểm tra Python đã cài các thư viện: `pip install docxtpl openpyxl httpx feedparser beautifulsoup4`.
+2. Kiểm tra Python đã cài các thư viện: `pip install docxtpl openpyxl httpx feedparser beautifulsoup4 pymupdf`.
 3. Chỉ cần nói với AI: *"Hãy tiếp tục thực hiện theo file LICH_SU_TRAO_DOI.md"* là AI sẽ nắm trọn toàn bộ dự án ngay lập tức mà không cần hỏi lại từ đầu!

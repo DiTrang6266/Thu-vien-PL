@@ -10,11 +10,13 @@
   - `Kho_Can_Cu_Phap_Ly.xlsx`: 15 văn bản chuẩn hóa.
 - **Giai đoạn 3 (Động cơ xuất Hồ sơ 1-chạm Word & Bat):** ✅ HOÀN THÀNH 100%
   - `xuat_ho_so_1cham.py` + `CHAY_TU_DONG.bat` đã sẵn sàng trên Desktop.
-- **Giai đoạn 4 (Nghiên cứu Nâng cấp NotebookLM Grounded AI Tự động hóa):** ✅ ĐÃ NGHIÊN CỨU XONG KIẾN TRÚC
-  - Đã chốt kiến trúc Pipeline 4 bước: Tự động tải PDF -> Lôi PDF cũ -> AI bóc tách Diff -> Gửi Telegram & Cập nhật Excel.
+- **Giai đoạn 4 (Hệ thống Trinh sát & Đối chiếu Pháp lý Tự động hóa 100%):** 🚀 ĐANG TRIỂN KHAI
+  - **Việc 1:** Xây dựng module đọc và bóc tách cấu trúc văn bản (`modules/legal_parser.py` & `modules/legal_diff.py`) $\rightarrow$ ✅ HOÀN THÀNH 100% (Đã test pass 100% cả nhận diện Điều/Khoản và Redline diff từng chữ).
+  - **Việc 2:** Xây dựng module AI phân tích tác động toàn văn & lớp kiểm tra chống ảo giác (`modules/ai_analyzer.py`) $\rightarrow$ ⏳ CHỜ BẮT ĐẦU.
+  - **Việc 3:** Xây dựng module xuất bản báo cáo toàn văn qua Telegraph Instant View (`modules/telegraph_publisher.py`) $\rightarrow$ ⏳ CHỜ BẮT ĐẦU.
+  - **Việc 4:** Tích hợp tổng thể vào `recon_pipeline.py`, cấu hình GitHub Actions $\rightarrow$ ⏳ CHỜ BẮT ĐẦU.
 
 ---
 
 ## 2. BƯỚC TIẾP THEO KHI TIẾP TỤC DỰ ÁN
-1. Nghiệm thu chạy thử `CHAY_TU_DONG.bat` trên máy tính để đúc trọn bộ 8 gói thầu.
-2. Nâng cấp bộ não Gemini Grounded Diff vào `recon_pipeline.py` để tự động bóc tách bảng so sánh Cũ vs Mới khi có văn bản sửa đổi.
+1. Thực hiện **Việc 2**: Xây dựng module AI phân tích tác động toàn văn & lớp kiểm tra chống ảo giác (`ai_analyzer.py`).
