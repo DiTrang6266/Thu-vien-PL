@@ -12,11 +12,11 @@
   - `xuat_ho_so_1cham.py` + `CHAY_TU_DONG.bat` đã sẵn sàng trên Desktop.
 - **Giai đoạn 4 (Hệ thống Trinh sát & Đối chiếu Pháp lý Tự động hóa 100%):** 🚀 ĐANG TRIỂN KHAI
   - **Việc 1:** Xây dựng module đọc và bóc tách cấu trúc văn bản (`modules/legal_parser.py` & `modules/legal_diff.py`) $\rightarrow$ ✅ HOÀN THÀNH 100%.
-  - **Việc 2:** Xây dựng module AI phân tích tác động toàn văn & lớp kiểm tra chống ảo giác (`modules/ai_analyzer.py`) $\rightarrow$ ✅ HOÀN THÀNH 100% (Tích hợp Gemini Flash/Pro + Strict Citation Verifier).
-  - **Việc 3:** Xây dựng module xuất bản báo cáo toàn văn qua Telegraph Instant View (`modules/telegraph_publisher.py`) $\rightarrow$ ⏳ CHỜ BẮT ĐẦU.
+  - **Việc 2:** Xây dựng module AI phân tích tác động toàn văn & lớp kiểm tra chống ảo giác (`modules/ai_analyzer.py`) $\rightarrow$ ✅ HOÀN THÀNH 100%.
+  - **Việc 3:** Xây dựng module xuất bản báo cáo toàn văn qua Telegraph Instant View (`modules/telegraph_publisher.py`) $\rightarrow$ ✅ HOÀN THÀNH 100% (Đã test sinh link Instant View tức thì mượt mà).
   - **Việc 4:** Tích hợp tổng thể vào `recon_pipeline.py`, cấu hình GitHub Actions $\rightarrow$ ⏳ CHỜ BẮT ĐẦU.
 
 ---
 
 ## 2. BƯỚC TIẾP THEO KHI TIẾP TỤC DỰ ÁN
-1. Thực hiện **Việc 3**: Xây dựng module xuất bản báo cáo toàn văn không giới hạn độ dài qua Telegraph Instant View (`modules/telegraph_publisher.py`).
+1. Thực hiện **Việc 4**: Tích hợp toàn diện các module vào `recon_pipeline.py`, cập nhật `.github/workflows/watchdog.yml` và chạy thử nghiệm thực tế.

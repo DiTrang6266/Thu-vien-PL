@@ -80,6 +80,9 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
   - Người dùng đã tạo `GEMINI_API_KEY` từ Google AI Studio và lưu vào Repository Secrets trên GitHub.
   - Đã hoàn thành `modules/ai_analyzer.py` tích hợp gọi trực tiếp REST API siêu nhẹ (Gemini 2.0 / 1.5 Pro / Flash), bóc tách Top 3 thay đổi cốt lõi, tác động HSMT/dự toán/thẩm quyền, quy định chuyển tiếp và lớp hậu kiểm đối soát trích dẫn gốc chống ảo giác.
   - Đã chạy kiểm thử tự động `tests/test_ai_analyzer.py` đạt 100%.
+* **Triển khai Việc 3:**
+  - Đã hoàn thành `modules/telegraph_publisher.py` tự động xuất bản báo cáo phân tích toàn văn lên Telegraph.
+  - Đã chạy kiểm thử tự động `tests/test_telegraph.py` đạt 100% (tạo thành công link Instant View đọc tức thì trong Telegram).
 
 ---
 
@@ -98,7 +101,8 @@ Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ d�
 9. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $\rightarrow$ Điều $\rightarrow$ Khoản $\rightarrow$ Điểm kèm số trang.
 10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
 11. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn (Gemini Flash/Pro) + Kiểm tra trích dẫn 100%.
-12. 🧪 **`tests/test_parser_diff.py` & `tests/test_ai_analyzer.py`:** Bộ kịch bản kiểm thử tự động.
+12. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản báo cáo Instant View không giới hạn ký tự trên Telegraph.
+13. 🧪 **`tests/`:** Bộ kiểm thử tự động `test_parser_diff.py`, `test_ai_analyzer.py`, `test_telegraph.py`.
 
 ---
 
