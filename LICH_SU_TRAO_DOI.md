@@ -156,3 +156,12 @@ ightarrow$ Điểm kèm số trang PDF.
   - Bóc tách chính xác 100% Số hiệu (`63/2026/TT-BXD`, `112/2026/TT-BQP`, `1074/QĐ-BXD`), Ngày ban hành đầy đủ (`ngày DD tháng MM năm YYYY`) và Cơ quan ban hành.
   - Con AI Gemini đã thật sự đọc hiểu toàn văn bản, bóc tách chính xác Top 3 Điểm mới cốt lõi kèm số liệu và danh mục phụ lục chi tiết.
   - Đã thử nghiệm quét thực tế và gửi thành công 6 văn bản kèm Thẻ Căn Cứ 1-Chạm chuẩn Nghị định 30 và file PDF gốc có dấu mộc về Telegram.
+
+### 6. Thảo luận Chuyên sâu về Cơ chế Phân loại 'Phạm vi Áp dụng' (Scope Gate):
+* **Vấn đề người dùng nêu ra:**
+  - Nhận xét văn bản `Thông tư 63/2026/TT-BXD` thực chất là định mức riêng cho *Dự án đường sắt Lào Cai - Hà Nội - Hải Phòng*, không phải văn bản áp dụng chung toàn quốc, tại sao hệ thống vẫn lọc là phù hợp?
+* **Giải trình bản chất pháp lý & kỹ thuật:**
+  - Về hình thức: Bộ Xây dựng ban hành dưới dạng *Thông tư* nên Lớp 1 (Thể thức) và Lớp 2 (Từ khóa định mức dự toán xây dựng) đều nhận diện là VBQPPL đúng ngành.
+  - Về nội dung: AI đã tóm tắt chính xác 14 phụ lục và ngày hiệu lực, nhưng cần nâng cấp thêm tiêu chí đánh giá **Phạm vi áp dụng (Scope)**.
+* **Định hướng giải pháp:**
+  - Bổ sung trường phân loại `scope`: `PHO_QUAT_TOAN_QUOC` (áp dụng cho mọi dự án -> Gửi alert + Nạp Sổ cái Master) vs `DAC_THU_DU_AN_RIENG` (chỉ áp dụng cho 1 dự án cá biệt -> Tự động bỏ qua hoặc gắn nhãn lưu trữ phụ).
