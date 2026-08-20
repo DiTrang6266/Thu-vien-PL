@@ -122,22 +122,24 @@ class LegalAIAnalyzer:
         citation = self.generate_nd30_citation(doc_title, doc_metadata)
         
         if self.api_key:
-            system_instruction = """BẠN LÀ THẨM ĐỊNH VIÊN PHÁP LUẬT VÀ CHUYÊN GIA TÓM TẮT TRUNG THỰC 100%.
-Nhiệm vụ của bạn:
-1. THẨM ĐỊNH GÁC CỔNG (GATEKEEPER):
-   - Kiểm tra xem văn bản này có THỰC SỰ thuộc 1 trong 4 Trụ cột Chuyên môn:
-     (1) DAU_TU_CONG_XAY_DUNG (Quản lý dự án, chi phí, dự toán, định mức, quy chuẩn QCVN, nghiệm thu, quy hoạch xây dựng).
-     (2) DAU_THAU_MUA_SAM (Luật Đấu thầu, E-HSMT, kế hoạch LCNT, lựa chọn nhà thầu).
-     (3) CHI_THUONG_XUYEN_TSCONG (Mua sắm, sửa chữa, cải tạo tài sản công bằng nguồn chi thường xuyên / vốn sự nghiệp).
-     (4) QUOC_PHONG_PCCC (Công trình quốc phòng, quy chuẩn PCCC QCVN 06).
-   - NẾU KHÔNG THUỘC 4 TRỤ CỘT TRÊN (Ví dụ: hoa tiêu, hàng hải, bến thủy nội địa, sát hạch lái xe, y tế điều trị, giáo dục, thuế thu nhập cá nhân...): ĐÁNH DẤU "is_domain_relevant": false VÀ DỪNG LẠI.
-   - Kiểm tra xem văn bản có ÁP DỤNG PHỔ QUÁT TOÀN QUỐC hay chỉ là văn bản ĐẶC THÙ CHO 1 DỰ ÁN CÁ BIỆT (như đường sắt Lào Cai, sân bay Long Thành...). Nếu là dự án riêng: ĐÁNH DẤU "is_nationwide_universal": false.
+            system_instruction = """BẠN LÀ CHUYÊN GIA THẨM ĐỊNH PHÁP LUẬT VÀ QUẢN LÝ DỰ ÁN XÂY DỰNG CAO CẤP.
+Nhiệm vụ: Phân tích sâu sắc văn bản pháp luật, bóc tách TOÀN BỘ CÁC QUY ĐỊNH KỸ THUẬT VÀ NGHIỆP VỤ THỰC CHẤT (SUBSTANTIVE PROVISIONS).
 
-2. TÓM TẮT TRUNG THỰC - CHỐNG ẢO GIÁC (ZERO-HALLUCINATION):
-   - TUYỆT ĐỐI KHÔNG SUY DIỄN: Văn bản quy định về cái gì thì tóm tắt đúng cái đó. Tuyệt đối không tự ý ép các mục Đấu thầu, Dự toán, BQLDA vào văn bản nếu văn bản không trực tiếp điều chỉnh.
-   - BẮT BUỘC TRÍCH DẪN ĐIỀU/KHOẢN: Mỗi ý tóm tắt phải ghi rõ căn cứ [Điều mấy, Khoản mấy] trong văn bản gốc.
-   - Nêu rõ các văn bản cũ bị bãi bỏ hoặc thay thế (nếu có).
-   - Nêu rõ ngày có hiệu lực thi hành và quy định chuyển tiếp (nếu có).
+NGUYÊN TẮC BẮT BUỘC:
+1. THẨM ĐỊNH GÁC CỔNG (GATEKEEPER):
+   - Kiểm tra xem văn bản có thuộc 1 trong 4 Trụ cột Chuyên môn (Đầu tư công & Xây dựng, Đấu thầu, Chi thường xuyên/Tài sản công, Quốc phòng & PCCC) và áp dụng phổ quát toàn quốc hay không.
+   - Nếu không đạt -> is_domain_relevant: false hoặc is_nationwide_universal: false.
+
+2. TÓM TẮT CHUYÊN SÂU - CHỐNG ẢO GIÁC (ZERO-HALLUCINATION DEEP EXTRACTION):
+   - KHÔNG CHỈ DỪNG LẠI Ở ĐIỀU 1 VÀ ĐIỀU 2 (Phạm vi & Đối tượng): Đây là điều hiển nhiên.
+   - PHẢI BÓC TÁCH CÁC ĐIỀU KHOẢN NGHIỆP VỤ THỰC CHẤT (Từ Điều 3 trở đi):
+     + Thành phần hồ sơ, quy cách hồ sơ, số lượng bộ hồ sơ, hồ sơ lấy ý kiến, hồ sơ thẩm định/phê duyệt.
+     + Quy trình, thủ tục, thời hạn giải quyết, thẩm quyền của Chủ đầu tư, Ban QLDA, Tư vấn, Cơ quan thẩm định.
+     + Các mẫu biểu áp dụng (Tờ trình, Báo cáo thẩm định, Phụ lục).
+     + Yêu cầu kỹ thuật, tiêu chuẩn định mức, chỉ tiêu quy hoạch, an toàn, PCCC.
+   - Trích xuất từ 5 - 8 ĐIỂM QUY ĐỊNH CỐT LÕI. Mỗi điểm viết 2-3 câu phân tích rõ ràng, súc tích, mang giá trị nghiệp vụ thực tế kèm thẻ [Điều ... Khoản ...].
+   - Bóc tách danh sách văn bản bị bãi bỏ hoặc thay thế (repealed_docs).
+   - Bóc tách ngày có hiệu lực và điều khoản chuyển tiếp (effective_and_transition).
 """
 
             prompt = f"""{system_instruction}
@@ -164,7 +166,7 @@ Trả về ĐÚNG định dạng JSON sau:
   "cau_can_cu_nd30": "{citation}"
 }}
 """
-            models_to_try = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.5-flash", "gemini-flash-latest"]
+            models_to_try = ["gemini-3.5-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-flash-latest"]
             for m in models_to_try:
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"

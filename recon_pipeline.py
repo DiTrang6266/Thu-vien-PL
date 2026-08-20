@@ -1,3 +1,4 @@
+import fitz
 # -*- coding: utf-8 -*-
 """
 HỆ THỐNG TRẠM GÁC & TRINH SÁT PHÁP LUẬT TỰ ĐỘNG 24/7 (AUTOMATED LEGAL RECON PIPELINE)
@@ -331,9 +332,28 @@ def run_pipeline(force_reprocess: bool = False):
 
                     t1_res["raw_content"] = body_text[:2000]
 
-                    # TẦNG 2: AI GATEKEEPER & TÓM TẮT TRUNG THỰC
+                    # Tải trước PDF nếu có để bóc tách toàn văn sâu sắc
+                    local_pdf = None
+                    full_doc_text = f"{raw_title}\n{body_text}"
+                    if pdf_url:
+                        local_pdf = download_official_pdf(pdf_url, doc_hash)
+                        if local_pdf and os.path.exists(local_pdf):
+                            try:
+                                doc_pdf = fitz.open(local_pdf)
+                                pdf_pages_text = []
+                                max_pages = min(25, len(doc_pdf))
+                                for p_idx in range(max_pages):
+                                    pdf_pages_text.append(f"\n=== TRANG {p_idx+1} ===\n" + doc_pdf[p_idx].get_text())
+                                extracted_pdf_str = "\n".join(pdf_pages_text)
+                                if len(extracted_pdf_str.strip()) > 300:
+                                    full_doc_text = extracted_pdf_str[:35000]
+                                    log(f"📑 Đã bóc tách toàn văn PDF ({max_pages} trang, {len(full_doc_text)} ký tự) để nạp vào AI.")
+                            except Exception as e:
+                                log(f"⚠️ Lỗi bóc tách PDF text: {e}")
+
+                    # TẦNG 2: AI GATEKEEPER & TÓM TẮT CHUYÊN SÂU TỪ TOÀN VĂN
                     ai_result = ai_analyzer.analyze_document_deep(
-                        doc_text=f"{raw_title}\n{body_text[:5000]}",
+                        doc_text=full_doc_text,
                         doc_title=raw_title,
                         doc_metadata=t1_res
                     )
@@ -345,9 +365,7 @@ def run_pipeline(force_reprocess: bool = False):
 
                     log(f"🎯 PHÁT HIỆN VĂN BẢN PHỔ QUÁT TOÀN QUỐC HỢP LỆ: [{so_hieu_clean}] {raw_title}")
 
-                    local_pdf = None
-                    if pdf_url:
-                        local_pdf = download_official_pdf(pdf_url, doc_hash)
+# PDF đã được tải trước đó
 
                     # ĐỒNG BỘ SỔ CÁI EXCEL
                     excel_sync.sync_new_document(
