@@ -2,7 +2,7 @@
 """
 Module: ai_analyzer.py
 Mục đích: Lớp 3 trong Phễu phân loại lai (3-Tier Hybrid Funnel).
-Nhiệm vụ: Phân tích thuần túy pháp lý và sinh thẻ căn cứ Nghị định 30/2020 chuẩn xác 100%.
+Nhiệm vụ: Bộ não Gemini AI (gemini-flash-latest, gemini-3.6-flash) đọc hiểu toàn văn bản và sinh thẻ căn cứ NĐ 30 chuẩn xác.
 """
 
 import os
@@ -22,6 +22,20 @@ def _log_debug(msg: str):
         pass
 
 
+def format_vietnamese_date(raw_date: str) -> str:
+    """Chuyển đổi các định dạng ngày thành 'ngày DD tháng MM năm YYYY' chuẩn Nghị định 30."""
+    if not raw_date:
+        return ""
+    if "tháng" in raw_date and "năm" in raw_date:
+        return raw_date.strip()
+
+    m = re.search(r"(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})", raw_date)
+    if m:
+        d, mon, y = int(m.group(1)), int(m.group(2)), m.group(3)
+        return f"ngày {d:02d} tháng {mon:02d} năm {y}"
+    return raw_date.strip()
+
+
 class LegalAIAnalyzer:
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
@@ -31,7 +45,6 @@ class LegalAIAnalyzer:
         doc_title: str,
         doc_metadata: Optional[Dict[str, Any]] = None
     ) -> str:
-        """Sinh chuỗi căn cứ chuẩn Nghị định 30/2020/NĐ-CP."""
         meta = doc_metadata or {}
         so_hieu = meta.get("doc_number", "")
         doc_type = meta.get("doc_type", "THÔNG TƯ")
@@ -48,22 +61,19 @@ class LegalAIAnalyzer:
         elif "LUAT" in str(doc_type) or "luật" in doc_title.lower():
             type_label = "Luật"
 
-        # Khớp số hiệu sạch
         if not so_hieu or len(so_hieu) > 35 or "/" not in so_hieu:
             match = re.search(r"(\d+(?:/\d{4})?/[A-ZĐĐa-z]+(?:-[A-ZĐĐa-z0-9]+)?)", f"{doc_title} {meta.get('raw_content', '')}")
             if match:
                 so_hieu = match.group(1)
 
-        # Khớp ngày ban hành
         if not ngay_bh:
             d_match = re.search(r"ngày\s+(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})", f"{doc_title} {meta.get('raw_content', '')}")
             if d_match:
-                d, m, y = d_match.group(1), d_match.group(2), d_match.group(3)
-                ngay_bh = f"ngày {int(d):02d} tháng {int(m):02d} năm {y}"
+                ngay_bh = d_match.group(0)
 
-        date_str = f" {ngay_bh}" if ngay_bh and "ngày" in ngay_bh else (f" ngày {ngay_bh}" if ngay_bh else "")
+        formatted_date = format_vietnamese_date(ngay_bh)
+        date_str = f" {formatted_date}" if formatted_date else ""
         
-        # Thẩm quyền chuẩn
         auth_str = f" của {authority}"
         if authority == "Bộ Xây dựng":
             auth_str = " của Bộ trưởng Bộ Xây dựng"
@@ -80,7 +90,6 @@ class LegalAIAnalyzer:
         elif authority == "Quốc hội":
             auth_str = ""
 
-        # Trích yếu nội dung
         trich_yeu = doc_title.strip()
         trich_yeu = re.sub(r"^(Thông tư|Nghị định|Quyết định|Luật)\s*(số\s*[\w\-/]+)?\s*", "", trich_yeu, flags=re.IGNORECASE)
         trich_yeu = re.sub(r"^ngày\s*[\d/.\-]+\s*", "", trich_yeu, flags=re.IGNORECASE)
@@ -102,40 +111,47 @@ class LegalAIAnalyzer:
         citation = self.generate_nd30_citation(doc_title, doc_metadata)
         
         if self.api_key:
-            try:
-                system_instruction = "BẠN LÀ CHUYÊN GIA PHÁP LUẬT XÂY DỰNG VÀ ĐẤU THẦU. Tóm tắt điểm mới pháp lý, xuất JSON Schema."
-                prompt = f"""{system_instruction}
+            system_instruction = """BẠN LÀ CHUYÊN GIA PHÁP LUẬT XÂY DỰNG VÀ ĐẤU THẦU VIỆT NAM.
+Nhiệm vụ: Đọc toàn văn tài liệu, tóm tắt chính xác 3 ĐIỂM MỚI QUAN TRỌNG NHẤT (nêu rõ số liệu, tên phụ lục, định mức chi tiết).
+Trả về kết quả bằng ĐÚNG định dạng JSON."""
+
+            prompt = f"""{system_instruction}
 Tiêu đề: {doc_title}
-Nội dung: {doc_text[:15000]}
+Nội dung chi tiết:
+{doc_text[:15000]}
 
 Trả về JSON:
 {{
   "is_project_relevant": true,
   "executive_title": "BÁO CÁO PHÂN TÍCH: {doc_title[:80]}",
   "summary_top3": [
-    "1. [Điểm mới 1]: Nêu rõ quy định chi tiết",
-    "2. [Điểm mới 2]: Nêu rõ hao phí định mức hoặc đối tượng áp dụng",
-    "3. [Điểm mới 3]: Nêu rõ hiệu lực thi hành"
+    "1. [Quy định / Định mức ban hành]: Nêu rõ tên định mức, dự án và cơ quan ban hành",
+    "2. [Danh mục các phụ lục chi tiết]: Liệt kê các phụ lục kỹ thuật/đơn giá cụ thể",
+    "3. [Hiệu lực & Trách nhiệm thi hành]: Nêu rõ ngày có hiệu lực và yêu cầu áp dụng"
   ],
   "cau_can_cu_nd30": "{citation}"
 }}
 """
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.api_key}"
-                payload = {
-                    "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json"}
-                }
-                with httpx.Client(timeout=30.0) as client:
-                    res = client.post(url, json=payload)
-                    if res.status_code == 200:
-                        data = res.json()
-                        raw_str = data["candidates"][0]["content"]["parts"][0]["text"]
-                        clean_str = re.sub(r"^```json\s*", "", raw_str).strip().rstrip("`")
-                        parsed = json.loads(clean_str)
-                        parsed["cau_can_cu_nd30"] = citation
-                        return parsed
-            except Exception as e:
-                _log_debug(f"⚠️ Gemini API fallback: {e}")
+            models_to_try = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-latest", "gemini-3.5-flash"]
+            for m in models_to_try:
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"
+                    payload = {
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json"}
+                    }
+                    with httpx.Client(timeout=35.0) as client:
+                        res = client.post(url, json=payload)
+                        if res.status_code == 200:
+                            data = res.json()
+                            raw_str = data["candidates"][0]["content"]["parts"][0]["text"]
+                            clean_str = re.sub(r"^```json\s*", "", raw_str).strip().rstrip("`")
+                            parsed = json.loads(clean_str)
+                            parsed["cau_can_cu_nd30"] = citation
+                            _log_debug(f"✅ Gemini AI ({m}) đã phân tích thành công sâu sắc.")
+                            return parsed
+                except Exception as e:
+                    _log_debug(f"⚠️ Thử model {m} gặp lỗi ({e}), chuyển model tiếp theo...")
 
         # Fallback pháp lý chuẩn
         return {

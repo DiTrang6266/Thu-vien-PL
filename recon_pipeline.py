@@ -26,6 +26,16 @@ from modules.telegraph_publisher import TelegraphPublisher
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
+# Load environment variables from .env if present
+env_local = os.path.join(BASE_DIR, ".env")
+if os.path.exists(env_local):
+    with open(env_local, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                os.environ[k.strip()] = v.strip()
+
 DOWNLOADS_DIR = os.path.join(DATA_DIR, "downloads")
 KNOWN_DOCS_FILE = os.path.join(DATA_DIR, "known_documents.json")
 EXCEL_LEGAL_PATH = os.path.join(BASE_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
@@ -37,11 +47,6 @@ FEED_SOURCES = [
     {
         "name": "Công báo Nước CHXHCN Việt Nam (Văn bản mới)",
         "url": "https://congbao.chinhphu.vn/cac-van-ban-moi-ban-hanh.rss",
-        "weight": 1.0
-    },
-    {
-        "name": "Công báo Nước CHXHCN Việt Nam (Số mới đăng)",
-        "url": "http://congbao.chinhphu.vn/cac-so-cong-bao-moi-dang.rss",
         "weight": 1.0
     },
     {
