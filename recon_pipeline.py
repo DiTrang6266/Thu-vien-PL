@@ -26,7 +26,11 @@ from modules.telegraph_publisher import TelegraphPublisher
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-# Load environment variables from .env if present
+DOWNLOADS_DIR = os.path.join(DATA_DIR, "downloads")
+KNOWN_DOCS_FILE = os.path.join(DATA_DIR, "known_documents.json")
+EXCEL_LEGAL_PATH = os.path.join(BASE_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
+
+# Load environment variables from .env
 env_local = os.path.join(BASE_DIR, ".env")
 if os.path.exists(env_local):
     with open(env_local, "r", encoding="utf-8") as f:
@@ -35,10 +39,6 @@ if os.path.exists(env_local):
             if line and not line.startswith("#") and "=" in line:
                 k, v = line.split("=", 1)
                 os.environ[k.strip()] = v.strip()
-
-DOWNLOADS_DIR = os.path.join(DATA_DIR, "downloads")
-KNOWN_DOCS_FILE = os.path.join(DATA_DIR, "known_documents.json")
-EXCEL_LEGAL_PATH = os.path.join(BASE_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
 
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(DOWNLOADS_DIR, exist_ok=True)
@@ -65,6 +65,18 @@ FEED_SOURCES = [
         "weight": 1.0
     }
 ]
+
+DOC_TYPE_LABELS = {
+    "THONG_TU": "THÔNG TƯ",
+    "NGHI_DINH": "NGHỊ ĐỊNH",
+    "LUAT": "LUẬT",
+    "QUYET_DINH": "QUYẾT ĐỊNH",
+    "VAN_BAN_HOP_NHAT": "VĂN BẢN HỢP NHẤT",
+    "QUY_CHUAN": "QUY CHUẨN KỸ THUẬT QUỐC GIA (QCVN)",
+    "TIEU_CHUAN": "TIÊU CHUẨN QUỐC GIA (TCVN)",
+    "NGHI_QUYET": "NGHỊ QUYẾT",
+    "CONG_VAN": "CÔNG VĂN"
+}
 
 
 def log(msg: str):
@@ -163,21 +175,13 @@ def send_telegram_alert(
     chat_id = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
 
     so_hieu = tier1_meta.get("doc_number", item["title"][:35])
-    doc_type = tier1_meta.get("doc_type", "THÔNG TƯ")
-    if doc_type == "THONG_TU":
-        doc_type = "THÔNG TƯ"
-    elif doc_type == "NGHI_DINH":
-        doc_type = "NGHỊ ĐỊNH"
-    elif doc_type == "LUAT":
-        doc_type = "LUẬT"
-    elif doc_type == "QUYET_DINH":
-        doc_type = "QUYẾT ĐỊNH"
-
+    raw_doc_type = tier1_meta.get("doc_type", "THONG_TU")
+    doc_type_label = DOC_TYPE_LABELS.get(raw_doc_type, "VĂN BẢN QUY PHẠM PHÁP LUẬT")
     authority = tier1_meta.get("authority", "Bộ Xây dựng")
     pub_date = item.get("published", datetime.now().strftime("%d/%m/%Y"))
 
-    # Bản tin Pháp lý chuẩn hóa
-    msg = f"<b>📜 {doc_type} | TRẠM GÁC PHÁP LÝ 24/7</b>\n"
+    # Header
+    msg = f"<b>📜 {doc_type_label} | TRẠM GÁC PHÁP LÝ 24/7</b>\n"
     msg += f"━━━━━━━━━━━━━━━━━━━━━━\n"
     msg += f"📌 <b>Số hiệu:</b> <code>{so_hieu}</code>\n"
     msg += f"📅 <b>Ngày ban hành:</b> {pub_date} | 🏛️ <b>Cơ quan:</b> {authority}\n\n"
@@ -197,15 +201,12 @@ def send_telegram_alert(
     # Sổ cái Excel
     msg += f"📊 <i>Sổ cái Excel Master đã tự động đồng bộ: <b>Kho_Can_Cu_Phap_Ly.xlsx</b></i>"
 
-    # Nút bấm Inline
+    # Nút bấm Inline (Instant View & Link gốc)
     buttons = []
-    first_row = []
     if instant_view_url:
-        first_row.append({"text": "📖 Đọc Báo cáo Instant View", "url": instant_view_url})
+        buttons.append([{"text": "📖 ĐỌC BÁO CÁO PHÂN TÍCH TOÀN VĂN (INSTANT VIEW)", "url": instant_view_url}])
     if item.get("link"):
-        first_row.append({"text": "🌐 Link Đối Soát Gốc", "url": item["link"]})
-    if first_row:
-        buttons.append(first_row)
+        buttons.append([{"text": "🌐 Link Đối Soát Gốc", "url": item["link"]}])
 
     reply_markup = {"inline_keyboard": buttons} if buttons else None
 
@@ -280,30 +281,23 @@ def run_pipeline(force_reprocess: bool = False):
                     if not force_reprocess and doc_hash in known_docs:
                         continue
 
-                    # =========================================================
-                    # LỚP 2: BỘ LỌC NGỮ NGHĨA CHUYÊN NGÀNH SIÊU TỐC (3-5ms)
-                    # =========================================================
+                    # LỚP 2: BỘ LỌC NGỮ NGHĨA CHUYÊN NGÀNH
                     t2_res = tier2_filter.process(raw_title, summary)
                     if not t2_res["is_domain_relevant"]:
                         known_docs.add(doc_hash)
                         continue
 
-                    # CÀO NỘI DUNG CHI TIẾT TỪ TRANG BÀI BÁO ĐỂ LẤY SỐ HIỆU VÀ FILE PDF
+                    # CÀO NỘI DUNG CHI TIẾT
                     details = fetch_article_details(link)
                     body_text = details["body_text"]
                     pdf_url = details["pdf_url"]
 
-                    # =========================================================
-                    # LỚP 1: BÓC TÁCH THỂ THỨC & THẨM QUYỀN (0.05ms)
-                    # =========================================================
+                    # LỚP 1: BÓC TÁCH THỂ THỨC & THẨM QUYỀN
                     t1_res = tier1_matcher.process(raw_title, body_text, source_name=source["name"])
                     if not t1_res["is_valid_legal_doc"]:
                         known_docs.add(doc_hash)
                         continue
 
-                    # =========================================================
-                    # LỚP 3: BỘ NÃO AI & THẺ CĂN CỨ NGHỊ ĐỊNH 30
-                    # =========================================================
                     so_hieu_clean = t1_res.get("doc_number", raw_title[:35])
                     ngay_bh_clean = t1_res.get("ngay_ban_hanh", published)
                     auth_clean = t1_res.get("authority", "Bộ Xây dựng")
@@ -338,10 +332,15 @@ def run_pipeline(force_reprocess: bool = False):
                         instant_url = telegraph_pub.publish_report(
                             title=f"BÁO CÁO PHÂN TÍCH: {so_hieu_clean}",
                             analysis_data=ai_result,
-                            doc_item={"title": raw_title, "link": link}
+                            doc_item={
+                                "so_hieu": so_hieu_clean,
+                                "co_quan": auth_clean,
+                                "ngay_ban_hanh": ngay_bh_clean,
+                                "link": link
+                            }
                         )
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        log(f"⚠️ Lỗi xuất bản Telegraph: {e}")
 
                     # BẮN TELEGRAM
                     item_data = {

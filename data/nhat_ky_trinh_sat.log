@@ -408,3 +408,45 @@
 ✅ Gemini AI (gemini-3.5-flash) đã phân tích thành công sâu sắc.
 [2026-08-20 09:56:38] ✅ Đã gửi thông báo Telegram thành công: 1074/QĐ-BXD
 [2026-08-20 09:56:39] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [57/2026/TT-BXD] Thông tư quy định về thẩm định thiết kế, kiểm định, kiểm tra, chứng nhận an toàn kỹ thuật và phòng ngừa ô nhiễm môi trường đối với phương tiện, thiết bị thăm dò, khai thác, vận chuyển dầu khí trên biển
+✅ Gemini AI (gemini-3.6-flash) đã phân tích thành công sâu sắc.
+[2026-08-20 09:57:01] ✅ Đã gửi thông báo Telegram thành công: 57/2026/TT-BXD
+[2026-08-20 09:57:03] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [46/2026/TT-BXD] Thông tư ban hành Quy chuẩn kỹ thuật quốc gia về quy hoạch đô thị và nông thôn
+[2026-08-20 09:57:07] 💾 Đã tải và lưu trữ file PDF thành công (414225 bytes): C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\ecb81a212efbc029_van_ban_goc.pdf
+✅ Gemini AI (gemini-3.5-flash) đã phân tích thành công sâu sắc.
+[2026-08-20 09:57:23] ✅ Đã gửi thông báo Telegram thành công: 46/2026/TT-BXD
+[2026-08-20 09:57:25] ✅ Đã gửi file PDF gốc đính kèm thành công: C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\ecb81a212efbc029_van_ban_goc.pdf
+[2026-08-20 09:57:26] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [59/VBHN-BXD] Hợp nhất Thông tư Quy định chi tiết một số điều của Luật Quy hoạch đô thị và nông thôn
+[2026-08-20 09:57:51] 💾 Đã tải và lưu trữ file PDF thành công (12386148 bytes): C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\d4602c979ed8f469_van_ban_goc.pdf
+⚠️ Thử model gemini-3.6-flash gặp lỗi (The read operation timed out), chuyển model tiếp theo...
+✅ Gemini AI (gemini-3.7-flash) đã phân tích thành công sâu sắc.
+[2026-08-20 09:58:33] ✅ Đã gửi thông báo Telegram thành công: 59/VBHN-BXD
+[2026-08-20 09:58:51] ✅ Đã gửi file PDF gốc đính kèm thành công: C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\d4602c979ed8f469_van_ban_goc.pdf
+[2026-08-20 09:58:51] 📡 Đang quét nguồn: Bộ Xây dựng (Chỉ đạo điều hành chuyên ngành) (https://moc.gov.vn/rss/1176/tin-chi-dao--dieu-hanh.rss)...
+[2026-08-20 09:58:51]    -> Đọc được 30 mục tin mới nhất.
+[2026-08-20 09:58:51] 📡 Đang quét nguồn: Bộ Kế hoạch và Đầu tư (Văn bản Đấu thầu & Đầu tư công) (https://www.mpi.gov.vn/Pages/rss.aspx)...
+[2026-08-20 09:59:00] 🏁 HOÀN THÀNH CHU TRÌNH TRINH SÁT. Số văn bản mới phù hợp: 6
+[2026-08-20 16:47:21] 🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG (3-TIER FUNNEL)...
+[2026-08-20 16:47:21] 📡 Đang quét nguồn: Công báo Nước CHXHCN Việt Nam (Văn bản mới) (https://congbao.chinhphu.vn/cac-van-ban-moi-ban-hanh.rss)...
+[2026-08-20 16:47:21]    -> Đọc được 50 mục tin mới nhất.
+[2026-08-20 16:47:21] 📡 Đang quét nguồn: Bộ Xây dựng (Văn bản quy phạm pháp luật mới) (https://moc.gov.vn/rss/1196/gioi-thieu-van-ban-moi.rss)...
+[2026-08-20 16:47:22]    -> Đọc được 30 mục tin mới nhất.
+[2026-08-20 16:47:23] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [63/2026/TT-BXD] Thông tư ban hành định mức dự toán xây dựng Dự án thành phần 2 thuộc Dự án đầu tư xây dựng tuyến đường sắt Lào Cai - Hà Nội - Hải Phòng
+✅ Gemini AI (gemini-3.6-flash) đã phân tích chuyên sâu thành công.
+[2026-08-20 16:47:59] ✅ Đã gửi thông báo Telegram thành công: 63/2026/TT-BXD
+[2026-08-20 16:48:03] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [1074/QĐ-BXD] Ban hành các giải pháp kỹ thuật nâng cao an toàn phòng cháy, chữa cháy cho các cơ sở, công trình không bảo đảm yêu cầu về phòng cháy và chữa cháy và không có khả năng khắc phục theo các tiêu chuẩn, quy chuẩn kỹ thuật tại thời điểm đưa vào hoạt động...
+✅ Gemini AI (gemini-3.6-flash) đã phân tích chuyên sâu thành công.
+[2026-08-20 16:48:37] ✅ Đã gửi thông báo Telegram thành công: 1074/QĐ-BXD
+[2026-08-20 16:48:40] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [57/2026/TT-BXD] Thông tư quy định về thẩm định thiết kế, kiểm định, kiểm tra, chứng nhận an toàn kỹ thuật và phòng ngừa ô nhiễm môi trường đối với phương tiện, thiết bị thăm dò, khai thác, vận chuyển dầu khí trên biển
+⚠️ Thử model gemini-3.6-flash gặp lỗi (list indices must be integers or slices, not str), chuyển model tiếp theo...
+✅ Gemini AI (gemini-3.5-flash) đã phân tích chuyên sâu thành công.
+[2026-08-20 16:49:32] ✅ Đã gửi thông báo Telegram thành công: 57/2026/TT-BXD
+[2026-08-20 16:49:36] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [46/2026/TT-BXD] Thông tư ban hành Quy chuẩn kỹ thuật quốc gia về quy hoạch đô thị và nông thôn
+[2026-08-20 16:49:40] 💾 Đã tải và lưu trữ file PDF thành công (414225 bytes): C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\ecb81a212efbc029_van_ban_goc.pdf
+✅ Gemini AI (gemini-3.6-flash) đã phân tích chuyên sâu thành công.
+[2026-08-20 16:50:15] ✅ Đã gửi thông báo Telegram thành công: 46/2026/TT-BXD
+[2026-08-20 16:50:20] ✅ Đã gửi file PDF gốc đính kèm thành công: C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\ecb81a212efbc029_van_ban_goc.pdf
+[2026-08-20 16:50:24] 🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [59/VBHN-BXD] Hợp nhất Thông tư Quy định chi tiết một số điều của Luật Quy hoạch đô thị và nông thôn
+[2026-08-20 16:50:59] 💾 Đã tải và lưu trữ file PDF thành công (12386148 bytes): C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án\data\downloads\d4602c979ed8f469_van_ban_goc.pdf
+⚠️ Thử model gemini-3.6-flash gặp lỗi (The read operation timed out), chuyển model tiếp theo...
+✅ Gemini AI (gemini-3.5-flash) đã phân tích chuyên sâu thành công.
+[2026-08-20 16:52:11] ✅ Đã gửi thông báo Telegram thành công: 59/VBHN-BXD
