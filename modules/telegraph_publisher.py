@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Module: telegraph_publisher.py
-Mục đích: Xuất bản Báo cáo Tóm tắt Pháp lý Toàn văn trung thực lên Telegraph (Instant View).
-Tuyệt đối không gò ép khuôn mẫu 3 mục (Đấu thầu, Dự toán, BQLDA).
+Mục đích: Xuất bản Báo cáo Tham mưu Nghiệp vụ Thực chiến lên Telegraph (Instant View).
+Hiển thị:
+1. Thông tin văn bản & Phạm vi nghiệp vụ.
+2. Tóm tắt tác động trực tiếp đến Ban QLDA, Dự toán, Đấu thầu.
+3. Các quy định cốt lõi & Hành động bắt buộc.
+4. Bảng đối chiếu Cũ vs Mới (Redline Table).
+5. Cảnh báo rủi ro pháp lý & Bẫy thanh kiểm tra.
+6. Thẻ căn cứ pháp lý Nghị định 30.
 """
 
 import os
@@ -25,7 +31,6 @@ class TelegraphPublisher:
 
     def _load_or_create_account(self) -> str:
         os.makedirs(os.path.dirname(self.token_cache_path), exist_ok=True)
-
         if os.path.exists(self.token_cache_path):
             try:
                 with open(self.token_cache_path, "r", encoding="utf-8") as f:
@@ -33,8 +38,8 @@ class TelegraphPublisher:
                     token = data.get("access_token")
                     if token:
                         return token
-            except Exception as e:
-                logging.warning(f"Không thể đọc file cache Telegraph token: {e}")
+            except Exception:
+                pass
 
         try:
             with httpx.Client(timeout=15.0, verify=False) as client:
@@ -53,7 +58,7 @@ class TelegraphPublisher:
                         json.dump({"access_token": token}, f, ensure_ascii=False, indent=2)
                     return token
         except Exception as e:
-            logging.error(f"Không thể kết nối Telegraph API: {e}")
+            logging.error(f"Lỗi Telegraph account: {e}")
 
         return "anonymous_token"
 
@@ -65,7 +70,7 @@ class TelegraphPublisher:
     ) -> List[Dict[str, Any]]:
         nodes = []
 
-        # 1. Header & Thông tin chung
+        # 1. Header & Thông số hành chính
         nodes.append({"tag": "h4", "children": ["🏛️ THÔNG TIN VĂN BẢN"]})
         meta_items = []
         if doc_meta:
@@ -80,16 +85,62 @@ class TelegraphPublisher:
         nodes.append({"tag": "p", "children": meta_items})
         nodes.append({"tag": "hr"})
 
-        # 2. Nội dung các quy định cốt lõi (Bám sát điều khoản thật)
-        nodes.append({"tag": "h3", "children": ["📑 CÁC QUY ĐỊNH CỐT LÕI (TRÍCH XUẤT TỪ VĂN BẢN GỐC)"]})
-        points = ai_data.get("summary_points", [])
-        if not points:
-            points = ai_data.get("summary_top3", [])
-        for pt in points:
-            nodes.append({"tag": "p", "children": [{"tag": "strong", "children": [pt]}]})
-        nodes.append({"tag": "hr"})
+        # 2. Đánh giá Tác động Nghiệp vụ Tổng quan
+        impact = ai_data.get("impact_summary")
+        if impact:
+            nodes.append({"tag": "h3", "children": ["⚡ TÁC ĐỘNG TRỰC TIẾP ĐẾN DỰ ÁN & HỒ SƠ"]})
+            nodes.append({"tag": "p", "children": [{"tag": "strong", "children": [impact]}]})
+            nodes.append({"tag": "hr"})
 
-        # 3. Văn bản bị bãi bỏ / thay thế (nếu có)
+        # 3. Các Quy định Cốt lõi & Hành động Bắt buộc
+        points = ai_data.get("substantive_points", [])
+        if points and isinstance(points, list):
+            nodes.append({"tag": "h3", "children": ["📋 CÁC QUY ĐỊNH KỸ THUẬT & NGHIỆP VỤ CỐT LÕI"]})
+            for pt in points:
+                if isinstance(pt, dict):
+                    clause = pt.get("clause", "")
+                    p_title = pt.get("title", "")
+                    content = pt.get("content", "")
+                    action = pt.get("action_required", "")
+
+                    item_children = [
+                        {"tag": "strong", "children": [f"{clause} - {p_title}\n"]},
+                        f"• Nội dung: {content}\n"
+                    ]
+                    if action:
+                        item_children.append({"tag": "em", "children": [f"👉 Hành động bắt buộc: {action}\n"]})
+                    
+                    nodes.append({"tag": "p", "children": item_children})
+                elif isinstance(pt, str):
+                    nodes.append({"tag": "p", "children": [pt]})
+            nodes.append({"tag": "hr"})
+
+        # 4. Bảng Đối chiếu Cũ vs Mới (nếu có)
+        table_data = ai_data.get("comparative_table", [])
+        if table_data and isinstance(table_data, list) and len(table_data) > 0:
+            nodes.append({"tag": "h3", "children": ["🔄 BẢNG ĐỐI CHIẾU ĐIỂM MỚI (CŨ VS MỚI)"]})
+            for row in table_data:
+                if isinstance(row, dict):
+                    item_name = row.get("item", "")
+                    old_r = row.get("old_rule", "")
+                    new_r = row.get("new_rule", "")
+                    diff = row.get("key_difference", "")
+                    nodes.append({"tag": "p", "children": [
+                        {"tag": "strong", "children": [f"📌 {item_name}:\n"]},
+                        f"• Quy định cũ: {old_r}\n",
+                        f"• Quy định mới: {new_r}\n",
+                        {"tag": "em", "children": [f"➔ Thay đổi cốt lõi: {diff}\n"]}
+                    ]})
+            nodes.append({"tag": "hr"})
+
+        # 5. Cảnh báo rủi ro & Bẫy pháp lý
+        risks = ai_data.get("compliance_risks")
+        if risks:
+            nodes.append({"tag": "h3", "children": ["⚠️ CẢNH BÁO RỦI RO & ĐIỂM LƯU Ý KHI THANH KIỂM TRA"]})
+            nodes.append({"tag": "p", "children": [risks]})
+            nodes.append({"tag": "hr"})
+
+        # 6. Văn bản bị bãi bỏ / thay thế
         repealed = ai_data.get("repealed_docs", [])
         if repealed and isinstance(repealed, list) and len(repealed) > 0:
             nodes.append({"tag": "h3", "children": ["❌ VĂN BẢN BÃI BỎ / THAY THẾ"]})
@@ -97,8 +148,8 @@ class TelegraphPublisher:
                 nodes.append({"tag": "p", "children": [f"• {r}"]})
             nodes.append({"tag": "hr"})
 
-        # 4. Hiệu lực thi hành & Chuyển tiếp
-        eff_trans = ai_data.get("effective_and_transition") or ai_data.get("transition_rules")
+        # 7. Hiệu lực thi hành & Chuyển tiếp
+        eff_trans = ai_data.get("effective_and_transition")
         if eff_trans:
             nodes.append({"tag": "h3", "children": ["⏳ HIỆU LỰC THI HÀNH & ĐIỀU KHOẢN CHUYỂN TIẾP"]})
             nodes.append({"tag": "p", "children": [{"tag": "em", "children": [eff_trans]}]})
@@ -107,7 +158,7 @@ class TelegraphPublisher:
         # Footer
         nodes.append({"tag": "p", "children": [
             {"tag": "em", "children": [
-                "Báo cáo được tóm tắt trung thực, bám sát nguyên văn tài liệu bởi Trợ lý Pháp luật 24/7."
+                "Báo cáo Tham mưu Nghiệp vụ Thực chiến được thẩm định và lập tự động bởi Trợ lý Pháp luật 24/7."
             ]}
         ]})
 
@@ -135,11 +186,11 @@ class TelegraphPublisher:
                 res_data = res.json()
                 if res_data.get("ok"):
                     url = res_data["result"]["url"]
-                    logging.info(f"Đã xuất bản bài viết lên Telegraph thành công: {url}")
+                    logging.info(f"Đã xuất bản bài viết lên Telegraph: {url}")
                     return url
                 else:
-                    logging.error(f"Lỗi khi xuất bản Telegraph: {res_data}")
+                    logging.error(f"Lỗi xuất bản Telegraph: {res_data}")
         except Exception as e:
-            logging.error(f"Ngoại lệ khi gọi Telegraph API: {e}")
+            logging.error(f"Ngoại lệ Telegraph: {e}")
 
         return None

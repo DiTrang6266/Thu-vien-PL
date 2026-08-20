@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Bộ kiểm thử tự động toàn diện: Phễu gác cổng 2 tầng và Tóm tắt Trung thực.
+Bộ kiểm thử tự động toàn diện: Phễu gác cổng 2 tầng và Động cơ Tham mưu Thực chiến.
 """
 
 import os
@@ -16,6 +16,15 @@ from modules.ai_analyzer import LegalAIAnalyzer
 def test_tier2_rejects_waterway_piloting():
     classifier = HybridTier2Classifier()
     title = "Văn bản hợp nhất Thông tư quy định về quản lý nhà nước chuyên ngành tại cảng thủy nội địa, bến thủy nội địa, khu neo đậu và quản lý hoạt động hoa tiêu đường thủy nội địa"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is False
+    assert res["decision"] == "DROP_OUT_OF_SCOPE_INDUSTRY"
+
+
+def test_tier2_rejects_urban_rural_planning():
+    """Quy hoạch không gian đô thị & nông thôn vĩ mô phải bị loại trừ dứt khoát."""
+    classifier = HybridTier2Classifier()
+    title = "Văn bản hợp nhất số 59/VBHN-BXD quy định chi tiết một số điều của Luật Quy hoạch đô thị và nông thôn"
     res = classifier.classify_and_filter(title)
     assert res["is_accepted"] is False
     assert res["decision"] == "DROP_OUT_OF_SCOPE_INDUSTRY"
@@ -37,9 +46,9 @@ def test_tier2_rejects_individual_allocation():
     assert res["decision"] == "DROP_INDIVIDUAL_DECISION"
 
 
-def test_tier2_accepts_construction_planning():
+def test_tier2_accepts_cost_management():
     classifier = HybridTier2Classifier()
-    title = "Thông tư ban hành Quy chuẩn kỹ thuật quốc gia về quy hoạch đô thị và nông thôn"
+    title = "Thông tư hướng dẫn xác định và quản lý chi phí đầu tư xây dựng, định mức dự toán xây dựng công trình"
     res = classifier.classify_and_filter(title)
     assert res["is_accepted"] is True
     assert res["target_domain"] == DomainEnum.DAU_TU_CONG_XAY_DUNG
@@ -55,7 +64,7 @@ def test_tier2_accepts_bidding_guideline():
 
 def test_tier2_accepts_regular_expenditure():
     classifier = HybridTier2Classifier()
-    title = "Thông tư quy định quản lý, sử dụng kinh phí chi thường xuyên để sửa chữa, bảo dưỡng tài sản công"
+    title = "Thông tư quy định quản lý, sử dụng kinh phí chi thường xuyên để sửa chữa, bảo dưỡng tài sản công theo Nghị định 138/2024/NĐ-CP"
     res = classifier.classify_and_filter(title)
     assert res["is_accepted"] is True
     assert res["target_domain"] == DomainEnum.CHI_THUONG_XUYEN_TSCONG

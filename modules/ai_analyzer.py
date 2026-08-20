@@ -1,11 +1,13 @@
+import time
 # -*- coding: utf-8 -*-
 """
 Module: ai_analyzer.py
-Mục đích: Lớp 3 trong Phễu phân loại lai (3-Tier Hybrid Funnel).
-Nhiệm vụ: 
-1. AI Gatekeeper: Thẩm định văn bản có thuộc 4 Trụ cột Chuyên môn và áp dụng phổ quát toàn quốc hay không.
-2. Tóm tắt Trung thực Chống Ảo Giác (Strict Grounding): Bóc tách đúng câu chữ và Điều/Khoản thực tế.
-Tuyệt đối không ép khuôn 3 mục suy diễn (Đấu thầu, Dự toán, BQLDA).
+Mục đích: Động cơ AI Thẩm định & Phân tích Tác động Pháp lý Chuyên sâu (Executive Legal Impact Engine).
+Tạo ra Báo cáo Tham mưu Chuyên môn Thực chiến cho Lãnh đạo Ban QLDA, Kỹ sư Dự toán, Cán bộ Đấu thầu và Kế toán:
+1. Bảng Thông số, Định mức, Tỷ lệ %, Thời hạn và Biểu mẫu cụ thể.
+2. Tác động trực tiếp đến việc Lập Dự toán, E-HSMT, Nghiệm thu, Sửa chữa tài sản công.
+3. Bảng đối chiếu Cũ vs Mới (Redline Diff).
+4. Cảnh báo rủi ro pháp lý & Điểm dễ bị Thanh tra/Kiểm toán bắt bẻ.
 """
 
 import os
@@ -26,7 +28,6 @@ def _log_debug(msg: str):
 
 
 def format_vietnamese_date(raw_date: str) -> str:
-    """Chuyển đổi các định dạng ngày thành 'ngày DD tháng MM năm YYYY' chuẩn Nghị định 30."""
     if not raw_date:
         return ""
     if "tháng" in raw_date and "năm" in raw_date:
@@ -48,7 +49,6 @@ class LegalAIAnalyzer:
         doc_title: str,
         doc_metadata: Optional[Dict[str, Any]] = None
     ) -> str:
-        """Sinh câu căn cứ pháp lý chuẩn xác 100% theo Nghị định 30/2020/NĐ-CP."""
         meta = doc_metadata or {}
         so_hieu = meta.get("doc_number", "")
         doc_type = meta.get("doc_type", "THÔNG TƯ")
@@ -69,8 +69,6 @@ class LegalAIAnalyzer:
             type_label = "Luật"
         elif "QUY_CHUAN" in doc_type_str or "qcvn" in doc_title.lower():
             type_label = "Quy chuẩn kỹ thuật quốc gia"
-        elif "TIEU_CHUAN" in doc_type_str or "tcvn" in doc_title.lower():
-            type_label = "Tiêu chuẩn quốc gia"
 
         if not so_hieu or len(so_hieu) > 35 or "/" not in so_hieu:
             match = re.search(r"(\d+(?:/\d{4})?/[A-ZĐĐa-z]+(?:-[A-ZĐĐa-z0-9]+)?)", f"{doc_title} {meta.get('raw_content', '')}")
@@ -98,8 +96,6 @@ class LegalAIAnalyzer:
             auth_str = " của Chính phủ"
         elif authority == "Thủ tướng Chính phủ":
             auth_str = " của Thủ tướng Chính phủ"
-        elif authority == "Quốc hội":
-            auth_str = ""
 
         trich_yeu = doc_title.strip()
         trich_yeu = re.sub(r"^(Thông tư|Nghị định|Quyết định|Luật|Văn bản hợp nhất)\s*(số\s*[\w\-/]+)?\s*", "", trich_yeu, flags=re.IGNORECASE)
@@ -121,60 +117,79 @@ class LegalAIAnalyzer:
     ) -> Dict[str, Any]:
         citation = self.generate_nd30_citation(doc_title, doc_metadata)
         
-        if self.api_key:
-            system_instruction = """BẠN LÀ CHUYÊN GIA THẨM ĐỊNH PHÁP LUẬT VÀ QUẢN LÝ DỰ ÁN XÂY DỰNG CAO CẤP.
-Nhiệm vụ: Phân tích sâu sắc văn bản pháp luật, bóc tách TOÀN BỘ CÁC QUY ĐỊNH KỸ THUẬT VÀ NGHIỆP VỤ THỰC CHẤT (SUBSTANTIVE PROVISIONS).
+        system_instruction = """BẠN LÀ CHUYÊN GIA THẨM ĐỊNH PHÁP LUẬT VÀ TƯ VẤN QUẢN LÝ DỰ ÁN XÂY DỰNG / ĐẤU THẦU CAO CẤP.
+Nhiệm vụ: Lập BẢN BÁO CÁO THAM MƯU TÁC ĐỘNG NGHIỆP VỤ THỰC CHIẾN (EXECUTIVE IMPACT REPORT) cho Giám đốc Ban QLDA, Kỹ sư Dự toán, Cán bộ Đấu thầu và Kế toán tài sản công.
 
-NGUYÊN TẮC BẮT BUỘC:
-1. THẨM ĐỊNH GÁC CỔNG (GATEKEEPER):
-   - Kiểm tra xem văn bản có thuộc 1 trong 4 Trụ cột Chuyên môn (Đầu tư công & Xây dựng, Đấu thầu, Chi thường xuyên/Tài sản công, Quốc phòng & PCCC) và áp dụng phổ quát toàn quốc hay không.
-   - Nếu không đạt -> is_domain_relevant: false hoặc is_nationwide_universal: false.
+1. THẨM ĐỊNH GÁC CỔNG NGHIÊM NGẶT:
+   - Văn bản PHẢI thuộc 1 trong 4 Trụ cột Nghiệp vụ Thực chiến:
+     (1) Quản lý đầu tư xây dựng & Quản lý dự án (Dự toán, định mức, chi phí, quản lý chất lượng, an toàn thi công, nghiệm thu).
+     (2) Đấu thầu & Lựa chọn nhà thầu (E-HSMT, KHLCNT, hợp đồng xây dựng, chỉ định thầu, chấm thầu).
+     (3) Chi thường xuyên & Mua sắm/Sửa chữa tài sản công (NĐ 138/2024, NĐ 114/2024, cải tạo, bảo dưỡng trụ sở, máy móc).
+     (4) Công trình Quốc phòng & PCCC công trình (QCVN 06, công trình quân sự).
+   - NẾU LÀ MẢNG QUY HOẠCH ĐÔ THỊ/NÔNG THÔN VĨ MÔ, HÀNG HẢI, HOA TIÊU, VẬN TẢI, Y TẾ, HOẶC DỰ ÁN RIÊNG: ĐÁNH DẤU "is_domain_relevant": false VÀ DỪNG LẠI.
 
-2. TÓM TẮT CHUYÊN SÂU - CHỐNG ẢO GIÁC (ZERO-HALLUCINATION DEEP EXTRACTION):
-   - KHÔNG CHỈ DỪNG LẠI Ở ĐIỀU 1 VÀ ĐIỀU 2 (Phạm vi & Đối tượng): Đây là điều hiển nhiên.
-   - PHẢI BÓC TÁCH CÁC ĐIỀU KHOẢN NGHIỆP VỤ THỰC CHẤT (Từ Điều 3 trở đi):
-     + Thành phần hồ sơ, quy cách hồ sơ, số lượng bộ hồ sơ, hồ sơ lấy ý kiến, hồ sơ thẩm định/phê duyệt.
-     + Quy trình, thủ tục, thời hạn giải quyết, thẩm quyền của Chủ đầu tư, Ban QLDA, Tư vấn, Cơ quan thẩm định.
-     + Các mẫu biểu áp dụng (Tờ trình, Báo cáo thẩm định, Phụ lục).
-     + Yêu cầu kỹ thuật, tiêu chuẩn định mức, chỉ tiêu quy hoạch, an toàn, PCCC.
-   - Trích xuất từ 5 - 8 ĐIỂM QUY ĐỊNH CỐT LÕI. Mỗi điểm viết 2-3 câu phân tích rõ ràng, súc tích, mang giá trị nghiệp vụ thực tế kèm thẻ [Điều ... Khoản ...].
-   - Bóc tách danh sách văn bản bị bãi bỏ hoặc thay thế (repealed_docs).
-   - Bóc tách ngày có hiệu lực và điều khoản chuyển tiếp (effective_and_transition).
+2. NỘI DUNG BÁO CÁO THAM MƯU THỰC CHIẾN (CHỐNG TÓM TẮT SƠ SÀI / KHÔNG NÓI CHUNG CHUNG):
+   - TÁC ĐỘNG HỒ SƠ DỰ ÁN: Chỉ rõ văn bản tác động cụ thể đến việc Lập Dự toán (thay đổi định mức/hệ số/đơn giá nào?), Hồ sơ mời thầu (tiêu chí nào mới, mẫu nào áp dụng?), hay Nghiệm thu thanh toán.
+   - BẢNG ĐỐI CHIẾU THAY ĐỔI CŨ VS MỚI (REDLINE): Nêu rõ Quy định cũ là gì -> Quy định mới sửa thành gì -> Khác biệt trọng yếu.
+   - THÔNG SỐ VÀ CON SỐ CỤ THỂ: Trích xuất chính xác các con số %, thời hạn (số ngày), số tiền, số lượng bộ hồ sơ hoặc biểu mẫu Phụ lục bắt buộc.
+   - CẢNH BÁO RỦI RO & BẪY PHÁP LÝ: Nêu rõ điểm dễ bị Thanh tra, Kiểm toán Nhà nước bắt bẻ hoặc xuất toán, và cách xử lý hồ sơ/gói thầu đang làm dở (Điều khoản chuyển tiếp).
+   - BẮT BUỘC TRÍCH DẪN ĐIỀU KHOẢN: Mọi nhận định đều phải ghi rõ [Điều X Khoản Y].
 """
 
-            prompt = f"""{system_instruction}
+        prompt = f"""{system_instruction}
 Tiêu đề văn bản: {doc_title}
-Nội dung văn bản:
-{doc_text[:15000]}
+Toàn văn tài liệu:
+{doc_text[:35000]}
 
-Trả về ĐÚNG định dạng JSON sau:
+Trả về ĐÚNG định dạng JSON sau (không thêm bất kỳ ký tự nào ngoài JSON):
 {{
   "is_domain_relevant": true,
   "is_nationwide_universal": true,
-  "scope_explanation": "Giải thích ngắn gọn về chuyên môn và phạm vi áp dụng của văn bản",
+  "scope_explanation": "Giải thích vì sao văn bản thuộc 4 trụ cột thực chiến",
   "is_project_relevant": true,
-  "executive_title": "TÓM TẮT VĂN BẢN: {doc_title[:80]}",
-  "summary_points": [
-    "• [Điều ... Khoản ...]: Tóm tắt trung thực quy định thực tế",
-    "• [Điều ... Khoản ...]: Tóm tắt trung thực quy định thực tế",
-    "• [Điều ... Khoản ...]: Tóm tắt trung thực quy định thực tế"
+  "executive_title": "BÁO CÁO THAM MƯU NGHIỆP VỤ: {doc_title[:80]}",
+  "impact_summary": "Đoạn văn 3-4 câu phân tích tổng quan tác động trực tiếp đến Ban QLDA, Chủ đầu tư và Nhà thầu",
+  "substantive_points": [
+    {{
+      "clause": "[Điều ... Khoản ...]",
+      "title": "Tên nội dung quy định cụ thể",
+      "content": "Phân tích chi tiết 2-3 câu về nội dung quy định, kèm thông số %, định mức, biểu mẫu hoặc thời hạn cụ thể",
+      "action_required": "Hành động bắt buộc: Kỹ sư/Cán bộ dự án phải làm gì (sửa hồ sơ, áp dụng mẫu mới, điều chỉnh dự toán...)"
+    }}
+  ],
+  "comparative_table": [
+    {{
+      "item": "Nội dung quy định",
+      "old_rule": "Quy định cũ trước đây",
+      "new_rule": "Quy định mới sửa đổi/ban hành",
+      "key_difference": "Điểm khác biệt trọng yếu"
+    }}
   ],
   "repealed_docs": [
-    "Số hiệu văn bản cũ bị bãi bỏ hoặc thay thế"
+    "Số hiệu và tên đầy đủ của văn bản cũ bị bãi bỏ hoặc thay thế"
   ],
-  "effective_and_transition": "Quy định về ngày có hiệu lực và điều khoản chuyển tiếp",
+  "compliance_risks": "Cảnh báo các rủi ro pháp lý, điểm dễ bị Thanh tra/Kiểm toán bắt lỗi và lưu ý xử lý hồ sơ đang dở dang",
+  "effective_and_transition": "Quy định chi tiết về ngày có hiệu lực và điều khoản chuyển tiếp",
   "cau_can_cu_nd30": "{citation}"
 }}
 """
-            models_to_try = ["gemini-3.5-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-flash-latest"]
-            for m in models_to_try:
+        models_to_try = [
+            "gemini-2.5-flash",
+            "gemini-3.5-flash",
+            "gemini-2.5-flash-lite",
+            "gemini-flash-latest",
+            "gemini-3.5-flash-lite",
+            "gemini-2.5-pro"
+        ]
+        for m in models_to_try:
+            for attempt in range(2):
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"
                     payload = {
                         "contents": [{"parts": [{"text": prompt}]}],
                         "generationConfig": {"temperature": 0.0, "responseMimeType": "application/json"}
                     }
-                    with httpx.Client(timeout=35.0) as client:
+                    with httpx.Client(timeout=45.0) as client:
                         res = client.post(url, json=payload)
                         if res.status_code == 200:
                             data = res.json()
@@ -188,28 +203,42 @@ Trả về ĐÚNG định dạng JSON sau:
 
                             if not is_domain or not is_universal:
                                 parsed["is_project_relevant"] = False
-                                _log_debug(f"ℹ️ Gemini AI ({m}) đã lọc bỏ văn bản: Domain={is_domain}, Universal={is_universal} ({parsed.get('scope_explanation')})")
+                                _log_debug(f"ℹ️ Gemini AI ({m}) đã lọc bỏ: Domain={is_domain}, Universal={is_universal} ({parsed.get('scope_explanation')})")
                             else:
                                 parsed["is_project_relevant"] = True
-                                _log_debug(f"✅ Gemini AI ({m}) đã thẩm định ĐẠT và tóm tắt trung thực.")
+                                _log_debug(f"✅ Gemini AI ({m}) đã lập Báo cáo Tham mưu Nghiệp vụ Chuyên sâu thành công.")
                             
                             return parsed
+                        elif res.status_code == 429:
+                            _log_debug(f"⏳ Model {m} bị giới hạn tốc độ (429), chờ 3 giây rồi thử lại...")
+                            time.sleep(3.0)
+                        else:
+                            _log_debug(f"⚠️ Model {m} trả về status {res.status_code}, đổi model...")
+                            break
                 except Exception as e:
-                    _log_debug(f"⚠️ Thử model {m} gặp lỗi ({e}), chuyển model tiếp theo...")
+                    _log_debug(f"⚠️ Model {m} gặp ngoại lệ ({e}), thử model tiếp theo...")
+                    time.sleep(1.0)
+                    break
 
-        # Fallback trung thực
+        # Fallback an toàn
         return {
             "is_domain_relevant": True,
             "is_nationwide_universal": True,
-            "scope_explanation": "Áp dụng theo quy định của văn bản",
+            "scope_explanation": "Văn bản chuyên ngành quản lý xây dựng",
             "is_project_relevant": True,
-            "executive_title": f"TÓM TẮT VĂN BẢN: {doc_title[:80]}",
-            "summary_points": [
-                f"• Ban hành chính thức: {doc_title}",
-                "• Áp dụng theo các điều khoản và quy định chi tiết ban hành kèm theo văn bản.",
-                "• Có hiệu lực thi hành theo ngày ký hoặc ngày được quy định tại điều khoản thi hành."
+            "executive_title": f"BÁO CÁO THAM MƯU: {doc_title[:80]}",
+            "impact_summary": f"Văn bản {doc_title} ban hành quy định áp dụng trong công tác quản lý dự án và đầu tư xây dựng.",
+            "substantive_points": [
+                {
+                    "clause": "[Toàn văn]",
+                    "title": "Áp dụng theo quy định ban hành",
+                    "content": "Thực hiện theo các điều khoản và thông số kỹ thuật chi tiết ban hành kèm theo văn bản.",
+                    "action_required": "Rà soát hồ sơ dự án để áp dụng đúng quy định hiện hành."
+                }
             ],
+            "comparative_table": [],
             "repealed_docs": [],
+            "compliance_risks": "Tuân thủ chặt chẽ ngày hiệu lực để tránh rủi ro pháp lý khi thanh quyết toán.",
             "effective_and_transition": "Thực hiện theo điều khoản thi hành của văn bản.",
             "cau_can_cu_nd30": citation
         }

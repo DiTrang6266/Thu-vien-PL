@@ -1,19 +1,19 @@
-import fitz
 # -*- coding: utf-8 -*-
 """
 HỆ THỐNG TRẠM GÁC & TRINH SÁT PHÁP LUẬT TỰ ĐỘNG 24/7 (AUTOMATED LEGAL RECON PIPELINE)
-Kiến trúc Phễu 2 tầng:
-- TẦNG 1: Sàng lọc thể thức & loại bỏ ngành ngoài/cá biệt (< 0.1ms) qua HybridTier2Classifier.
-- TẦNG 2: AI Gatekeeper & Tóm tắt Trung thực Chống Ảo Giác qua LegalAIAnalyzer.
+Kiến trúc Phễu 2 tầng Thực chiến:
+- TẦNG 1: Sàng lọc thể thức & loại bỏ ngành ngoài/quy hoạch đô thị/cá biệt (< 0.1ms).
+- TẦNG 2: Bóc tách toàn văn PDF (PyMuPDF) -> AI Executive Impact Engine lập Báo cáo Tham mưu Chuyên sâu.
 - TỰ ĐỘNG ĐỒNG BỘ: Xuất bản Telegraph Instant View, Đồng bộ Sổ cái Excel Master, Bắn tin nhắn Telegram 1-Tap Copy & Đính kèm PDF gốc.
 """
 
-import os
 import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
+
+import os
 import json
 import re
 import hashlib
@@ -25,6 +25,7 @@ from urllib.parse import urljoin
 import httpx
 import feedparser
 from bs4 import BeautifulSoup
+import fitz
 
 from modules.classifier_tier1 import StructuralAuthorityMatcher, DocumentType
 from modules.classifier_tier2 import HybridTier2Classifier, DomainEnum
@@ -187,7 +188,8 @@ def send_telegram_alert(
     title = item.get("title", "")
     cau_can_cu = ai_analysis.get("cau_can_cu_nd30", "")
     repealed_docs = ai_analysis.get("repealed_docs", [])
-    summary_points = ai_analysis.get("summary_points", [])
+    impact = ai_analysis.get("impact_summary", "")
+    points = ai_analysis.get("substantive_points", [])
 
     doc_type_str = str(tier1_meta.get("doc_type", "")).upper()
     if "VAN_BAN_HOP_NHAT" in doc_type_str or "VBHN" in title.upper() or "HỢP NHẤT" in title.upper():
@@ -211,17 +213,32 @@ def send_telegram_alert(
         ""
     ]
 
-    # Văn bản bãi bỏ nếu có
+    # Bãi bỏ nếu có
     if repealed_docs and len(repealed_docs) > 0:
         lines.append(f"🔴 <b>Bãi bỏ/Thay thế:</b> {', '.join(repealed_docs)}")
         lines.append("")
 
-    # Quy định cốt lõi kèm trích dẫn Điều/Khoản
-    lines.append("⚡ <b>QUY ĐỊNH CỐT LÕI (TRÍCH DẪN ĐIỀU KHOẢN):</b>")
-    for pt in summary_points[:4]:
-        lines.append(f"• {pt.replace('• ', '')}")
+    # Tác động cốt lõi
+    if impact:
+        lines.append(f"⚡ <b>TÁC ĐỘNG TRỰC TIẾP ĐẾN DỰ ÁN:</b>")
+        lines.append(f"<i>{impact}</i>")
+        lines.append("")
 
-    lines.append("")
+    # Điểm mới kỹ thuật thực chiến
+    if points and len(points) > 0:
+        lines.append("📋 <b>ĐIỂM MỚI NGHIỆP VỤ TRỌNG YẾU:</b>")
+        for pt in points[:3]:
+            if isinstance(pt, dict):
+                cl = pt.get("clause", "")
+                t = pt.get("title", "")
+                act = pt.get("action_required", "")
+                lines.append(f"• <b>{cl} - {t}:</b> {pt.get('content', '')}")
+                if act:
+                    lines.append(f"  👉 <i>Hành động: {act}</i>")
+            elif isinstance(pt, str):
+                lines.append(f"• {pt}")
+        lines.append("")
+
     lines.append("📋 <b>CHẠM ĐỂ COPY CĂN CỨ PHÁP LÝ (DÁN WORD):</b>")
     lines.append(f"<code>{cau_can_cu}</code>")
 
@@ -232,7 +249,7 @@ def send_telegram_alert(
 
     inline_keyboard = []
     if instant_view_url:
-        inline_keyboard.append([{"text": "📖 Đọc Báo cáo Toàn văn (Instant View)", "url": instant_view_url}])
+        inline_keyboard.append([{"text": "📖 Xem Báo Cáo Tham Mưu Toàn Văn (Instant View)", "url": instant_view_url}])
     
     doc_link = item.get("link", "")
     if doc_link and doc_link.startswith("http"):
@@ -277,7 +294,7 @@ def send_telegram_alert(
 
 
 def run_pipeline(force_reprocess: bool = False):
-    log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG (2-TIER HYBRID GATE)...")
+    log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG (4-PILLAR HYBRID GATE)...")
     
     tier1_matcher = StructuralAuthorityMatcher()
     tier2_filter = HybridTier2Classifier()
@@ -308,7 +325,7 @@ def run_pipeline(force_reprocess: bool = False):
                     if not force_reprocess and doc_hash in known_docs:
                         continue
 
-                    # TẦNG 1: SÀNG LỌC THỂ THỨC, NGÀNH NGOÀI & DỰ ÁN RIÊNG (< 0.1ms)
+                    # TẦNG 1: SÀNG LỌC 4 TRỤ CỘT THỰC CHIẾN (< 0.1ms)
                     t2_res = tier2_filter.classify_and_filter(raw_title, summary)
                     if not t2_res["is_accepted"]:
                         log(f"ℹ️ Tầng 1 đã lọc bỏ ({t2_res['decision']}): {raw_title}")
@@ -332,7 +349,7 @@ def run_pipeline(force_reprocess: bool = False):
 
                     t1_res["raw_content"] = body_text[:2000]
 
-                    # Tải trước PDF nếu có để bóc tách toàn văn sâu sắc
+                    # TẢI TRƯỚC FILE PDF VÀ BÓC TÁCH TOÀN VĂN
                     local_pdf = None
                     full_doc_text = f"{raw_title}\n{body_text}"
                     if pdf_url:
@@ -351,7 +368,7 @@ def run_pipeline(force_reprocess: bool = False):
                             except Exception as e:
                                 log(f"⚠️ Lỗi bóc tách PDF text: {e}")
 
-                    # TẦNG 2: AI GATEKEEPER & TÓM TẮT CHUYÊN SÂU TỪ TOÀN VĂN
+                    # TẦNG 2: AI GATEKEEPER & BÁO CÁO THAM MƯU THỰC CHIẾN
                     ai_result = ai_analyzer.analyze_document_deep(
                         doc_text=full_doc_text,
                         doc_title=raw_title,
@@ -359,13 +376,11 @@ def run_pipeline(force_reprocess: bool = False):
                     )
 
                     if not ai_result.get("is_project_relevant", True):
-                        log(f"ℹ️ Tầng 2 AI đã lọc bỏ do không đạt yêu cầu chuyên môn/phạm vi: [{so_hieu_clean}] {raw_title}")
+                        log(f"ℹ️ Tầng 2 AI đã lọc bỏ do không thuộc 4 trụ cột thực chiến: [{so_hieu_clean}] {raw_title}")
                         known_docs.add(doc_hash)
                         continue
 
                     log(f"🎯 PHÁT HIỆN VĂN BẢN PHỔ QUÁT TOÀN QUỐC HỢP LỆ: [{so_hieu_clean}] {raw_title}")
-
-# PDF đã được tải trước đó
 
                     # ĐỒNG BỘ SỔ CÁI EXCEL
                     excel_sync.sync_new_document(
@@ -382,7 +397,7 @@ def run_pipeline(force_reprocess: bool = False):
                     instant_url = None
                     try:
                         instant_url = telegraph_pub.publish_report(
-                            title=f"TÓM TẮT VĂN BẢN: {so_hieu_clean}",
+                            title=f"BÁO CÁO THAM MƯU: {so_hieu_clean}",
                             analysis_data=ai_result,
                             doc_item={
                                 "so_hieu": so_hieu_clean,
