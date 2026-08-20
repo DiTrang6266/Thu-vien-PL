@@ -186,11 +186,22 @@ def send_telegram_alert(
     msg += f"📌 <b>Số hiệu:</b> <code>{so_hieu}</code>\n"
     msg += f"📅 <b>Ngày ban hành:</b> {pub_date} | 🏛️ <b>Cơ quan:</b> {authority}\n\n"
 
-    # Điểm mới cốt lõi
-    msg += f"🎯 <b>NỘI DUNG & ĐIỂM MỚI QUAN TRỌNG:</b>\n"
-    for pt in ai_analysis.get("summary_top3", [])[:3]:
-        msg += f"• {pt}\n"
+    # Nội dung tóm tắt trung thực
+    msg += f"🎯 <b>NỘI DUNG TÓM TẮT TRUNG THỰC (BÁM SÁT VĂN BẢN):</b>\n"
+    points = ai_analysis.get("summary_points", [])
+    if not points:
+        points = ai_analysis.get("summary_top3", [])
+    for pt in points[:4]:
+        msg += f"{pt}\n"
     msg += "\n"
+
+    # Văn bản bãi bỏ / thay thế nếu có
+    repealed = ai_analysis.get("repealed_docs", [])
+    if repealed and isinstance(repealed, list) and len(repealed) > 0:
+        msg += f"❌ <b>Văn bản bị bãi bỏ / thay thế:</b>\n"
+        for r in repealed[:3]:
+            msg += f"• {r}\n"
+        msg += "\n"
 
     # Thẻ Căn Cứ 1-Chạm
     citation = ai_analysis.get("cau_can_cu_nd30", "")
@@ -204,7 +215,7 @@ def send_telegram_alert(
     # Nút bấm Inline (Instant View & Link gốc)
     buttons = []
     if instant_view_url:
-        buttons.append([{"text": "📖 ĐỌC BÁO CÁO PHÂN TÍCH TOÀN VĂN (INSTANT VIEW)", "url": instant_view_url}])
+        buttons.append([{"text": "📖 ĐỌC BÁO CÁO TÓM TẮT TOÀN VĂN (INSTANT VIEW)", "url": instant_view_url}])
     if item.get("link"):
         buttons.append([{"text": "🌐 Link Đối Soát Gốc", "url": item["link"]}])
 
@@ -281,9 +292,11 @@ def run_pipeline(force_reprocess: bool = False):
                     if not force_reprocess and doc_hash in known_docs:
                         continue
 
-                    # LỚP 2: BỘ LỌC NGỮ NGHĨA CHUYÊN NGÀNH
+                    # LỚP 2: BỘ LỌC NGỮ NGHĨA CHUYÊN NGÀNH & PHẠM VI ÁP DỤNG
                     t2_res = tier2_filter.process(raw_title, summary)
                     if not t2_res["is_domain_relevant"]:
+                        if t2_res.get("best_matched_domain") == "VAN_BAN_DAC_THU_DU_AN_RIENG":
+                            log(f"ℹ️ Lớp 2 đã lọc bỏ văn bản đặc thù cho 1 dự án riêng: {raw_title}")
                         known_docs.add(doc_hash)
                         continue
 
@@ -302,18 +315,24 @@ def run_pipeline(force_reprocess: bool = False):
                     ngay_bh_clean = t1_res.get("ngay_ban_hanh", published)
                     auth_clean = t1_res.get("authority", "Bộ Xây dựng")
 
-                    log(f"🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [{so_hieu_clean}] {raw_title}")
-                    
-                    local_pdf = None
-                    if pdf_url:
-                        local_pdf = download_official_pdf(pdf_url, doc_hash)
-
                     t1_res["raw_content"] = body_text[:2000]
                     ai_result = ai_analyzer.analyze_document_deep(
                         doc_text=f"{raw_title}\n{body_text[:5000]}",
                         doc_title=raw_title,
                         doc_metadata=t1_res
                     )
+
+                    # KIỂM TRA PHẠM VI ÁP DỤNG CỦA AI
+                    if not ai_result.get("is_project_relevant", True) or not ai_result.get("is_nationwide_universal", True):
+                        log(f"ℹ️ AI đã lọc bỏ văn bản do phạm vi không áp dụng toàn quốc: [{so_hieu_clean}] {raw_title}")
+                        known_docs.add(doc_hash)
+                        continue
+
+                    log(f"🎯 PHÁT HIỆN VĂN BẢN PHỔ QUÁT TOÀN QUỐC HỢP LỆ: [{so_hieu_clean}] {raw_title}")
+
+                    local_pdf = None
+                    if pdf_url:
+                        local_pdf = download_official_pdf(pdf_url, doc_hash)
 
                     # ĐỒNG BỘ SỔ CÁI EXCEL
                     excel_sync.sync_new_document(
@@ -330,7 +349,7 @@ def run_pipeline(force_reprocess: bool = False):
                     instant_url = None
                     try:
                         instant_url = telegraph_pub.publish_report(
-                            title=f"BÁO CÁO PHÂN TÍCH: {so_hieu_clean}",
+                            title=f"TÓM TẮT VĂN BẢN: {so_hieu_clean}",
                             analysis_data=ai_result,
                             doc_item={
                                 "so_hieu": so_hieu_clean,
