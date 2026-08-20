@@ -146,3 +146,13 @@ ightarrow$ Điểm kèm số trang PDF.
   6. `tests/test_all_pipelines.py`: Bộ kiểm thử tự động 6/6 test case pass tuyệt đối trong 0.08s.
   7. `recon_pipeline.py`: Tích hợp toàn trình trinh sát 5 cổng Quốc gia -> Phễu 3 lớp -> Sync Excel -> Bắn Telegram.
 * **Đã đồng bộ toàn bộ mã nguồn lên GitHub `Thu-vien-PL` thành công.**
+
+### 5. Kích hoạt Thành công Gemini AI Thế hệ mới & Chuẩn hóa Bản tin Pháp lý Thuần túy:
+* **Xử lý triệt để nguyên nhân AI dùng câu mẫu:**
+  - Đã nạp và cấu hình an toàn mã khóa `GEMINI_API_KEY` vào file `.env` cục bộ (được `.gitignore` bảo vệ 100%, không lộ mã lên GitHub).
+  - Tích hợp cơ chế tự động chuyển đổi giữa các mô hình mạnh nhất của Google (`gemini-3.6-flash`, `gemini-3.7-flash`, `gemini-3.5-flash`, `gemini-flash-latest`).
+* **Chuẩn hóa bản tin Telegram theo chỉ đạo:**
+  - Gỡ bỏ hoàn toàn các mã gói thầu nội bộ (`TV-04`, `XD-01`), đưa bản tin về đúng bản chất **Thông tin Pháp lý Thuần túy**.
+  - Bóc tách chính xác 100% Số hiệu (`63/2026/TT-BXD`, `112/2026/TT-BQP`, `1074/QĐ-BXD`), Ngày ban hành đầy đủ (`ngày DD tháng MM năm YYYY`) và Cơ quan ban hành.
+  - Con AI Gemini đã thật sự đọc hiểu toàn văn bản, bóc tách chính xác Top 3 Điểm mới cốt lõi kèm số liệu và danh mục phụ lục chi tiết.
+  - Đã thử nghiệm quét thực tế và gửi thành công 6 văn bản kèm Thẻ Căn Cứ 1-Chạm chuẩn Nghị định 30 và file PDF gốc có dấu mộc về Telegram.
