@@ -33,14 +33,14 @@ class TestHybridPipeline(unittest.TestCase):
         res = self.tier1.process(title)
         self.assertTrue(res["is_valid_legal_doc"])
         self.assertEqual(res["doc_type"], DocumentType.NGHI_DINH.value)
-        self.assertEqual(res["authority"], "GOV")
+        self.assertEqual(res["authority"], "Chính phủ")
 
     def test_tier1_valid_circular(self):
         title = "Thông tư số 06/2024/TT-BKHĐT hướng dẫn mẫu E-HSMT trên Hệ thống mạng đấu thầu quốc gia"
         res = self.tier1.process(title)
         self.assertTrue(res["is_valid_legal_doc"])
         self.assertEqual(res["doc_type"], DocumentType.THONG_TU.value)
-        self.assertEqual(res["authority"], "BKHDT")
+        self.assertEqual(res["authority"], "Bộ Kế hoạch và Đầu tư")
 
     def test_tier1_junk_rejection(self):
         title = "Thông báo số 12/TB-VP về việc phân công lịch trực Tết Nguyên đán 2026"

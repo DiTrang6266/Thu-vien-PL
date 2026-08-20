@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Hệ thống Trinh sát & Đối chiếu Văn bản Pháp luật 24/7 (Zero-Cost Watchdog Engine)
-Tích hợp:
-- Lớp 1: Bóc tách Thể thức & Thẩm quyền theo Nghị định 30/2020/NĐ-CP (classifier_tier1)
-- Lớp 2: Bộ lọc Ngữ nghĩa Chuyên ngành Siêu tốc 3-5ms (classifier_tier2)
-- Lớp 3: Bộ não AI Gemini + Pydantic Schema (ai_analyzer)
-- Đồng bộ tự động 2 chiều Sổ cái Master Excel (Kho_Can_Cu_Phap_Ly.xlsx)
-- Bắn Telegram Thông minh: Cảnh báo khai tử (<s>...</s>) + Thẻ căn cứ 1-chạm (<code>...</code>) + PDF gốc đính kèm.
 """
 
 import os
@@ -110,7 +104,9 @@ def normalize_url(base_url: str, link: str) -> str:
     return urllib.parse.urljoin(base_url, link)
 
 
-def extract_direct_pdf_link(article_url: str) -> Optional[str]:
+def fetch_article_details(article_url: str) -> Dict[str, Any]:
+    body_text = ""
+    pdf_url = None
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -118,16 +114,17 @@ def extract_direct_pdf_link(article_url: str) -> Optional[str]:
         }
         with httpx.Client(timeout=15.0, headers=headers, follow_redirects=True, verify=False) as client:
             res = client.get(article_url)
-            if res.status_code != 200:
-                return None
-            soup = BeautifulSoup(res.text, "html.parser")
-            for a in soup.find_all("a", href=True):
-                href = a["href"].strip()
-                if ".pdf" in href.lower() or "download" in href.lower() or "file_name=" in href.lower():
-                    return normalize_url(article_url, href)
+            if res.status_code == 200:
+                soup = BeautifulSoup(res.text, "html.parser")
+                body_text = soup.get_text(separator=" ", strip=True)
+                for a in soup.find_all("a", href=True):
+                    href = a["href"].strip()
+                    if ".pdf" in href.lower() or "download" in href.lower() or "file_name=" in href.lower():
+                        pdf_url = normalize_url(article_url, href)
+                        break
     except Exception:
         pass
-    return None
+    return {"body_text": body_text, "pdf_url": pdf_url}
 
 
 def download_official_pdf(pdf_url: str, doc_id: str) -> Optional[str]:
@@ -161,26 +158,30 @@ def send_telegram_alert(
     chat_id = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
 
     so_hieu = tier1_meta.get("doc_number", item["title"][:35])
-    doc_type = tier1_meta.get("doc_type", "VĂN BẢN QUY PHẠM")
-    authority = tier1_meta.get("authority", "Cơ quan ban hành")
+    doc_type = tier1_meta.get("doc_type", "THÔNG TƯ")
+    if doc_type == "THONG_TU":
+        doc_type = "THÔNG TƯ"
+    elif doc_type == "NGHI_DINH":
+        doc_type = "NGHỊ ĐỊNH"
+    elif doc_type == "LUAT":
+        doc_type = "LUẬT"
+    elif doc_type == "QUYET_DINH":
+        doc_type = "QUYẾT ĐỊNH"
+
+    authority = tier1_meta.get("authority", "Bộ Xây dựng")
     pub_date = item.get("published", datetime.now().strftime("%d/%m/%Y"))
 
-    # Header
+    # Bản tin Pháp lý chuẩn hóa
     msg = f"<b>📜 {doc_type} | TRẠM GÁC PHÁP LÝ 24/7</b>\n"
     msg += f"━━━━━━━━━━━━━━━━━━━━━━\n"
     msg += f"📌 <b>Số hiệu:</b> <code>{so_hieu}</code>\n"
-    msg += f"📅 <b>Ngày quét:</b> {pub_date} | 🏛️ <b>Cơ quan:</b> {authority}\n\n"
+    msg += f"📅 <b>Ngày ban hành:</b> {pub_date} | 🏛️ <b>Cơ quan:</b> {authority}\n\n"
 
-    # Top 3 điểm mới
-    msg += f"🎯 <b>TOP ĐIỂM MỚI CỐT LÕI TÁC ĐỘNG HỒ SƠ:</b>\n"
+    # Điểm mới cốt lõi
+    msg += f"🎯 <b>NỘI DUNG & ĐIỂM MỚI QUAN TRỌNG:</b>\n"
     for pt in ai_analysis.get("summary_top3", [])[:3]:
         msg += f"• {pt}\n"
     msg += "\n"
-
-    # Gói thầu bị ảnh hưởng
-    packages = ai_analysis.get("affected_packages", [])
-    if packages:
-        msg += f"📦 <b>GÓI THẦU CẦN RÀ SOÁT NGAY:</b> <code>{', '.join(packages)}</code>\n\n"
 
     # Thẻ Căn Cứ 1-Chạm
     citation = ai_analysis.get("cau_can_cu_nd30", "")
@@ -216,7 +217,7 @@ def send_telegram_alert(
         payload["reply_markup"] = json.dumps(reply_markup)
 
     try:
-        with httpx.Client(timeout=15.0) as client:
+        with httpx.Client(timeout=15.0, verify=False) as client:
             res = client.post(send_url, json=payload)
             if res.status_code == 200:
                 success = True
@@ -224,13 +225,13 @@ def send_telegram_alert(
     except Exception as e:
         log(f"❌ Lỗi gửi tin nhắn Telegram: {e}")
 
-    # Gửi đính kèm file PDF gốc có dấu mộc
+    # Gửi đính kèm file PDF gốc
     if local_pdf_path and os.path.exists(local_pdf_path):
         doc_url = f"https://api.telegram.org/bot{bot_token}/sendDocument"
         caption = f"📎 File PDF gốc có chữ ký số/dấu mộc: {so_hieu}"
         try:
             with open(local_pdf_path, "rb") as f_pdf:
-                with httpx.Client(timeout=60.0) as client:
+                with httpx.Client(timeout=60.0, verify=False) as client:
                     files = {"document": (os.path.basename(local_pdf_path), f_pdf, "application/pdf")}
                     data = {"chat_id": chat_id, "caption": caption}
                     res = client.post(doc_url, data=data, files=files)
@@ -242,7 +243,7 @@ def send_telegram_alert(
     return success
 
 
-def run_pipeline():
+def run_pipeline(force_reprocess: bool = False):
     log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG (3-TIER FUNNEL)...")
     
     tier1_matcher = StructuralAuthorityMatcher()
@@ -251,7 +252,7 @@ def run_pipeline():
     excel_sync = LegalExcelSyncEngine(EXCEL_LEGAL_PATH)
     telegraph_pub = TelegraphPublisher()
 
-    known_docs = load_known_documents()
+    known_docs = set() if force_reprocess else load_known_documents()
     total_matched = 0
 
     for source in FEED_SOURCES:
@@ -271,15 +272,7 @@ def run_pipeline():
                     published = entry.get("published", datetime.now().strftime("%d/%m/%Y"))
 
                     doc_hash = hashlib.md5(f"{raw_title}_{link}".encode("utf-8")).hexdigest()
-                    if doc_hash in known_docs:
-                        continue
-
-                    # =========================================================
-                    # LỚP 1: BÓC TÁCH THỂ THỨC & THẨM QUYỀN (0.05ms)
-                    # =========================================================
-                    t1_res = tier1_matcher.process(raw_title, summary)
-                    if not t1_res["is_valid_legal_doc"]:
-                        known_docs.add(doc_hash)
+                    if not force_reprocess and doc_hash in known_docs:
                         continue
 
                     # =========================================================
@@ -290,39 +283,55 @@ def run_pipeline():
                         known_docs.add(doc_hash)
                         continue
 
+                    # CÀO NỘI DUNG CHI TIẾT TỪ TRANG BÀI BÁO ĐỂ LẤY SỐ HIỆU VÀ FILE PDF
+                    details = fetch_article_details(link)
+                    body_text = details["body_text"]
+                    pdf_url = details["pdf_url"]
+
                     # =========================================================
-                    # LỚP 3: BỘ NÃO GEMINI AI + PYDANTIC GROUNDING
+                    # LỚP 1: BÓC TÁCH THỂ THỨC & THẨM QUYỀN (0.05ms)
                     # =========================================================
-                    log(f"🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: {raw_title}")
+                    t1_res = tier1_matcher.process(raw_title, body_text, source_name=source["name"])
+                    if not t1_res["is_valid_legal_doc"]:
+                        known_docs.add(doc_hash)
+                        continue
+
+                    # =========================================================
+                    # LỚP 3: BỘ NÃO AI & THẺ CĂN CỨ NGHỊ ĐỊNH 30
+                    # =========================================================
+                    so_hieu_clean = t1_res.get("doc_number", raw_title[:35])
+                    ngay_bh_clean = t1_res.get("ngay_ban_hanh", published)
+                    auth_clean = t1_res.get("authority", "Bộ Xây dựng")
+
+                    log(f"🎯 PHÁT HIỆN VĂN BẢN ĐÚNG CHUYÊN NGÀNH: [{so_hieu_clean}] {raw_title}")
                     
-                    pdf_url = extract_direct_pdf_link(link)
                     local_pdf = None
                     if pdf_url:
                         local_pdf = download_official_pdf(pdf_url, doc_hash)
 
+                    t1_res["raw_content"] = body_text[:2000]
                     ai_result = ai_analyzer.analyze_document_deep(
-                        doc_text=f"{raw_title}\n{summary}",
+                        doc_text=f"{raw_title}\n{body_text[:5000]}",
                         doc_title=raw_title,
                         doc_metadata=t1_res
                     )
 
                     # ĐỒNG BỘ SỔ CÁI EXCEL
                     excel_sync.sync_new_document(
-                        so_hieu=t1_res.get("doc_number", raw_title[:30]),
-                        loai_vb=t1_res.get("doc_type", "VĂN BẢN"),
-                        co_quan=t1_res.get("authority", "GOV"),
-                        ngay_bh=published,
-                        ngay_hl=published,
+                        so_hieu=so_hieu_clean,
+                        loai_vb=t1_res.get("doc_type", "Thông tư"),
+                        co_quan=auth_clean,
+                        ngay_bh=ngay_bh_clean,
+                        ngay_hl=ngay_bh_clean,
                         linh_vuc=t2_res.get("best_matched_domain", "XÂY DỰNG"),
-                        cau_can_cu=ai_result.get("cau_can_cu_nd30", ""),
-                        tags_bo_sung=ai_result.get("affected_packages", [])
+                        cau_can_cu=ai_result.get("cau_can_cu_nd30", "")
                     )
 
                     # XUẤT BẢN TELEGRAPH INSTANT VIEW
                     instant_url = None
                     try:
                         instant_url = telegraph_pub.publish_report(
-                            title=f"BÁO CÁO PHÂN TÍCH: {t1_res.get('doc_number', raw_title[:40])}",
+                            title=f"BÁO CÁO PHÂN TÍCH: {so_hieu_clean}",
                             analysis_data=ai_result,
                             doc_item={"title": raw_title, "link": link}
                         )
@@ -333,7 +342,7 @@ def run_pipeline():
                     item_data = {
                         "title": raw_title,
                         "link": link,
-                        "published": published
+                        "published": ngay_bh_clean
                     }
                     send_telegram_alert(
                         item=item_data,
