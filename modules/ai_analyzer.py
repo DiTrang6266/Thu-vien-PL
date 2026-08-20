@@ -41,7 +41,7 @@ def format_vietnamese_date(raw_date: str) -> str:
 
 class LegalAIAnalyzer:
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY") or "AQ.Ab8RN6Ip2cJuK3UlMGyv6iWxuOEoiKyHo1oB61Fbx5b9oLNdqw"
 
     def generate_nd30_citation(
         self,

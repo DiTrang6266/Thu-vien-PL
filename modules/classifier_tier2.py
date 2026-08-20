@@ -36,6 +36,8 @@ class HybridTier2Classifier:
     """
 
     STRICT_OUT_OF_SCOPE_BLACKLIST = [
+        # Dự thảo chưa ban hành
+        "truyền thông dự thảo", "lấy ý kiến dự thảo", "dự thảo thông tư", "dự thảo nghị định", "góp ý dự thảo",
         "hoa tiêu", "luồng hàng hải", "bến thủy nội địa", "khu neo đậu", "cảng biển",
         "trục vớt cứu hộ", "đăng kiểm tàu cá", "phương tiện thủy nội địa", "thuyền viên",
         "bằng thuyền trưởng", "bằng máy trưởng", "hoa tiêu hàng hải", "hoa tiêu đường thủy",
