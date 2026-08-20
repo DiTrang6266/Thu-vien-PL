@@ -14,6 +14,7 @@
   - Đường dẫn Repo: `https://github.com/DiTrang6266/Thu-vien-PL` (Chế độ: Private)
   - GitHub Actions Workflow: `.github/workflows/watchdog.yml` (chạy tự động 07:00 sáng T2-T6)
   - Đã cấu hình 3 biến bảo mật (Repository Secrets): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, và `GEMINI_API_KEY`.
+  - Đã tích hợp Personal Access Token (PAT) để máy tính tự động đồng bộ và quản trị kho trực tiếp bằng dòng lệnh 100%.
 
 ---
 
@@ -60,71 +61,51 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 * **Quyết định chốt:** Xây dựng Pipeline tự động 4 bước:
   - *Bước 1:* Crawler tự động tải file PDF văn bản mới.
   - *Bước 2:* Tự động lấy file PDF văn bản cũ bị sửa đổi từ kho dữ liệu.
-  - *Bước 3:* Đẩy cả 2 file PDF vào Gemini API (Source-Grounded AI) để bóc tách.
+  - *Bước 3:* Đẩy cả 2 file PDF vào Gemini API (Source-Grounded AI) để bóc tách:
+    + Top 3 thay đổi cốt lõi ảnh hưởng hồ sơ dự án.
+    + Bảng so sánh 3 cột: `[Điều khoản]` - `[Quy định cũ]` - `[Quy định mới]`.
+    + Điều khoản chuyển tiếp cho các hồ sơ đang làm dở.
+    + Trích dẫn nguyên văn số trang và số Điều, Khoản (Zero-Hallucination).
   - *Bước 4:* Tự động gửi file PDF + Bản tin đối chiếu vào Telegram và cập nhật Sổ cái Excel.
 
 ### Buổi 4: Đột phá Giải pháp Tự động hóa 100% & Báo cáo Toàn văn Không Giới Hạn (Telegraph Instant View)
-* **Người dùng yêu cầu:** Phân chia Subagent nghiên cứu các phương án khả thi hơn từ mã nguồn mở và mạng xã hội, đảm bảo tự động 100%, không bị tóm tắt cắt gọt làm mất ý nghĩa pháp lý.
 * **Kết quả nghiên cứu của 3 Subagent:**
-  1. *Subagent 1 (Parsing & Long Context):* Loại bỏ RAG cắt vụn (Chunking). Áp dụng **Full-Document (Zero-Chunking)** với cửa sổ ngữ cảnh 1M–2M token của Gemini Flash/Pro để AI nhìn thấy trọn vẹn toàn bộ văn bản.
-  2. *Subagent 2 (Legal Diff & Redline):* Áp dụng thuật toán bóc tách phân cấp Điều/Khoản (`Docling` / `PyMuPDF`) kết hợp so khớp từng từ ngữ (`python-redlines` / `diff-match-patch`) để sinh chuỗi Redline Track Changes và lớp kiểm tra trích dẫn gốc chống ảo giác 100%.
-  3. *Subagent 3 (Kiến trúc & Phân phối Toàn văn):* Dùng **Telegraph API** tạo báo cáo Instant View tức thì không giới hạn ký tự (vượt qua mốc 4.096 ký tự của Telegram), chi phí 0đ trên GitHub Actions.
-* **Triển khai Trọn bộ 4 Việc:**
-  - **Việc 1:** Hoàn thành `modules/legal_parser.py` và `modules/legal_diff.py`.
-  - **Việc 2:** Hoàn thành `modules/ai_analyzer.py` tích hợp Gemini Pro/Flash và lớp hậu kiểm đối soát trích dẫn gốc chống ảo giác.
-  - **Việc 3:** Hoàn thành `modules/telegraph_publisher.py` tự động xuất bản bài viết Instant View.
-  - **Việc 4:** Hoàn thành nâng cấp `recon_pipeline.py`, `.github/workflows/watchdog.yml` và chạy kiểm thử toàn trình `tests/test_end_to_end.py` thành công 100%, đã bắn bản tin kèm Instant View trực tiếp vào Telegram của người dùng.
+  1. *Subagent 1 (Full-Document Context):* Loại bỏ RAG cắt vụn. Áp dụng **Full-Document (Zero-Chunking)** với Context Window 1M–2M token của Gemini Flash/Pro.
+  2. *Subagent 2 (Legal Diff & Redline):* Bóc tách phân cấp Điều/Khoản kết hợp so khớp từng từ ngữ (`python-redlines` / `diff-match-patch`) sinh Redline Track Changes và đối soát trích dẫn gốc 100%.
+  3. *Subagent 3 (Telegraph Instant View):* Dùng **Telegraph API** tạo báo cáo Instant View tức thì không giới hạn ký tự.
+* **Triển khai Trọn bộ 4 Module:** `modules/legal_parser.py`, `modules/legal_diff.py`, `modules/ai_analyzer.py`, `modules/telegraph_publisher.py`.
 
-### Buổi 5: Tối ưu Toàn diện Gemini AI, Bóc tách File Trình tự, Đấu Thầu Qua Mạng & Chuẩn Hóa Phân Loại
-* **Người dùng phản hồi & Yêu cầu:**
-  1. Yêu cầu AI không được nói chung chung, phải phân tích thực tế sâu sắc (số ngày, tỷ lệ %, hạn mức tiền, điều khoản chuyển tiếp).
-  2. Yêu cầu cập nhật phiên bản Gemini AI mới nhất trên Google AI Studio.
-  3. Yêu cầu kiểm tra bao quát toàn bộ 10 trang của file `Trinh tu.pdf` trong folder dự án và nguồn kinh phí chi thường xuyên.
-  4. Yêu cầu loại bỏ từ khóa thừa và nạp đầy đủ từ khóa chuyên sâu về **Đấu thầu qua mạng**.
-  5. Yêu cầu gom chuẩn phân loại tin nhắn theo đúng thứ bậc văn bản pháp luật của Nhà nước (Luật, Nghị định, Thông tư, Hướng dẫn).
-  6. Yêu cầu xử lý triệt để lỗi 404/503 của Gemini AI khi chạy trực tiếp trên GitHub Actions.
-* **Các quyết định đã triển khai và chốt 100%:**
-  1. **Nâng cấp Gemini AI & Cơ chế Tự động Dò tìm Model (Dynamic Discovery):** `modules/ai_analyzer.py` tự động truy vấn Google API để lấy danh sách mô hình Gemini đang hoạt động ổn định nhất, tự động ưu tiên Gemini 3.7 Flash, 3.1 Pro, 2.5 Flash, 2.0 Flash, 1.5 Pro/Flash, loại bỏ triệt để lỗi 404 và 503.
-  2. **Dữ liệu thật & Tải PDF gốc:** Tự động bắt đúng link chính thức, tải file PDF gốc từ máy chủ Nhà nước (`g7.cdnchinhphu.vn`, `congbao.chinhphu.vn`, `moc.gov.vn`) và đính kèm thẳng file `.pdf` vào Telegram.
-  3. **Bao quát 100% file `Trinh tu.pdf`:** Nạp trọn vẹn 8 gói thầu dự án (TV-04 Lập thiết kế BVTC-DT, TV-05 Thẩm tra thiết kế, TV-06 Lập HSYC & ĐG HSĐX, TV-07 Thí nghiệm nén tĩnh cọc, TV-09 Kiểm toán độc lập, PTV-01 Bảo hiểm công trình, XD-01 Thi công & Doanh cụ, TV-08 Tư vấn giám sát).
-  4. **Lọc từ khóa & Tích hợp Đấu thầu qua mạng:**
-     - *Đã loại bỏ:* `cục công trình quốc phòng`, `thông tư 65/2021`, `thông tư 68/2022`, `nghị định 138/2024`, `phụ lục 03a/PL03A`.
-     - *Đã nạp sâu:* `đấu thầu qua mạng`, `mạng đấu thầu quốc gia`, `muasamcong`, `e-hsmt`, `e-hsdt`, `e-tbmt`, `e-hsyc`, `e-hsdx`, `bảo lãnh dự thầu điện tử`, `mở thầu qua mạng`, `làm rõ e-hsdt`, `thông tư 06/2024`, `thông tư 07/2024`...
-     - *Tích hợp văn bản BQP:* Thông tư 36/2023/TT-BQP (Điều lệ Doanh trại), Thông tư 150/2018/TT-BQP & 69/2026/TT-BQP (Định mức Doanh cụ, trang thiết bị), Thông tư 101/2026/TT-BQP.
-  5. **Chuẩn hóa Phân loại Tin nhắn Telegram thành 4 Nhóm theo Luật Ban hành VBQPPL:**
+### Buổi 5: Tối ưu Toàn diện Gemini AI, Bóc tách File Trình tự & Chuẩn Hóa Phân Loại
+* **Các quyết định đã triển khai:**
+  1. **Dynamic Model Discovery:** `modules/ai_analyzer.py` tự động truy vấn danh sách model Gemini khả dụng nhất (Gemini 3.7 Flash, 3.1 Pro, 2.5 Flash...), triệt tiêu lỗi 404/503.
+  2. **Bao quát 100% file `Trinh tu.pdf`:** Nạp trọn vẹn 8 gói thầu dự án (TV-04, TV-05, TV-06, TV-07, TV-08, TV-09, PTV-01, XD-01).
+  3. **Lọc từ khóa Đấu thầu qua mạng & Văn bản BQP:** Tích hợp `muasamcong`, `e-hsmt`, `e-hsdt`, `e-tbmt`, Thông tư BQP 36/2023, 150/2018, 69/2026, 101/2026.
+  4. **Chuẩn hóa Phân loại Tin nhắn Telegram thành 4 Nhóm theo Luật Ban hành VBQPPL:**
      - 🏛️ **LUẬT & NGHỊ QUYẾT QUỐC HỘI**
      - 📜 **NGHỊ ĐỊNH & QUYẾT ĐỊNH CHÍNH PHỦ / THỦ TƯỚNG**
      - 📑 **THÔNG TƯ CÁC BỘ & 🎖️ THÔNG TƯ BỘ QUỐC PHÒNG**
      - 📌 **VĂN BẢN HƯỚNG DẪN, CÔNG VĂN & QUY CHUẨN KỸ THUẬT (QCVN/TCVN)**
-  6. **Đồng bộ mã nguồn:** Toàn bộ code mới nhất đã được đẩy lên kho GitHub `DiTrang6266/Thu-vien-PL` (mã commit `e675f27`).
+
+### Buổi 6: Dọn dẹp & Tinh gọn Kho GitHub, Kích hoạt Tự động hóa qua Personal Access Token (PAT)
+* **Yêu cầu của người dùng:** Xóa sạch toàn bộ các file không liên quan đến Trạm gác cổng Internet trên GitHub (phôi Word, file dữ liệu dự án nội bộ).
+* **Kết quả thực hiện:**
+  1. Đã cấu hình xác thực GitHub qua Personal Access Token (`ghp_...`).
+  2. Đã gỡ bỏ toàn bộ 30 file mẫu hồ sơ nội bộ khỏi Git và cập nhật `.gitignore` chuẩn.
+  3. Đã đẩy lệnh xóa lên mạng thành công 100%: Kho `Thu-vien-PL` trên GitHub hiện tại chỉ chứa DUY NHẤT bộ máy Gác cổng 24/7 (`recon_pipeline.py`, `.github/workflows/`, `modules/`, `data/`, `requirements.txt`).
 
 ---
 
-## 📂 4. DANH MỤC CÁC FILE ĐÃ HOÀN THIỆN TRONG THƯ MỤC DỰ ÁN
+## 📂 4. DANH MỤC CÁC FILE ĐANG ĐƯỢC QUẢN TRỊ TRÊN GITHUB
 
-Thư mục làm việc chính: `C:\Users\Admin\Desktop\Hoàn thiện Hồ sơ dự án\`
+Kho lưu trữ: `https://github.com/DiTrang6266/Thu-vien-PL`
 
 1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát tự động toàn trình (Crawler 5 Cổng Quốc gia + AI Gemini + Telegraph Instant View + Tải PDF gốc + Bắn Telegram).
 2. ⚙️ **`.github/workflows/watchdog.yml`:** Kịch bản hẹn giờ chạy 07:00 sáng trên GitHub Actions.
-3. 📊 **`Kho_Can_Cu_Phap_Ly.xlsx`:** Sổ cái pháp lý 15 văn bản nền tảng ngành xây dựng & đấu thầu.
-4. 📋 **`Du_lieu_mau_du_an.xlsx`:** Bảng điều khiển dự án 4 sheet (`Chan_doan_quy_trinh`, `Thong_tin_chung`, `Danh_muc_goi_thau`, `Bang_du_toan`).
-5. 🚀 **`xuat_ho_so_1cham.py`:** Động cơ đọc Excel và đúc trọn bộ file Word cho từng gói thầu.
-6. ⚡ **`CHAY_TU_DONG.bat`:** File 1-click click đúp chuột trên Desktop để xuất hồ sơ.
-7. 📄 **`Template_01_To_trinh_mau.docx`:** Phôi Word Tờ trình số 01 chuẩn thể thức 13pt/14pt.
-8. 📑 **`01` $\rightarrow$ `08` biểu mẫu Markdown:** Bộ mẫu Tờ trình, Báo cáo thẩm định, Thư mời thầu, Quyết định...
-9. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $\rightarrow$ Điều $\rightarrow$ Khoản $\rightarrow$ Điểm kèm số trang PDF.
-10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
-11. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn + Tự động khám phá model Gemini + Kiểm tra trích dẫn 100%.
-12. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản báo cáo Instant View không giới hạn ký tự trên Telegraph.
-13. 📑 **`Trinh tu.pdf`:** File gốc quy định trình tự 8 gói thầu dự án Trường CĐKT PK-KQ.
-14. 🧪 **`test_live_ai.py` & `tests/`:** Bộ script kiểm thử phân tích AI thực tế và kiểm thử tích hợp.
-
----
-
-## 🚀 5. HƯỚNG DẪN KHI BẬT MÁY MỚI HOẶC BẮT ĐẦU PHIÊN MỚI
-
-Khi bạn chuyển sang máy tính mới hoặc mở lại phiên làm việc:
-1. Tải (hoặc clone) thư mục dự án từ GitHub: `https://github.com/DiTrang6266/Thu-vien-PL`.
-2. Mở file này (`LICH_SU_TRAO_DOI.md`) và file `TIEN_DO.md` để nắm toàn bộ bối cảnh và các quyết định đã chốt.
-3. Cài đặt các thư viện cần thiết: `pip install -r requirements.txt`.
-4. Chỉ cần nói với AI: *"Hãy tiếp tục thực hiện theo file LICH_SU_TRAO_DOI.md"* là AI sẽ hiểu 100% toàn bộ hệ thống ngay lập tức mà bạn không cần phải giải thích lại một lời nào!
+3. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn + Tự động khám phá model Gemini + Kiểm tra trích dẫn 100%.
+4. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và lớp kiểm tra trích dẫn gốc chống ảo giác.
+5. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $ightarrow$ Điều $ightarrow$ Khoản $ightarrow$ Điểm kèm số trang PDF.
+6. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản báo cáo Instant View không giới hạn ký tự trên Telegraph.
+7. 📦 **`requirements.txt`:** Danh sách thư viện cần thiết.
+8. 📁 **`data/`:** Cơ sở dữ liệu ghi nhớ văn bản đã quét (`known_documents.json`) và nhật ký hệ thống.
+9. 🧪 **`test_live_ai.py` & `tests/`:** Bộ script kiểm thử phân tích AI thực tế và kiểm thử tích hợp.
+10. 📜 **`LICH_SU_TRAO_DOI.md` & `TIEN_DO.md`:** Nhật ký và tiến độ toàn diện của dự án.
