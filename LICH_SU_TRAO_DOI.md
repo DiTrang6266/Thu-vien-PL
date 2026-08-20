@@ -165,3 +165,12 @@ ightarrow$ Điểm kèm số trang PDF.
   - Về nội dung: AI đã tóm tắt chính xác 14 phụ lục và ngày hiệu lực, nhưng cần nâng cấp thêm tiêu chí đánh giá **Phạm vi áp dụng (Scope)**.
 * **Định hướng giải pháp:**
   - Bổ sung trường phân loại `scope`: `PHO_QUAT_TOAN_QUOC` (áp dụng cho mọi dự án -> Gửi alert + Nạp Sổ cái Master) vs `DAC_THU_DU_AN_RIENG` (chỉ áp dụng cho 1 dự án cá biệt -> Tự động bỏ qua hoặc gắn nhãn lưu trữ phụ).
+
+### 7. Hoàn thiện Bộ lọc Gác cổng (Chi thường xuyên, Chặn văn bản đặc thù) & Tóm tắt Trung thực 100%:
+* **Nâng cấp Bộ lọc Gác cổng Lớp 2 & Lớp 3:**
+  - Bổ sung nhóm **Chi thường xuyên / Quản lý tài sản công** (mua sắm hàng hóa, dịch vụ, sửa chữa, cải tạo, bảo dưỡng tài sản công theo Luật Đấu thầu & hướng dẫn Bộ Tài chính).
+  - Kích hoạt cơ chế **chặn dứt khoát văn bản đặc thù của 1 dự án riêng biệt** (đã lọc bỏ thành công `Thông tư 63/2026/TT-BXD` định mức riêng đường sắt Lào Cai trong `0.06ms`).
+* **Chuẩn hóa Tóm tắt Trung thực (Grounded Summary):**
+  - Dẹp bỏ hoàn toàn việc ép khuôn 3 mục (Đấu thầu, Dự toán, BQLDA).
+  - Tóm tắt bám sát 100% nội dung thực tế ban hành, bắt buộc trích dẫn kèm `[Điều... Khoản...]` làm bằng chứng.
+  - Bổ sung mục liệt kê rõ các văn bản cũ bị bãi bỏ/thay thế và điều khoản chuyển tiếp.
