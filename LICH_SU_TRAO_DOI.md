@@ -135,3 +135,14 @@ ightarrow$ Điểm kèm số trang PDF.
   * **Lớp 2 (3-5ms / High Recall):** Vector Semantic Embedding (BGE-M3 / Vietnamese-SBERT / PyVi) -> Lọc nhanh 5 lĩnh vực chuyên ngành (Đấu thầu, Dự toán, QLDA, Công trình Quốc phòng, PCCC) và loại bỏ 90% văn bản ngoài ngành.
   * **Lớp 3 (200ms / Deep Grounding):** LLM Gemini / Small LLM kết hợp Pydantic v2 JSON Schema -> Đọc hiểu ngữ nghĩa sâu, xác định tác động hồ sơ dự án, gán tag gói thầu (TV-04, XD-01...) và trích dẫn nguyên văn số Điều/Khoản chống ảo giác.
 * **Mẫu thông báo Telegram UX 5 Giây:** Cảnh báo khai tử gạch ngang (`<s>...</s>`), Thẻ căn cứ 1-chạm (`<code>...</code>`) chạm tay là copy chuẩn Nghị định 30 để dán Word.
+
+### 4. Hoàn thành Lập trình & Triển khai Thực tế (Commit `db37641`):
+* **Đã hoàn thành 100% các module:**
+  1. `modules/classifier_tier1.py`: Lớp 1 bóc tách thể thức số hiệu theo NĐ 30/2020 và lọc rác (<0.05ms).
+  2. `modules/classifier_tier2.py`: Lớp 2 định tuyến ngữ nghĩa 5 cụm chủ đề xây dựng/đấu thầu/chi phí/quốc phòng/PCCC (3-5ms).
+  3. `modules/ai_analyzer.py`: Lớp 3 bộ não Gemini AI + Pydantic v2 Schema trích dẫn số Điều/Khoản chống ảo giác.
+  4. `modules/excel_sync_engine.py`: Động cơ tự động cập nhật Sổ cái Excel `Kho_Can_Cu_Phap_Ly.xlsx` và ghi log audit.
+  5. `modules/word_grounding_engine.py`: Động cơ lọc căn cứ còn hạn và tự động xếp đúng thứ bậc lập pháp để ốp vào Word.
+  6. `tests/test_all_pipelines.py`: Bộ kiểm thử tự động 6/6 test case pass tuyệt đối trong 0.08s.
+  7. `recon_pipeline.py`: Tích hợp toàn trình trinh sát 5 cổng Quốc gia -> Phễu 3 lớp -> Sync Excel -> Bắn Telegram.
+* **Đã đồng bộ toàn bộ mã nguồn lên GitHub `Thu-vien-PL` thành công.**
