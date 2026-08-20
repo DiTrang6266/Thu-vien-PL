@@ -2,7 +2,10 @@
 """
 Module: ai_analyzer.py
 Mục đích: Lớp 3 trong Phễu phân loại lai (3-Tier Hybrid Funnel).
-Nhiệm vụ: Bộ não Gemini AI (gemini-3.6-flash, gemini-3.7-flash) phân tích tác động toàn diện, đa chiều và chống ảo giác.
+Nhiệm vụ: 
+1. AI Gatekeeper: Thẩm định văn bản có thuộc 4 Trụ cột Chuyên môn và áp dụng phổ quát toàn quốc hay không.
+2. Tóm tắt Trung thực Chống Ảo Giác (Strict Grounding): Bóc tách đúng câu chữ và Điều/Khoản thực tế.
+Tuyệt đối không ép khuôn 3 mục suy diễn (Đấu thầu, Dự toán, BQLDA).
 """
 
 import os
@@ -69,13 +72,11 @@ class LegalAIAnalyzer:
         elif "TIEU_CHUAN" in doc_type_str or "tcvn" in doc_title.lower():
             type_label = "Tiêu chuẩn quốc gia"
 
-        # Khớp số hiệu
         if not so_hieu or len(so_hieu) > 35 or "/" not in so_hieu:
             match = re.search(r"(\d+(?:/\d{4})?/[A-ZĐĐa-z]+(?:-[A-ZĐĐa-z0-9]+)?)", f"{doc_title} {meta.get('raw_content', '')}")
             if match:
                 so_hieu = match.group(1)
 
-        # Khớp ngày ban hành
         if not ngay_bh:
             d_match = re.search(r"ngày\s+(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})", f"{doc_title} {meta.get('raw_content', '')}")
             if d_match:
@@ -84,7 +85,6 @@ class LegalAIAnalyzer:
         formatted_date = format_vietnamese_date(ngay_bh)
         date_str = f" {formatted_date}" if formatted_date else ""
         
-        # Thẩm quyền chuẩn
         auth_str = f" của {authority}"
         if authority == "Bộ Xây dựng":
             auth_str = " của Bộ trưởng Bộ Xây dựng"
@@ -101,7 +101,6 @@ class LegalAIAnalyzer:
         elif authority == "Quốc hội":
             auth_str = ""
 
-        # Trích yếu nội dung
         trich_yeu = doc_title.strip()
         trich_yeu = re.sub(r"^(Thông tư|Nghị định|Quyết định|Luật|Văn bản hợp nhất)\s*(số\s*[\w\-/]+)?\s*", "", trich_yeu, flags=re.IGNORECASE)
         trich_yeu = re.sub(r"^ngày\s*[\d/.\-]+\s*", "", trich_yeu, flags=re.IGNORECASE)
@@ -123,50 +122,46 @@ class LegalAIAnalyzer:
         citation = self.generate_nd30_citation(doc_title, doc_metadata)
         
         if self.api_key:
-            system_instruction = """BẠN LÀ CHUYÊN GIA CỐ VẤN PHÁP LUẬT XÂY DỰNG VÀ ĐẤU THẦU ĐẦU TƯ CÔNG VIỆT NAM.
-Nhiệm vụ: Đọc toàn văn tài liệu, phân tích TOÀN DIỆN, SÂU SẮC và trả về kết quả bằng ĐÚNG định dạng JSON Schema sau:
+            system_instruction = """BẠN LÀ THẨM ĐỊNH VIÊN PHÁP LUẬT VÀ CHUYÊN GIA TÓM TẮT TRUNG THỰC 100%.
+Nhiệm vụ của bạn:
+1. THẨM ĐỊNH GÁC CỔNG (GATEKEEPER):
+   - Kiểm tra xem văn bản này có THỰC SỰ thuộc 1 trong 4 Trụ cột Chuyên môn:
+     (1) DAU_TU_CONG_XAY_DUNG (Quản lý dự án, chi phí, dự toán, định mức, quy chuẩn QCVN, nghiệm thu, quy hoạch xây dựng).
+     (2) DAU_THAU_MUA_SAM (Luật Đấu thầu, E-HSMT, kế hoạch LCNT, lựa chọn nhà thầu).
+     (3) CHI_THUONG_XUYEN_TSCONG (Mua sắm, sửa chữa, cải tạo tài sản công bằng nguồn chi thường xuyên / vốn sự nghiệp).
+     (4) QUOC_PHONG_PCCC (Công trình quốc phòng, quy chuẩn PCCC QCVN 06).
+   - NẾU KHÔNG THUỘC 4 TRỤ CỘT TRÊN (Ví dụ: hoa tiêu, hàng hải, bến thủy nội địa, sát hạch lái xe, y tế điều trị, giáo dục, thuế thu nhập cá nhân...): ĐÁNH DẤU "is_domain_relevant": false VÀ DỪNG LẠI.
+   - Kiểm tra xem văn bản có ÁP DỤNG PHỔ QUÁT TOÀN QUỐC hay chỉ là văn bản ĐẶC THÙ CHO 1 DỰ ÁN CÁ BIỆT (như đường sắt Lào Cai, sân bay Long Thành...). Nếu là dự án riêng: ĐÁNH DẤU "is_nationwide_universal": false.
 
-YÊU CẦU:
-1. summary_top3: 3 điểm mới cốt lõi nhất (nêu rõ số liệu, tên phụ lục, thẩm quyền, ngày hiệu lực).
-2. impact_areas: Phân tích tác động thực tiễn cho 3 đối tượng:
-   - ho_so_moi_thau_va_dau_thau: Tác động đến E-HSMT, tiêu chuẩn đánh giá, quy trình đấu thầu.
-   - du_toan_va_chi_phi: Tác động đến định mức, đơn giá nhân công, máy, quản lý chi phí.
-   - tham_quyen_va_trach_nhiem: Tác động đến thẩm quyền phê duyệt của Chủ đầu tư, BQLDA, tư vấn.
-3. transition_rules: Quy định chuyển tiếp cho các gói thầu/hồ sơ đang lập dở hoặc đã phát hành.
-4. detailed_articles_diff: Danh sách 2-4 điều khoản quan trọng nhất (trích dẫn nguyên văn câu chữ để đối soát).
+2. TÓM TẮT TRUNG THỰC - CHỐNG ẢO GIÁC (ZERO-HALLUCINATION):
+   - TUYỆT ĐỐI KHÔNG SUY DIỄN: Văn bản quy định về cái gì thì tóm tắt đúng cái đó. Tuyệt đối không tự ý ép các mục Đấu thầu, Dự toán, BQLDA vào văn bản nếu văn bản không trực tiếp điều chỉnh.
+   - BẮT BUỘC TRÍCH DẪN ĐIỀU/KHOẢN: Mỗi ý tóm tắt phải ghi rõ căn cứ [Điều mấy, Khoản mấy] trong văn bản gốc.
+   - Nêu rõ các văn bản cũ bị bãi bỏ hoặc thay thế (nếu có).
+   - Nêu rõ ngày có hiệu lực thi hành và quy định chuyển tiếp (nếu có).
 """
 
             prompt = f"""{system_instruction}
-Tiêu đề: {doc_title}
-Nội dung tài liệu:
+Tiêu đề văn bản: {doc_title}
+Nội dung văn bản:
 {doc_text[:15000]}
 
-Trả về ĐÚNG JSON:
+Trả về ĐÚNG định dạng JSON sau:
 {{
+  "is_domain_relevant": true,
+  "is_nationwide_universal": true,
+  "scope_explanation": "Giải thích ngắn gọn về chuyên môn và phạm vi áp dụng của văn bản",
   "is_project_relevant": true,
-  "executive_title": "BÁO CÁO PHÂN TÍCH CHUYÊN SÂU: {doc_title[:80]}",
-  "summary_top3": [
-    "1. [Quy định / Định mức ban hành]: Nêu rõ tên định mức, dự án và cơ quan ban hành",
-    "2. [Danh mục các phụ lục chi tiết]: Liệt kê các phụ lục kỹ thuật/đơn giá cụ thể",
-    "3. [Hiệu lực & Trách nhiệm thi hành]: Nêu rõ ngày có hiệu lực và yêu cầu áp dụng"
+  "executive_title": "TÓM TẮT VĂN BẢN: {doc_title[:80]}",
+  "summary_points": [
+    "• [Điều ... Khoản ...]: Tóm tắt trung thực quy định thực tế",
+    "• [Điều ... Khoản ...]: Tóm tắt trung thực quy định thực tế",
+    "• [Điều ... Khoản ...]: Tóm tắt trung thực quy định thực tế"
   ],
-  "impact_areas": {{
-    "ho_so_moi_thau_va_dau_thau": "Phân tích tác động chi tiết tới công tác lập HSMT và lựa chọn nhà thầu",
-    "du_toan_va_chi_phi": "Phân tích tác động chi tiết tới dự toán, định mức và hao phí",
-    "tham_quyen_va_trach_nhiem": "Phân tích trách nhiệm BQLDA và các đơn vị liên quan"
-  }},
-  "transition_rules": "Quy định chuyển tiếp cụ thể đối với các hồ sơ nộp hoặc phát hành trước ngày hiệu lực",
-  "cau_can_cu_nd30": "{citation}",
-  "detailed_articles_diff": [
-    {{
-      "article_id": "Điều 1",
-      "title": "Phạm vi điều chỉnh và đối tượng áp dụng",
-      "status": "QUY ĐỊNH MỚI",
-      "exact_quote_new": "Trích dẫn nguyên văn câu chữ quan trọng nhất trong văn bản",
-      "core_change_explanation": "Giải thích ngắn gọn bản chất quy định",
-      "action_required": "Hành động bắt buộc kỹ sư/BQLDA phải thực hiện"
-    }}
-  ]
+  "repealed_docs": [
+    "Số hiệu văn bản cũ bị bãi bỏ hoặc thay thế"
+  ],
+  "effective_and_transition": "Quy định về ngày có hiệu lực và điều khoản chuyển tiếp",
+  "cau_can_cu_nd30": "{citation}"
 }}
 """
             models_to_try = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.5-flash", "gemini-flash-latest"]
@@ -175,7 +170,7 @@ Trả về ĐÚNG JSON:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"
                     payload = {
                         "contents": [{"parts": [{"text": prompt}]}],
-                        "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json"}
+                        "generationConfig": {"temperature": 0.0, "responseMimeType": "application/json"}
                     }
                     with httpx.Client(timeout=35.0) as client:
                         res = client.post(url, json=payload)
@@ -185,26 +180,34 @@ Trả về ĐÚNG JSON:
                             clean_str = re.sub(r"^```json\s*", "", raw_str).strip().rstrip("`")
                             parsed = json.loads(clean_str)
                             parsed["cau_can_cu_nd30"] = citation
-                            _log_debug(f"✅ Gemini AI ({m}) đã phân tích chuyên sâu thành công.")
+                            
+                            is_domain = parsed.get("is_domain_relevant", True)
+                            is_universal = parsed.get("is_nationwide_universal", True)
+
+                            if not is_domain or not is_universal:
+                                parsed["is_project_relevant"] = False
+                                _log_debug(f"ℹ️ Gemini AI ({m}) đã lọc bỏ văn bản: Domain={is_domain}, Universal={is_universal} ({parsed.get('scope_explanation')})")
+                            else:
+                                parsed["is_project_relevant"] = True
+                                _log_debug(f"✅ Gemini AI ({m}) đã thẩm định ĐẠT và tóm tắt trung thực.")
+                            
                             return parsed
                 except Exception as e:
                     _log_debug(f"⚠️ Thử model {m} gặp lỗi ({e}), chuyển model tiếp theo...")
 
-        # Fallback đầy đủ cấu trúc
+        # Fallback trung thực
         return {
+            "is_domain_relevant": True,
+            "is_nationwide_universal": True,
+            "scope_explanation": "Áp dụng theo quy định của văn bản",
             "is_project_relevant": True,
-            "executive_title": f"BÁO CÁO PHÂN TÍCH: {doc_title[:80]}",
-            "summary_top3": [
-                f"1. Ban hành văn bản chính thức áp dụng trong quản lý đầu tư xây dựng.",
-                "2. Quy định chi tiết các định mức, quy chuẩn kỹ thuật và trình tự thủ tục.",
-                "3. Yêu cầu chủ đầu tư và tư vấn áp dụng đúng từ ngày có hiệu lực."
+            "executive_title": f"TÓM TẮT VĂN BẢN: {doc_title[:80]}",
+            "summary_points": [
+                f"• Ban hành chính thức: {doc_title}",
+                "• Áp dụng theo các điều khoản và quy định chi tiết ban hành kèm theo văn bản.",
+                "• Có hiệu lực thi hành theo ngày ký hoặc ngày được quy định tại điều khoản thi hành."
             ],
-            "impact_areas": {
-                "ho_so_moi_thau_va_dau_thau": "Cần rà soát lại tiêu chuẩn kỹ thuật trong HSMT theo quy định mới.",
-                "du_toan_va_chi_phi": "Áp dụng định mức chi phí và đơn giá theo quy định ban hành.",
-                "tham_quyen_va_trach_nhiem": "Thực hiện đúng thẩm quyền phê duyệt và trách nhiệm quản lý dự án."
-            },
-            "transition_rules": "Áp dụng theo quy định chuyển tiếp tại các điều khoản thi hành của văn bản.",
-            "cau_can_cu_nd30": citation,
-            "detailed_articles_diff": []
+            "repealed_docs": [],
+            "effective_and_transition": "Thực hiện theo điều khoản thi hành của văn bản.",
+            "cau_can_cu_nd30": citation
         }

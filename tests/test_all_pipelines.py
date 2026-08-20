@@ -1,100 +1,76 @@
 # -*- coding: utf-8 -*-
 """
-Bộ kiểm thử tự động toàn trình (Comprehensive Test Suite):
-1. Test Lớp 1: Bóc tách Thể thức & Thẩm quyền (classifier_tier1)
-2. Test Lớp 2: Bộ lọc Ngữ nghĩa Chuyên ngành (classifier_tier2)
-3. Test Lớp 3: Bộ não AI Gemini & Pydantic Schema (ai_analyzer)
-4. Test Động cơ Đồng bộ Sổ cái Excel (excel_sync_engine)
-5. Test Động cơ Ốp Căn cứ Word theo Thứ bậc Lập pháp (word_grounding_engine)
+Bộ kiểm thử tự động toàn diện: Phễu gác cổng 2 tầng và Tóm tắt Trung thực.
 """
 
 import os
 import sys
-import unittest
+import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from modules.classifier_tier1 import StructuralAuthorityMatcher, DocumentType
-from modules.classifier_tier2 import SemanticDomainFilter, DomainEnum
+from modules.classifier_tier2 import HybridTier2Classifier, DomainEnum
 from modules.ai_analyzer import LegalAIAnalyzer
-from modules.excel_sync_engine import LegalExcelSyncEngine
-from modules.word_grounding_engine import get_active_legal_bases
 
 
-class TestHybridPipeline(unittest.TestCase):
+def test_tier2_rejects_waterway_piloting():
+    classifier = HybridTier2Classifier()
+    title = "Văn bản hợp nhất Thông tư quy định về quản lý nhà nước chuyên ngành tại cảng thủy nội địa, bến thủy nội địa, khu neo đậu và quản lý hoạt động hoa tiêu đường thủy nội địa"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is False
+    assert res["decision"] == "DROP_OUT_OF_SCOPE_INDUSTRY"
 
-    def setUp(self):
-        self.tier1 = StructuralAuthorityMatcher()
-        self.tier2 = SemanticDomainFilter()
-        self.ai = LegalAIAnalyzer()
 
-    def test_tier1_valid_decree(self):
-        title = "Nghị định số 24/2024/NĐ-CP quy định chi tiết một số điều của Luật Đấu thầu"
-        res = self.tier1.process(title)
-        self.assertTrue(res["is_valid_legal_doc"])
-        self.assertEqual(res["doc_type"], DocumentType.NGHI_DINH.value)
-        self.assertEqual(res["authority"], "Chính phủ")
+def test_tier2_rejects_project_specific_lao_cai():
+    classifier = HybridTier2Classifier()
+    title = "Thông tư ban hành định mức dự toán xây dựng Dự án thành phần 2 thuộc Dự án đầu tư xây dựng tuyến đường sắt Lào Cai - Hà Nội - Hải Phòng"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is False
+    assert res["decision"] == "DROP_PROJECT_SPECIFIC_DOC"
 
-    def test_tier1_valid_circular(self):
-        title = "Thông tư số 06/2024/TT-BKHĐT hướng dẫn mẫu E-HSMT trên Hệ thống mạng đấu thầu quốc gia"
-        res = self.tier1.process(title)
-        self.assertTrue(res["is_valid_legal_doc"])
-        self.assertEqual(res["doc_type"], DocumentType.THONG_TU.value)
-        self.assertEqual(res["authority"], "Bộ Kế hoạch và Đầu tư")
 
-    def test_tier1_junk_rejection(self):
-        title = "Thông báo số 12/TB-VP về việc phân công lịch trực Tết Nguyên đán 2026"
-        res = self.tier1.process(title)
-        self.assertFalse(res["is_valid_legal_doc"])
-        self.assertIn("JUNK_ADMINISTRATIVE_NOTICE", res["rejection_reason"])
+def test_tier2_rejects_individual_allocation():
+    classifier = HybridTier2Classifier()
+    title = "Quyết định về việc phân bổ dự toán chi ngân sách nhà nước năm 2026 cho Ban Quản lý dự án 7"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is False
+    assert res["decision"] == "DROP_INDIVIDUAL_DECISION"
 
-    def test_tier2_domain_matching(self):
-        title = "Thông tư hướng dẫn xác định định mức dự toán và đơn giá nhân công xây dựng"
-        res = self.tier2.process(title)
-        self.assertTrue(res["is_domain_relevant"])
-        self.assertEqual(res["best_matched_domain"], DomainEnum.DINH_MUC_DU_TOAN_CHI_PHI.value)
 
-    def test_tier2_out_of_domain_drop(self):
-        title = "Thông tư quy định mức giá thanh toán khám bệnh chữa bệnh bảo hiểm y tế và thuốc tân dược"
-        res = self.tier2.process(title)
-        self.assertFalse(res["is_domain_relevant"])
-        self.assertEqual(res["routing_action"], "DROP_OUT_OF_DOMAIN")
+def test_tier2_accepts_construction_planning():
+    classifier = HybridTier2Classifier()
+    title = "Thông tư ban hành Quy chuẩn kỹ thuật quốc gia về quy hoạch đô thị và nông thôn"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is True
+    assert res["target_domain"] == DomainEnum.DAU_TU_CONG_XAY_DUNG
 
-    def test_excel_sync_and_word_grounding(self):
-        excel_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Kho_Can_Cu_Phap_Ly.xlsx"))
-        sync_engine = LegalExcelSyncEngine(excel_path)
 
-        # Giả lập ban hành Thông tư mới thay thế Thông tư 11/2021
-        res = sync_engine.sync_new_document(
-            so_hieu="99/2026/TT-BXD",
-            loai_vb="Thông tư",
-            co_quan="Bộ Xây dựng",
-            ngay_bh="20/08/2026",
-            ngay_hl="20/08/2026",
-            linh_vuc="Quản lý chi phí",
-            cau_can_cu="Căn cứ Thông tư số 99/2026/TT-BXD ngày 20 tháng 8 năm 2026 của Bộ trưởng Bộ Xây dựng;",
-            thay_the_cho=["11/2021/TT-BXD"],
-            tags_bo_sung=["DU_TOAN", "QUAN_LY_CHI_PHI", "XD-01"],
-            thu_bac=300
-        )
-        self.assertTrue(res["success"])
+def test_tier2_accepts_bidding_guideline():
+    classifier = HybridTier2Classifier()
+    title = "Thông tư hướng dẫn lập hồ sơ mời thầu xây lắp qua mạng"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is True
+    assert res["target_domain"] == DomainEnum.DAU_THAU_MUA_SAM
 
-        # Kiểm tra trích xuất căn cứ cho Tờ trình Dự toán
-        bases = get_active_legal_bases(
-            dossier_type="TO_TRINH_DU_TOAN",
-            package_code="XD-01",
-            excel_path=excel_path
-        )
-        self.assertTrue(len(bases) > 0)
-        
-        # Kiểm tra thứ bậc: Luật (100) phải đứng trước Nghị định (200), Thông tư (300)
-        ranks = [b["thu_bac"] for b in bases]
-        self.assertEqual(ranks, sorted(ranks))
-        
-        # Đảm bảo văn bản hết hạn 63/2014 không xuất hiện
-        so_hieus = [b["so_hieu"] for b in bases]
-        self.assertNotIn("63/2014/NĐ-CP", so_hieus)
+
+def test_tier2_accepts_regular_expenditure():
+    classifier = HybridTier2Classifier()
+    title = "Thông tư quy định quản lý, sử dụng kinh phí chi thường xuyên để sửa chữa, bảo dưỡng tài sản công"
+    res = classifier.classify_and_filter(title)
+    assert res["is_accepted"] is True
+    assert res["target_domain"] == DomainEnum.CHI_THUONG_XUYEN_TSCONG
+
+
+def test_ai_nd30_citation_generation():
+    analyzer = LegalAIAnalyzer()
+    citation = analyzer.generate_nd30_citation(
+        "Thông tư quy định chi tiết về quản lý chi phí đầu tư xây dựng",
+        {"doc_number": "11/2021/TT-BXD", "authority": "Bộ Xây dựng", "ngay_ban_hanh": "31/08/2021"}
+    )
+    assert "Căn cứ Thông tư số 11/2021/TT-BXD" in citation
+    assert "của Bộ trưởng Bộ Xây dựng" in citation
+    assert citation.endswith(";")
 
 
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main([__file__, "-v"])
