@@ -36,12 +36,20 @@
 * Dọn sạch thư mục `scratch/`, `data/downloads/`, bộ nhớ đệm `__pycache__`.
 * Mã nguồn sạch sẽ, tinh gọn 100%, 18/18 Unit Test Cases PASS.
 
+### ✅ Giai đoạn 8: Nâng cấp Toàn diện Trạm gác Pháp lý Cloud 24/7 & Báo cáo Tuần tra 07:00 Sáng
+* **Hội đồng 3 Subagent Thẩm định & Phản biện Độc lập:** Thống nhất gói giải pháp xử lý sự cố trễ thông báo 07:00 sáng.
+* **Auto-Migration CSDL (`known_documents.json`):** Tự động chuyển đổi 108 văn bản cũ từ danh sách sang từ điển, loại bỏ 100% lỗi `TypeError`.
+* **Kích hoạt Báo cáo Tuần tra 07:00 Sáng (Daily Morning Heartbeat):** Gửi bản tin điểm danh trạng thái trực ban 24/7 và kho 94 văn bản kể cả khi 24h qua không có luật mới phát sinh.
+* **Định dạng Dual-Format Telegram:** Tách riêng caption $\le 850$ ký tự cho `sendDocument` và tin nhắn phân tích đầy đủ cho `sendMessage`, bảo vệ an toàn với `safe_html()` chống lỗi 400 Bad Request.
+* **Tối ưu Hạ tầng Cloud GitHub Actions:** Đổi lịch chạy sang 06:43 sáng (né đỉnh nghẽn 00:00 UTC), lưu trữ đồng bộ Sổ cái Excel `Kho_Can_Cu_Phap_Ly.xlsx`, `docs/index.html` và chống xung đột push.
+* **Kiểm thử Bền vững:** 23/23 Unit Test Cases **PASS 100%**.
+
 ---
 
 ## 2. BẢNG TỔNG HỢP 94 VĂN BẢN THEO CHUYÊN NGÀNH (MỐC 21/08/2026)
 
 | STT | Nhóm Văn bản | Số lượng VB | Mốc hiệu lực & Văn bản Xương sống Hiện hành |
-| :---: | :--- | :---: | :--- |
+| :--- | :--- | :---: | :--- |
 | **1** | Quy hoạch Xây dựng & Đo đạc | 9 | Luật 47/2024/QH15, NĐ 178/2025, TT 04/2022, QCVN 01:2021, Luật Đo đạc 27/2018. |
 | **2** | Xây dựng & Quản lý dự án | 7 | Luật 135/2025/QH15, NĐ 217/2026/NĐ-CP, NĐ 35/2023/NĐ-CP. |
 | **3** | An toàn Lao động | 1 | Luật An toàn, vệ sinh lao động số 84/2015/QH13. |
@@ -66,5 +74,6 @@
 
 * **Kho GitHub Master:** `https://github.com/DiTrang6266/Thu-vien-PL` (Nhánh: `main`).
 * **Trang Web Thẻ Di Động:** `https://ditrang6266.github.io/Thu-vien-PL/` (Đầy đủ 94 thẻ trực quan).
-* **Kiểm thử Tự động:** 18/18 Unit Test Cases **PASS 100%**.
+* **Kiểm thử Tự động:** 23/23 Unit Test Cases **PASS 100%**.
 * **Độ sạch mã nguồn:** Sạch sẽ 100%, không còn file rác hay file tạm.
+

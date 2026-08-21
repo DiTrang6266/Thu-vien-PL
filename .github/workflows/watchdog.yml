@@ -2,18 +2,22 @@ name: Legal Reconnaissance Watchdog 24/7
 
 on:
   schedule:
-    # Chạy tự động mỗi sáng lúc 07:00 (Giờ VN = 00:00 UTC) từ Thứ 2 đến Thứ 6
-    - cron: '0 0 * * 1-5'
+    # Chạy tự động lúc 06:43 sáng (Giờ VN = 23:43 UTC) từ Thứ 2 đến Thứ 6 (né đỉnh nghẽn 00:00 UTC)
+    - cron: '43 23 * * 0-4'
   workflow_dispatch:
     inputs:
       mode:
         description: 'Chế độ chạy'
         required: true
-        default: 'test_ai'
+        default: 'recon'
         type: choice
         options:
-          - test_ai
           - recon
+          - test_ai
+
+concurrency:
+  group: legal-recon-watchdog
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -21,9 +25,12 @@ permissions:
 jobs:
   recon_and_alert:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -43,10 +50,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.mode }}" = "recon" ]; then
-            echo "Running automated daily reconnaissance..."
+            echo "🔍 Đang chạy chu trình trinh sát pháp lý hàng ngày & Heartbeat 07:00..."
             python recon_pipeline.py
           else
-            echo "Running live AI deep analysis test..."
+            echo "🧪 Đang chạy kiểm thử phân tích AI trực tiếp..."
             python test_live_ai.py
           fi
 
@@ -54,10 +61,14 @@ jobs:
         run: |
           git config --global user.name "LegalReconBot"
           git config --global user.email "bot@legal-recon.local"
-          git add data/
+          git config --global core.autocrlf false
+          git add -f Kho_Can_Cu_Phap_Ly.xlsx
+          git add data/ docs/ index.html
           if git diff --staged --quiet; then
-            echo "No changes to commit."
+            echo "✨ Không có dữ liệu mới cần lưu trữ."
           else
-            git commit -m "Auto-update: Legal state [skip ci]"
-            git push
+            git commit -m "Auto-update: Legal state, Excel ledger & Web cards [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main
           fi
+

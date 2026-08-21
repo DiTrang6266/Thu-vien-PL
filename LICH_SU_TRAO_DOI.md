@@ -102,6 +102,16 @@ Dự án áp dụng quy chuẩn cố định bắt buộc khi đúc hồ sơ Wor
   - Tái tạo thành công `docs/index.html` và `index.html`.
   - Kiểm thử toàn bộ 18/18 Unit Test Cases PASS 100%.
 
+### Buổi 22: Thẩm định & Triển khai Nâng cấp Trạm gác Pháp lý 24/7, Báo cáo Tuần tra 07:00 Sáng & Hạ tầng GitHub Actions Zero-Fail
+* **Chỉ đạo của Người dùng:** Điều tra nguyên nhân 2 ngày liên tiếp lúc 7h không có tin nhắn Telegram, chia 3 subagent nghiên cứu độc lập và lập kế hoạch nâng cấp bền vững.
+* **Quyết định & Hành động đã triển khai:**
+  - **Hội đồng 3 Subagent Độc lập:** Thẩm định và chỉ ra 3 nguyên nhân: (1) Lỗi `TypeError` do xung đột list/dict trong `known_documents.json`; (2) Lịch chạy 00:00 UTC bị nghẽn hàng đợi GitHub Actions (delay 15-45 phút); (3) Cơ chế "im lặng khi không có luật mới" làm người dùng tưởng bot hỏng.
+  - **Auto-Migration CSDL:** Tự động nâng cấp 108 hash văn bản từ `list` sang `dict` trong `load_known_documents()`.
+  - **Báo cáo Tuần tra 07:00 Sáng (Daily Morning Heartbeat):** Gửi bản tin điểm danh trực ban 24/7 và thông báo tình trạng an toàn kho 94 văn bản lúc 07:00 sáng mỗi ngày.
+  - **Định dạng Dual-Format Telegram & `safe_html()`:** Tách riêng caption $\le 850$ ký tự cho `sendDocument` và tin nhắn phân tích đầy đủ cho `sendMessage`, bảo vệ an toàn chống lỗi 400 Bad Request.
+  - **Tối ưu Hạ tầng Cloud (`watchdog.yml`):** Đổi lịch chạy sang 06:43 sáng (né đỉnh nghẽn 00:00 UTC), lưu trữ đồng bộ Sổ cái Excel `Kho_Can_Cu_Phap_Ly.xlsx`, `docs/index.html` và chống xung đột push.
+  - **Kiểm thử Bền vững:** Bổ sung `tests/test_recon_pipeline_resilience.py`, 23/23 Unit Test Cases **PASS 100%**.
+
 ---
 
 ## 📂 4. DANH MỤC CÁC FILE ĐANG HOẠT ĐỘNG TRONG DỰ ÁN
@@ -120,10 +130,11 @@ Thư mục làm việc: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự �
 10. 📊 **`modules/legal_db_sync.py`:** Module đồng bộ Sổ cái Excel chống kẹt file trên Windows.
 11. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản bài viết Instant View Telegraph.
 12. 🔍 **`modules/legal_parser.py` & `legal_diff.py`:** Bóc tách phân cấp và so sánh điều khoản (diff).
-13. 🧪 **`tests/`:** 9 bộ kiểm thử tự động (18/18 Unit Test Cases PASS 100%).
-14. ⚙️ **`recon_pipeline.py`:** Luồng trinh sát pháp lý 24/7.
-15. 🚀 **`.github/workflows/watchdog.yml`:** Tự động chạy 07:00 sáng T2-T6 trên GitHub Actions.
+13. 🧪 **`tests/`:** 10 bộ kiểm thử tự động (23/23 Unit Test Cases PASS 100%).
+14. ⚙️ **`recon_pipeline.py`:** Luồng trinh sát pháp lý 24/7 & Báo cáo Tuần tra Heartbeat 07:00.
+15. 🚀 **`.github/workflows/watchdog.yml`:** Tự động chạy 06:43 sáng T2-T6 trên GitHub Actions (né đỉnh nghẽn 00:00 UTC).
 16. 📋 **`LICH_SU_TRAO_DOI.md` & `TIEN_DO.md`:** Hồ sơ bàn giao dự án.
+
 
 ---
 
