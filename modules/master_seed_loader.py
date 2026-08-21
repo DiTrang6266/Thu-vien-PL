@@ -470,8 +470,8 @@ MASTER_SEED_RECORDS = [
     {
         "linh_vuc": "Quốc phòng & Doanh trại", "loai_vb": "Thông tư", "so_hieu": "128/2021/TT-BQP",
         "trich_yeu": "Quy định phân cấp, ủy quyền quyết định chủ trương đầu tư và dự án đầu tư công trong Bộ Quốc phòng", "co_quan": "Bộ Quốc phòng",
-        "ngay_bh": "06/10/2021", "ngay_hl": "20/11/2021", "trang_thai": "Hết hiệu lực",
-        "thay_the": "Bị thay thế bởi Thông tư 102/2026/TT-BQP từ ngày 30/08/2026", "chuyen_tiep": "Áp dụng phân cấp thẩm quyền đầu tư BQP giai đoạn 2021-2026",
+        "ngay_bh": "06/10/2021", "ngay_hl": "20/11/2021", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Được sửa đổi, bổ sung bởi Thông tư 73/2023/TT-BQP và Thông tư 120/2024/TT-BQP", "chuyen_tiep": "Căn cứ pháp lý then chốt về phân cấp, ủy quyền quyết định đầu tư và dự án đầu tư công trong BQP",
         "tags": "ALL, BQP, PHAN_CAP, QLDA, TV-01, TV-02, TV-03, TV-04, TV-05, TV-08, XD-01", "link_iv": ""
     },
     {
@@ -491,15 +491,15 @@ MASTER_SEED_RECORDS = [
     {
         "linh_vuc": "Quốc phòng & Doanh trại", "loai_vb": "Thông tư", "so_hieu": "73/2023/TT-BQP",
         "trich_yeu": "Sửa đổi, bổ sung một số điều của Thông tư số 128/2021/TT-BQP ngày 01/10/2021 về quy định phân cấp, ủy quyền quyết định chủ trương đầu tư và dự án đầu tư công trong BQP", "co_quan": "Bộ Quốc phòng",
-        "ngay_bh": "05/10/2023", "ngay_hl": "20/11/2023", "trang_thai": "Hết hiệu lực",
-        "thay_the": "Bị thay thế bởi Thông tư 102/2026/TT-BQP từ ngày 30/08/2026", "chuyen_tiep": "Cập nhật phân cấp đầu tư BQP giai đoạn 2023-2026",
+        "ngay_bh": "05/10/2023", "ngay_hl": "20/11/2023", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Sửa đổi, bổ sung Thông tư 128/2021/TT-BQP", "chuyen_tiep": "Cập nhật phân cấp đầu tư BQP",
         "tags": "ALL, BQP, PHAN_CAP, QLDA, TV-01, TV-02, TV-03, TV-04, TV-05, TV-08, XD-01", "link_iv": ""
     },
     {
         "linh_vuc": "Quốc phòng & Doanh trại", "loai_vb": "Thông tư", "so_hieu": "120/2024/TT-BQP",
         "trich_yeu": "Sửa đổi, bổ sung một số điều của Thông tư số 128/2021/TT-BQP về phân cấp quản lý và thực hiện dự án đầu tư công trong Bộ Quốc phòng", "co_quan": "Bộ Quốc phòng",
-        "ngay_bh": "26/12/2024", "ngay_hl": "10/02/2025", "trang_thai": "Hết hiệu lực",
-        "thay_the": "Bị thay thế bởi Thông tư 102/2026/TT-BQP từ ngày 30/08/2026", "chuyen_tiep": "Phân cấp phê duyệt thiết kế, dự toán BQP giai đoạn 2024-2026",
+        "ngay_bh": "26/12/2024", "ngay_hl": "10/02/2025", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Sửa đổi, bổ sung Thông tư 128/2021/TT-BQP", "chuyen_tiep": "Phân cấp phê duyệt thiết kế, dự toán BQP",
         "tags": "ALL, BQP, PHAN_CAP, QLDA, TV-01, TV-02, TV-03, TV-04, TV-05, TV-08, XD-01", "link_iv": ""
     },
     {
@@ -515,13 +515,6 @@ MASTER_SEED_RECORDS = [
         "ngay_bh": "09/07/2026", "ngay_hl": "09/07/2026", "trang_thai": "Đang có hiệu lực",
         "thay_the": "None", "chuyen_tiep": "Áp dụng cho các dự án đầu tư xây dựng công trình trong toàn Bộ Quốc phòng",
         "tags": "ALL, BQP, QLDA, XD-01, TOAN_QUAN", "link_iv": ""
-    },
-    {
-        "linh_vuc": "Quốc phòng & Doanh trại", "loai_vb": "Thông tư", "so_hieu": "102/2026/TT-BQP",
-        "trich_yeu": "Quy định và hướng dẫn về lập, thẩm định, quyết định, phân cấp quyết định chủ trương đầu tư, dự án đầu tư trong Bộ Quốc phòng", "co_quan": "Bộ Quốc phòng",
-        "ngay_bh": "17/07/2026", "ngay_hl": "30/08/2026", "trang_thai": "Đang có hiệu lực",
-        "thay_the": "Thay thế Thông tư 128/2021/TT-BQP, Thông tư 73/2023/TT-BQP và Thông tư 120/2024/TT-BQP", "chuyen_tiep": "Văn bản xương sống về phân cấp, ủy quyền quyết định đầu tư và dự án đầu tư công mới nhất trong BQP",
-        "tags": "ALL, BQP, PHAN_CAP, QLDA, TV-01, TV-02, TV-03, TV-04, TV-05, TV-08, XD-01", "link_iv": ""
     },
     {
         "linh_vuc": "Quốc phòng & Doanh trại", "loai_vb": "Quyết định", "so_hieu": "35/QĐ-TTg",
