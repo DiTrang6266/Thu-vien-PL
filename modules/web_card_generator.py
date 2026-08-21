@@ -107,15 +107,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
 
     <!-- Search & Filter Controls -->
+    <!-- Search & Filter Controls -->
     <div class="sticky-tools">
         <input type="text" id="searchInput" class="search-box" placeholder="Tìm số hiệu (24/2024...), định mức, tên văn bản..." oninput="renderFilteredCards()">
         <div class="pills-container">
             <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả</button>
             <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
-            <button class="pill" onclick="setFilterCategory('DAU_THAU', this)">⚖️ Đấu thầu</button>
-            <button class="pill" onclick="setFilterCategory('XAY_LAP', this)">🏗️ Xây lắp (XD-01)</button>
-            <button class="pill" onclick="setFilterCategory('TU_VAN', this)">📐 Tư vấn (TV-04)</button>
-            <button class="pill" onclick="setFilterCategory('DOANH_CU', this)">🎖️ BQP / Doanh trại</button>
+            <button class="pill" onclick="setFilterCategory('TV-01', this)">🗺️ TV-01 (Quy hoạch/Đo đạc)</button>
+            <button class="pill" onclick="setFilterCategory('TV-02', this)">📋 TV-02 (Khảo sát/FS/BKTKT)</button>
+            <button class="pill" onclick="setFilterCategory('TV-03', this)">🔍 TV-03 (Thẩm tra FS)</button>
+            <button class="pill" onclick="setFilterCategory('TV-04', this)">📐 TV-04 (Thiết kế BVTC-DT)</button>
+            <button class="pill" onclick="setFilterCategory('TV-05', this)">🔎 TV-05 (Thẩm tra BVTC-DT)</button>
+            <button class="pill" onclick="setFilterCategory('TV-06', this)">⚖️ TV-06 (Lập HSMT/HSYC)</button>
+            <button class="pill" onclick="setFilterCategory('TV-07', this)">🧪 TV-07 (Nén cọc/Thí nghiệm)</button>
+            <button class="pill" onclick="setFilterCategory('TV-08', this)">👷 TV-08 (Giám sát XD)</button>
+            <button class="pill" onclick="setFilterCategory('TV-09', this)">📊 TV-09 (Kiểm toán)</button>
+            <button class="pill" onclick="setFilterCategory('PTV-01', this)">🛡️ PTV-01 (Bảo hiểm)</button>
+            <button class="pill" onclick="setFilterCategory('XD-01', this)">🏗️ XD-01 (Thi công & Doanh cụ)</button>
+            <button class="pill" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
+            <button class="pill" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
+            <button class="pill" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
+            <button class="pill" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
         </div>
     </div>
 
@@ -135,8 +147,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         function setFilterCategory(cat, el) {
             currentFilter = cat;
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
+            if (el) {
+                el.classList.add('active');
+            } else {
+                const btn = Array.from(document.querySelectorAll('.pill')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${cat}'`));
+                if (btn) btn.classList.add('active');
+            }
             renderFilteredCards();
+        }
+
+        function filterByTag(tag) {
+            tag = tag.trim().replace(/^#/, '');
+            setFilterCategory(tag, null);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderFilteredCards() {
@@ -158,11 +181,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 // 2. Category filter
                 if (currentFilter === 'ALL') return true;
                 if (currentFilter === 'HIEU_LUC') return item.trang_thai.toLowerCase().includes('đang có hiệu lực');
-                if (currentFilter === 'DAU_THAU') return (item.linh_vuc || '').toLowerCase().includes('đấu thầu') || (item.tags || '').toLowerCase().includes('đấu_thầu');
-                if (currentFilter === 'XAY_LAP') return (item.tags || '').toUpperCase().includes('XD') || (item.linh_vuc || '').toLowerCase().includes('xây');
-                if (currentFilter === 'TU_VAN') return (item.tags || '').toUpperCase().includes('TV') || (item.linh_vuc || '').toLowerCase().includes('tư vấn');
-                if (currentFilter === 'DOANH_CU') return (item.tags || '').toLowerCase().includes('doanh') || (item.co_quan || '').toLowerCase().includes('quốc phòng');
-                return true;
+                
+                const itemTags = (item.tags || '').toUpperCase();
+                const filterUpper = currentFilter.toUpperCase();
+
+                if (filterUpper.startsWith('TV-') || filterUpper.startsWith('PTV-') || filterUpper.startsWith('XD-')) {
+                    return itemTags.includes(filterUpper) || itemTags.includes('ALL');
+                }
+                if (filterUpper === 'BQP') return itemTags.includes('BQP') || (item.co_quan || '').toLowerCase().includes('quốc phòng');
+                if (filterUpper === 'MOI_TRUONG') return itemTags.includes('MOI_TRUONG') || (item.trich_yeu || '').toLowerCase().includes('môi trường');
+                if (filterUpper === 'PCCC') return itemTags.includes('PCCC') || (item.trich_yeu || '').toLowerCase().includes('cháy') || (item.trich_yeu || '').toLowerCase().includes('pccc');
+                if (filterUpper === 'CHI_THUONG_XUYEN') return itemTags.includes('CHI_THUONG_XUYEN') || (item.trich_yeu || '').toLowerCase().includes('chi thường xuyên');
+
+                return itemTags.includes(filterUpper);
             });
 
             statsEl.innerText = `Hiển thị ${filtered.length} / ${RAW_DATA.length} văn bản pháp lý`;
@@ -177,7 +208,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const statusClass = isActive ? 'status-active' : 'status-expired';
                 const statusText = isActive ? '🟢 CÒN HIỆU LỰC' : '🔴 HẾT HIỆU LỰC';
 
-                const tagsList = (item.tags || 'ALL').split(',').map(t => `<span class="tag-pill">${t.trim()}</span>`).join('');
+                const tagsList = (item.tags || 'ALL').split(',').map(t => {
+                    const cleanTag = t.trim();
+                    return `<span class="tag-pill" style="cursor:pointer;" onclick="filterByTag('${cleanTag}')">${cleanTag}</span>`;
+                }).join('');
 
                 let transitionHtml = '';
                 if (item.chuyen_tiep && item.chuyen_tiep.length > 5) {
