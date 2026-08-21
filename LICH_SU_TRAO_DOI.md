@@ -304,21 +304,30 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 
 ---
 
-## 📅 BUỔI 12 (21/08/2026): HỘI ĐỒNG 3 SUBAGENT PHẢN BIỆN & NÂNG CẤP BÁO CÁO PHÁP LÝ TOÀN DIỆN
+## 📅 BUỔI 13 (21/08/2026): BỔ SUNG TOÀN DIỆN 11 GÓI THẦU DỰ ÁN TỪ TV-01 ĐẾN XD-01
 
 ### 🎯 1. Yêu cầu của Người dùng
-* *"Tiến hành chia 3 subagent tiến hành đối soát độc lập từ dữ liệu thu thập được đề xuất phương án, sau đó phản biện lẫn nhau để đi đến thông nhất về cấu trúc tối ưu nhé, các subagent có tư duy độc lập không dựa vào nhau nhé"*
-* *"Lên plan chi tiết cho kế hoạch đã thống nhất cho tôi quan điểm đứng trên vai người khổng lồ, cấu trúc thống nhất, code ít nhất, hiệu quả cao nhất"*
+* *"nhìn cái này ngứa mắt thế, trình tự tôi gửi bạn có từ TV-01 cơ mà, không lẽ toàn bộ văn bản pháp lý chỉ lấy từ TV-04 à, kiểm tra lại rồi báo cáo chính xác nhé"*
 
 ### 💡 2. Các Quyết định Kỹ thuật & Kết quả Đạt được
-1. **Hội đồng 3 Subagent Độc lập:**
-   - *Subagent 1 (Pháp chế & Dự án):* Đưa ma trận 8 gói thầu và cảnh báo bẫy thanh tra vào báo cáo.
-   - *Subagent 2 (AI & NLP):* Đưa kỹ thuật bóc tách Chương (Chapter Map-Reduce) và kiểm chứng trích dẫn Redline.
-   - *Subagent 3 (Trải nghiệm UX):* Tối ưu tin nhắn Telegram 30 giây + Instant View sạch sẽ không lặp tiêu đề hành chính.
-2. **Triển khai Mã nguồn Hoàn hảo:**
-   - Nâng cấp `modules/ai_analyzer.py` và `modules/telegraph_publisher.py`.
-   - 18/18 Unit Test Cases PASS 100%.
-   - Sổ cái Master [Kho_Can_Cu_Phap_Ly.xlsx](file:///c:/Users/Manh%20Duy/Desktop/Hoàn%20thiện%20Hồ%20sơ%20dự%20án1/Kho_Can_Cu_Phap_Ly.xlsx) giữ vững 79 văn bản chuẩn mực.
+1. **Khắc phục triệt để thiếu sót phân loại gói thầu:**
+   - Đối chiếu lại toàn bộ 11 sheet trong file `Trình tự thực hiện dự án mới (version 1).xlsx` (các gói `TV-01` Quy hoạch/Đo đạc, `TV-02` Khảo sát/Lập FS/BKTKT, `TV-03` Thẩm tra FS/BKTKT).
+   - Gán trường `tags` cho toàn bộ 79 văn bản trong CSDL Master Seed:
+     + `TV-01`: 53 văn bản
+     + `TV-02`: 55 văn bản
+     + `TV-03`: 41 văn bản
+     + `TV-04`: 51 văn bản
+     + `TV-05`: 41 văn bản
+     + `TV-06`: 15 văn bản
+     + `TV-07`: 12 văn bản
+     + `TV-08`: 29 văn bản
+     + `TV-09`: 15 văn bản
+     + `PTV-01`: 10 văn bản
+     + `XD-01`: 64 văn bản
+2. **Nâng cấp Giao diện Web Card Di Động:**
+   - Cung cấp thanh lọc 1-chạm đầy đủ trọn gói 11 gói thầu từ `TV-01` đến `XD-01`.
+   - Cho phép người dùng chạm trực tiếp vào nhãn tag trên từng thẻ để lọc tức thì.
+   - Đồng bộ và đẩy lên GitHub Pages thành công.
 
 ---
 
@@ -327,13 +336,13 @@ Dự án áp dụng quy chuẩn cố định bắt buộc, không thay đổi:
 Thư mục làm việc chính: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án1\`
 
 1. 📡 **`recon_pipeline.py`:** Kịch bản trinh sát lọc 3 tầng thông minh + Master Template Telegram + Chuẩn hóa tham số đồng bộ Excel sạch sẽ.
-2. 🌱 **`modules/master_seed_loader.py`:** Module nạp mới toàn bộ 79 văn bản nền tảng chuẩn 14 cột giao diện Executive thật 100%.
+2. 🌱 **`modules/master_seed_loader.py`:** [NÂNG CẤP] Module nạp mới toàn bộ 79 văn bản nền tảng chuẩn 14 cột giao diện Executive, phủ kín 11 gói thầu từ TV-01 đến XD-01.
 3. 📊 **`modules/legal_db_sync.py`:** Bộ định dạng giao diện Excel chuyên nghiệp chuẩn Executive Dashboard + Quản lý vòng đời.
-4. 📱 **`modules/web_card_generator.py`:** Module tự động sinh Trang Web Thẻ Di Động Thông Minh (`docs/index.html` & `index.html`).
+4. 📱 **`modules/web_card_generator.py`:** [NÂNG CẤP] Module tự động sinh Trang Web Thẻ Di Động Thông Minh với thanh lọc 11 gói thầu và chạm thẻ lọc nhanh.
 5. 📄 **`modules/word_grounding_engine.py`:** Động cơ lọc căn cứ pháp lý sống và sắp xếp thứ bậc ốp phôi Word chuẩn 14 cột.
 6. 🛡️ **`modules/ai_gatekeeper.py`:** Module gác cổng AI siêu tốc 0.3s (Tier 2 Gatekeeper).
-7. 🧠 **`modules/ai_analyzer.py`:** [NÂNG CẤP] Bộ não AI phân tích tác động toàn văn đa tầng theo Chương + Lớp kiểm chứng trích dẫn Redline.
-8. 📰 **`modules/telegraph_publisher.py`:** [NÂNG CẤP] Bộ xuất bản báo cáo Instant View không lặp tiêu đề, cấu trúc 4 khối nghiệp vụ thực chiến.
+7. 🧠 **`modules/ai_analyzer.py`:** Bộ não AI phân tích tác động toàn văn đa tầng theo Chương + Lớp kiểm chứng trích dẫn Redline.
+8. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản báo cáo Instant View không lặp tiêu đề, cấu trúc 4 khối nghiệp vụ thực chiến.
 9. 🔍 **`modules/legal_parser.py`:** Bộ bóc tách cấu trúc Chương $\rightarrow$ Điều $\rightarrow$ Khoản $\rightarrow$ Điểm.
 10. ⚖️ **`modules/legal_diff.py`:** Bộ đối chiếu từng từ ngữ (Redline) và kiểm tra trích dẫn gốc chống ảo giác.
 11. 🧪 **`tests/test_master_seed_loader.py`:** Bộ unit test kiểm thử nạp hạt giống và tính chống trùng lặp (2/2 PASS).

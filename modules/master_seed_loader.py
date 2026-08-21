@@ -19,6 +19,56 @@ EXCEL_PATH = os.path.join(BASE_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
 
 MASTER_SEED_RECORDS = [
     {
+        "linh_vuc": "Quy hoạch Xây dựng", "loai_vb": "Luật", "so_hieu": "30/2009/QH12",
+        "trich_yeu": "Luật Quy hoạch đô thị năm 2009 (sửa đổi, bổ sung bởi Luật số 35/2018/QH14)", "co_quan": "Quốc hội",
+        "ngay_bh": "17/06/2009", "ngay_hl": "01/01/2010", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "None", "chuyen_tiep": "Căn cứ pháp lý nền tảng cho việc lập, thẩm định và phê duyệt điều chỉnh Quy hoạch Tổng mặt bằng 1/500 doanh trại và khu chức năng",
+        "tags": "ALL, QUY_HOACH, TV-01, TV-02, BQP", "link_iv": ""
+    },
+    {
+        "linh_vuc": "Quy hoạch Xây dựng", "loai_vb": "Nghị định", "so_hieu": "44/2015/NĐ-CP",
+        "trich_yeu": "Quy định chi tiết một số nội dung về quy hoạch xây dựng", "co_quan": "Chính phủ",
+        "ngay_bh": "06/05/2015", "ngay_hl": "30/06/2015", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Được sửa đổi, bổ sung bởi Nghị định số 35/2023/NĐ-CP và Nghị định số 72/2019/NĐ-CP", "chuyen_tiep": "Quy định trình tự, thủ tục lập và phê duyệt Quy hoạch chi tiết và Quy hoạch Tổng mặt bằng công trình",
+        "tags": "ALL, QUY_HOACH, TV-01, TV-02, QLDA", "link_iv": ""
+    },
+    {
+        "linh_vuc": "Quy hoạch Xây dựng", "loai_vb": "Thông tư", "so_hieu": "04/2022/TT-BXD",
+        "trich_yeu": "Quy định về hồ sơ nhiệm vụ và hồ sơ đồ án quy hoạch xây dựng vùng liên huyện, quy hoạch xây dựng vùng huyện, quy hoạch đô thị, quy hoạch xây dựng khu chức năng và quy hoạch nông thôn", "co_quan": "Bộ Xây dựng",
+        "ngay_bh": "24/10/2022", "ngay_hl": "01/01/2023", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Thay thế Thông tư 12/2016/TT-BXD và Thông tư 02/2017/TT-BXD", "chuyen_tiep": "Quy định thành phần hồ sơ bản vẽ, thuyết minh và quy cách đồ án quy hoạch Tổng mặt bằng tỷ lệ 1/500 gói TV-01",
+        "tags": "QUY_HOACH, TV-01, HO_SO_QUY_HOACH", "link_iv": ""
+    },
+    {
+        "linh_vuc": "Quy hoạch Xây dựng", "loai_vb": "Thông tư", "so_hieu": "20/2019/TT-BXD",
+        "trich_yeu": "Hướng dẫn xác định, quản lý chi phí quy hoạch xây dựng và quy hoạch đô thị", "co_quan": "Bộ Xây dựng",
+        "ngay_bh": "31/12/2019", "ngay_hl": "15/02/2020", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Thay thế Thông tư 01/2013/TT-BXD", "chuyen_tiep": "Căn cứ lập dự toán chi phí gói thầu TV-01 Tư vấn lập quy hoạch Tổng mặt bằng tỷ lệ 1/500",
+        "tags": "QUY_HOACH, CHI_PHI_QUY_HOACH, DU_TOAN, TV-01", "link_iv": ""
+    },
+    {
+        "linh_vuc": "Quy chuẩn Xây dựng", "loai_vb": "Thông tư", "so_hieu": "01/2021/TT-BXD",
+        "trich_yeu": "Ban hành Quy chuẩn kỹ thuật quốc gia về Quy hoạch xây dựng (Mã số: QCVN 01:2021/BXD)", "co_quan": "Bộ Xây dựng",
+        "ngay_bh": "19/05/2021", "ngay_hl": "05/07/2021", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Thay thế QCVN 01:2019/BXD ban hành kèm Thông tư 22/2019/TT-BXD", "chuyen_tiep": "Quy chuẩn bắt buộc áp dụng cho gói TV-01 về mật độ xây dựng, khoảng lùi công trình, khoảng cách an toàn PCCC, chỉ giới đường đỏ",
+        "tags": "QCVN, QUY_HOACH, TV-01, TV-02, TV-04, XD-01", "link_iv": ""
+    },
+    {
+        "linh_vuc": "Khảo sát & Đo đạc", "loai_vb": "Luật", "so_hieu": "27/2018/QH14",
+        "trich_yeu": "Luật Đo đạc và bản đồ năm 2018", "co_quan": "Quốc hội",
+        "ngay_bh": "14/06/2018", "ngay_hl": "01/01/2019", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "None", "chuyen_tiep": "Căn cứ pháp lý cho công tác đo đạc khảo sát địa hình, trắc địa công trình phục vụ lập quy hoạch TV-01 và khảo sát TV-02",
+        "tags": "KHAO_SAT, DO_DAC, TV-01, TV-02, XD-01", "link_iv": ""
+    },
+    {
+        "linh_vuc": "Khảo sát & Đo đạc", "loai_vb": "Nghị định", "so_hieu": "27/2019/NĐ-CP",
+        "trich_yeu": "Quy định chi tiết một số điều của Luật Đo đạc và bản đồ", "co_quan": "Chính phủ",
+        "ngay_bh": "13/03/2019", "ngay_hl": "01/05/2019", "trang_thai": "Đang có hiệu lực",
+        "thay_the": "Được sửa đổi, bổ sung bởi Nghị định 136/2021/NĐ-CP", "chuyen_tiep": "Quy định quy chuẩn đo đạc bản đồ địa hình tỷ lệ 1/500 phục vụ lập quy hoạch TMB và thiết kế xây dựng",
+        "tags": "KHAO_SAT, DO_DAC, TV-01, TV-02, XD-01", "link_iv": ""
+    }
+,
+    {
         "linh_vuc": "Xây dựng & Quản lý dự án", "loai_vb": "Luật", "so_hieu": "50/2014/QH13",
         "trich_yeu": "Luật Xây dựng năm 2014", "co_quan": "Quốc hội",
         "ngay_bh": "18/06/2014", "ngay_hl": "01/01/2015", "trang_thai": "Hết hiệu lực",

@@ -72,23 +72,24 @@
 
 ---
 
-### ✅ Giai đoạn 12: Nâng cấp Hệ thống Trinh sát & Báo cáo Đa tầng Toàn diện (Chuẩn Executive Hybrid)
-* **Chữa dứt điểm 4 căn bệnh kinh niên của AI:**
-  - Tích hợp kỹ thuật bóc tách đa tầng phân theo Chương nghiệp vụ (`substantive_points`) chống bệnh "Lost-in-the-Middle".
-  - Tích hợp lớp kiểm chứng trích dẫn dòng đỏ (`Redline Grounding Engine`) chống ảo giác.
-  - Tách riêng khối cảnh báo bẫy thanh tra (`compliance_risks`) và quy định chuyển tiếp (`transition_rules`).
-* **Tối ưu hóa Báo cáo Telegraph Instant View:**
-  - Bỏ khối tiêu đề hành chính trùng lặp, đi thẳng vào 4 khối chuyên môn thực chiến.
-* **Kiểm thử & Đồng bộ:**
-  - 18/18 Unit Test Cases PASS 100%.
-  - Sổ cái Master 79 văn bản chuẩn 14 cột được bảo toàn nguyên vẹn.
+### ✅ Giai đoạn 13: Bao quát Toàn diện 11 Gói thầu Dự án (Từ TV-01 đến XD-01)
+* **Bổ sung trọn vẹn Giai đoạn A (Chuẩn bị đầu tư):**
+  - Gói `TV-01`: Lập Quy hoạch TMB / Khảo sát đo đạc địa hình (53 văn bản áp dụng).
+  - Gói `TV-02`: Khảo sát địa chất & Lập Báo cáo nghiên cứu khả thi FS / BKTKT (55 văn bản áp dụng).
+  - Gói `TV-03`: Thẩm tra Báo cáo nghiên cứu khả thi FS / Thẩm tra BKTKT (41 văn bản áp dụng).
+* **Nâng cấp Bộ Lọc Thẻ Web Di Động (`web_card_generator.py`):**
+  - Tích hợp thanh lọc 1-chạm đầy đủ 11 gói thầu (`TV-01` $\rightarrow$ `XD-01`) và các chuyên ngành (BQP, Môi trường, PCCC, Chi thường xuyên).
+  - Cho phép bấm trực tiếp vào thẻ tag bên trong từng văn bản để lọc tức thì.
+* **Đồng bộ Sổ cái Excel & GitHub Pages:**
+  - Sổ cái `Kho_Can_Cu_Phap_Ly.xlsx` đạt chuẩn 79 văn bản với trường `tags` phủ kín 11 gói thầu.
+  - Đẩy lên GitHub Pages: `https://ditrang6266.github.io/Thu-vien-PL/`.
 
 ---
 
 ## 2. TRẠNG THÁI VẬN HÀNH & MÃ NGUỒN
-* **Mã nguồn (Giai đoạn 1 đến 12):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), sẵn sàng vận hành tự động.
+* **Mã nguồn (Giai đoạn 1 đến 13):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), **ĐÃ ĐẨY LÊN GITHUB THÀNH CÔNG**.
 * **Kho GitHub:** `https://github.com/DiTrang6266/Thu-vien-PL` (Nhánh: `main`).
-* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (79 thẻ).
+* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (79 thẻ trực quan).
 
 
 
