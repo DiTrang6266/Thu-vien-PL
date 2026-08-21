@@ -87,12 +87,38 @@ class TelegraphPublisher:
 
         # 2. Đánh giá Tác động Nghiệp vụ Tổng quan
         impact = ai_data.get("impact_summary")
-        if impact:
+        summary_top3 = ai_data.get("summary_top3")
+        if summary_top3 and isinstance(summary_top3, list):
+            nodes.append({"tag": "h3", "children": ["⚡ TOP 3 THAY ĐỔI CỐT LÕI TÁC ĐỘNG ĐẾN DỰ ÁN"]})
+            top_items = []
+            for item in summary_top3:
+                top_items.append(f"• {item}\n")
+            nodes.append({"tag": "p", "children": top_items})
+            nodes.append({"tag": "hr"})
+        elif impact:
             nodes.append({"tag": "h3", "children": ["⚡ TÁC ĐỘNG TRỰC TIẾP ĐẾN DỰ ÁN & HỒ SƠ"]})
             nodes.append({"tag": "p", "children": [{"tag": "strong", "children": [impact]}]})
             nodes.append({"tag": "hr"})
 
-        # 3. Các Quy định Cốt lõi & Hành động Bắt buộc
+        # 3. Phân tích chi tiết theo từng mảng nghiệp vụ (impact_areas)
+        impact_areas = ai_data.get("impact_areas")
+        if impact_areas and isinstance(impact_areas, dict):
+            nodes.append({"tag": "h3", "children": ["📂 TÁC ĐỘNG THEO MẢNG NGHIỆP VỤ"]})
+            area_nodes = []
+            for area_k, area_v in impact_areas.items():
+                area_label = area_k.replace("_", " ").title()
+                if "moi_thau" in area_k or "dau_thau" in area_k:
+                    area_label = "📋 Hồ sơ mời thầu & Đấu thầu"
+                elif "du_toan" in area_k or "chi_phi" in area_k:
+                    area_label = "💰 Dự toán & Quản lý chi phí"
+                elif "tham_quyen" in area_k or "trach_nhiem" in area_k:
+                    area_label = "⚖️ Thẩm quyền & Trách nhiệm"
+                area_nodes.append({"tag": "strong", "children": [f"• {area_label}:\n"]})
+                area_nodes.append(f"  {area_v}\n\n")
+            nodes.append({"tag": "p", "children": area_nodes})
+            nodes.append({"tag": "hr"})
+
+        # 4. Các Quy định Cốt lõi & Hành động Bắt buộc
         points = ai_data.get("substantive_points", [])
         if points and isinstance(points, list):
             nodes.append({"tag": "h3", "children": ["📋 CÁC QUY ĐỊNH KỸ THUẬT & NGHIỆP VỤ CỐT LÕI"]})
@@ -115,32 +141,40 @@ class TelegraphPublisher:
                     nodes.append({"tag": "p", "children": [pt]})
             nodes.append({"tag": "hr"})
 
-        # 4. Bảng Đối chiếu Cũ vs Mới (nếu có)
-        table_data = ai_data.get("comparative_table", [])
-        if table_data and isinstance(table_data, list) and len(table_data) > 0:
+        # 5. Bảng Đối chiếu Cũ vs Mới (detailed_articles_diff / comparative_table)
+        diff_data = ai_data.get("detailed_articles_diff") or ai_data.get("comparative_table") or []
+        if diff_data and isinstance(diff_data, list) and len(diff_data) > 0:
             nodes.append({"tag": "h3", "children": ["🔄 BẢNG ĐỐI CHIẾU ĐIỂM MỚI (CŨ VS MỚI)"]})
-            for row in table_data:
+            for row in diff_data:
                 if isinstance(row, dict):
-                    item_name = row.get("item", "")
-                    old_r = row.get("old_rule", "")
-                    new_r = row.get("new_rule", "")
-                    diff = row.get("key_difference", "")
-                    nodes.append({"tag": "p", "children": [
-                        {"tag": "strong", "children": [f"📌 {item_name}:\n"]},
-                        f"• Quy định cũ: {old_r}\n",
-                        f"• Quy định mới: {new_r}\n",
-                        {"tag": "em", "children": [f"➔ Thay đổi cốt lõi: {diff}\n"]}
-                    ]})
+                    art_id = row.get("article_id") or row.get("item", "")
+                    art_title = row.get("title", "")
+                    status = row.get("status", "")
+                    old_r = row.get("exact_quote_old") or row.get("old_rule", "")
+                    new_r = row.get("exact_quote_new") or row.get("new_rule", "")
+                    diff = row.get("core_change_explanation") or row.get("key_difference", "")
+                    action = row.get("action_required", "")
+
+                    children = [{"tag": "strong", "children": [f"📌 {art_id} - {art_title} [{status}]:\n"]}]
+                    if old_r:
+                        children.append(f"• Cũ: {old_r}\n")
+                    if new_r:
+                        children.append(f"• Mới: {new_r}\n")
+                    if diff:
+                        children.append({"tag": "em", "children": [f"➔ Thay đổi: {diff}\n"]})
+                    if action:
+                        children.append({"tag": "strong", "children": [f"👉 Hành động: {action}\n"]})
+                    nodes.append({"tag": "p", "children": children})
             nodes.append({"tag": "hr"})
 
-        # 5. Cảnh báo rủi ro & Bẫy pháp lý
+        # 6. Cảnh báo rủi ro & Bẫy pháp lý
         risks = ai_data.get("compliance_risks")
         if risks:
             nodes.append({"tag": "h3", "children": ["⚠️ CẢNH BÁO RỦI RO & ĐIỂM LƯU Ý KHI THANH KIỂM TRA"]})
             nodes.append({"tag": "p", "children": [risks]})
             nodes.append({"tag": "hr"})
 
-        # 6. Văn bản bị bãi bỏ / thay thế
+        # 7. Văn bản bị bãi bỏ / thay thế
         repealed = ai_data.get("repealed_docs", [])
         if repealed and isinstance(repealed, list) and len(repealed) > 0:
             nodes.append({"tag": "h3", "children": ["❌ VĂN BẢN BÃI BỎ / THAY THẾ"]})
@@ -148,8 +182,8 @@ class TelegraphPublisher:
                 nodes.append({"tag": "p", "children": [f"• {r}"]})
             nodes.append({"tag": "hr"})
 
-        # 7. Hiệu lực thi hành & Chuyển tiếp
-        eff_trans = ai_data.get("effective_and_transition")
+        # 8. Hiệu lực thi hành & Chuyển tiếp (transition_rules / effective_and_transition)
+        eff_trans = ai_data.get("transition_rules") or ai_data.get("effective_and_transition")
         if eff_trans:
             nodes.append({"tag": "h3", "children": ["⏳ HIỆU LỰC THI HÀNH & ĐIỀU KHOẢN CHUYỂN TIẾP"]})
             nodes.append({"tag": "p", "children": [{"tag": "em", "children": [eff_trans]}]})
@@ -167,11 +201,15 @@ class TelegraphPublisher:
     def publish_report(
         self,
         title: str,
-        analysis_data: Dict[str, Any],
-        doc_item: Optional[Dict[str, Any]] = None
+        analysis_data: Optional[Dict[str, Any]] = None,
+        doc_item: Optional[Dict[str, Any]] = None,
+        ai_data: Optional[Dict[str, Any]] = None,
+        doc_meta: Optional[Dict[str, Any]] = None
     ) -> Optional[str]:
         try:
-            nodes = self.format_nodes_from_analysis(title, analysis_data, doc_item)
+            effective_ai_data = analysis_data if analysis_data is not None else ai_data or {}
+            effective_doc_meta = doc_item if doc_item is not None else doc_meta
+            nodes = self.format_nodes_from_analysis(title, effective_ai_data, effective_doc_meta)
             payload = {
                 "access_token": self.access_token,
                 "title": title[:100],

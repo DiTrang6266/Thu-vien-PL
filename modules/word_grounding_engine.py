@@ -3,17 +3,35 @@
 Module: word_grounding_engine.py
 Mục đích: Động cơ Lọc Căn cứ Pháp lý Sống & Ốp tự động vào Phôi Word (Word Legal Grounding Injector).
 Chức năng:
-- Đọc Sổ cái Master Excel Kho_Can_Cu_Phap_Ly.xlsx.
+- Đọc Sổ cái Master Excel Kho_Can_Cu_Phap_Ly.xlsx (Chuẩn hóa 14 cột).
 - Lọc theo Tag nghiệp vụ và Gói thầu (TV-04, TV-05, XD-01, TO_TRINH_DU_TOAN, TO_TRINH_KHLCNT...).
-- Chỉ lấy các văn bản 🟢 Còn hiệu lực (hoặc 🟡 Bị sửa đổi một phần), loại bỏ 100% văn bản 🔴 Hết hiệu lực.
+- Chỉ lấy các văn bản 🟢 Còn hiệu lực, loại bỏ 100% văn bản 🔴 Hết hiệu lực.
 - Tự động sắp xếp theo Thứ bậc Lập pháp chuẩn Luật Ban hành VBQPPL:
-  Luật (100) -> Nghị định (200) -> Thông tư (300) -> Quyết định BQP (400) -> Quyết định CĐT (500) -> Căn cứ thực tế (999).
+  Luật (100) -> Nghị định (200) -> Thông tư (300) -> Quyết định/Quy chuẩn (400) -> Quyết định CĐT (500) -> Căn cứ thực tế (999).
 """
 
 import os
+import sys
 import openpyxl
 from datetime import datetime
 from typing import List, Dict, Any, Optional
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+
+def _get_legal_rank(loai_vb: str) -> int:
+    """Tính thứ bậc lập pháp chuẩn Luật Ban hành VBQPPL."""
+    loai = loai_vb.lower().strip()
+    if "luật" in loai or "nghị quyết quốc hội" in loai:
+        return 100
+    if "nghị định" in loai:
+        return 200
+    if "thông tư" in loai:
+        return 300
+    if "quy chuẩn" in loai or "tiêu chuẩn" in loai or "quyết định" in loai:
+        return 400
+    return 350
 
 
 def get_active_legal_bases(
@@ -33,7 +51,7 @@ def get_active_legal_bases(
         return []
 
     wb = openpyxl.load_workbook(resolved_excel_path, data_only=True)
-    ws = wb["KHO_CAN_CU_MASTER"] if "KHO_CAN_CU_MASTER" in wb.sheetnames else wb.active
+    ws = wb.active
 
     # Ma trận tag cho từng loại biểu mẫu
     DOSSIER_TAG_MAP = {
@@ -56,14 +74,17 @@ def get_active_legal_bases(
     matched_bases = []
 
     for row in range(2, ws.max_row + 1):
-        so_hieu = str(ws.cell(row=row, column=2).value or "").strip()
+        linh_vuc = str(ws.cell(row=row, column=2).value or "").strip()
         loai_vb = str(ws.cell(row=row, column=3).value or "").strip()
-        trang_thai = str(ws.cell(row=row, column=7).value or "").strip()
-        raw_tags = str(ws.cell(row=row, column=9).value or "").strip()
-        thu_bac = ws.cell(row=row, column=10).value or 300
-        cau_can_cu = str(ws.cell(row=row, column=11).value or "").strip()
+        so_hieu = str(ws.cell(row=row, column=4).value or "").strip()
+        trich_yeu = str(ws.cell(row=row, column=5).value or "").strip()
+        co_quan = str(ws.cell(row=row, column=6).value or "").strip()
+        ngay_bh = str(ws.cell(row=row, column=7).value or "").strip()
+        ngay_hl = str(ws.cell(row=row, column=8).value or "").strip()
+        trang_thai = str(ws.cell(row=row, column=9).value or "").strip()
+        raw_tags = str(ws.cell(row=row, column=12).value or "ALL").strip()
 
-        if not so_hieu or not cau_can_cu:
+        if not so_hieu or not trich_yeu:
             continue
 
         # 1. Kiểm tra trạng thái hiệu lực (Chỉ nhận còn hiệu lực)
@@ -73,13 +94,19 @@ def get_active_legal_bases(
         # 2. Khớp Tag
         doc_tags = set([t.strip().upper() for t in raw_tags.split(",") if t.strip()])
         if "ALL" in doc_tags or doc_tags.intersection(required_tags):
+            prefix = f"{loai_vb} số {so_hieu}" if loai_vb and not so_hieu.lower().startswith(loai_vb.lower()) else so_hieu
+            cau_can_cu = f"Căn cứ {prefix} ngày {ngay_bh} của {co_quan} {trich_yeu};"
+            thu_bac = _get_legal_rank(loai_vb)
+
             matched_bases.append({
                 "so_hieu": so_hieu,
                 "loai_vb": loai_vb,
                 "trang_thai": trang_thai,
-                "thu_bac": int(thu_bac),
+                "thu_bac": thu_bac,
                 "cau_can_cu": cau_can_cu
             })
+
+    wb.close()
 
     # 3. Nạp quyết định cá biệt của dự án từ context (Rank 500)
     internal_decisions = context.get("quyet_dinh_noi_bo", [])
@@ -105,3 +132,10 @@ def get_active_legal_bases(
     })
 
     return matched_bases
+
+
+if __name__ == "__main__":
+    bases = get_active_legal_bases(dossier_type="TO_TRINH_DU_TOAN", package_code="TV-04")
+    print(f"✅ Đã trích xuất {len(bases)} căn cứ pháp lý cho gói TV-04:")
+    for b in bases[:5]:
+        print(f"   [{b['thu_bac']}] {b['cau_can_cu']}")

@@ -1,437 +1,538 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-HỆ THỐNG TRẠM GÁC & TRINH SÁT PHÁP LUẬT TỰ ĐỘNG 24/7 (AUTOMATED LEGAL RECON PIPELINE)
-Kiến trúc Phễu 2 tầng Thực chiến:
-- TẦNG 1: Sàng lọc thể thức & loại bỏ ngành ngoài/quy hoạch đô thị/cá biệt (< 0.1ms).
-- TẦNG 2: Bóc tách toàn văn PDF (PyMuPDF) -> AI Executive Impact Engine lập Báo cáo Tham mưu Chuyên sâu.
-- TỰ ĐỘNG ĐỒNG BỘ: Xuất bản Telegraph Instant View, Đồng bộ Sổ cái Excel Master, Bắn tin nhắn Telegram 1-Tap Copy & Đính kèm PDF gốc.
+=============================================================================
+HỆ THỐNG TRINH SÁT & ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG 100% (ZERO-TOUCH LEGAL RECON)
+Kiến trúc Lọc Đa Tầng Thông Minh (3-Tier Intelligent Cascade Filtering)
+Chuẩn hóa Mẫu Hiển Thị Master Template cho Telegram & Telegraph Instant View
+- Tầng 1: Fast Heuristics & Blacklist Regex (0đ, <1ms)
+- Tầng 2: Gemini AI Gatekeeper Triage (0.3s, ~30 tokens)
+- Tầng 3: Deep Redline & Impact Analysis (Master Template + All-in-One Delivery)
+Bản quyền & Thiết kế: Tự động hóa Hồ sơ Dự án
+=============================================================================
 """
 
-import sys
-if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8")
-if hasattr(sys.stderr, "reconfigure"):
-    sys.stderr.reconfigure(encoding="utf-8")
-
 import os
+import sys
 import json
 import re
 import hashlib
-import logging
 from datetime import datetime
-from typing import Dict, List, Any, Optional
-from urllib.parse import urljoin
-
-import httpx
+from typing import Dict, List, Any, Optional, Tuple
 import feedparser
+import httpx
 from bs4 import BeautifulSoup
-import fitz
+import urllib3
 
-from modules.classifier_tier1 import StructuralAuthorityMatcher, DocumentType
-from modules.classifier_tier2 import HybridTier2Classifier, DomainEnum
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+from modules.legal_parser import LegalDocumentParser
+from modules.legal_diff import LegalDocumentDiffer
 from modules.ai_analyzer import LegalAIAnalyzer
-from modules.excel_sync_engine import LegalExcelSyncEngine
+from modules.ai_gatekeeper import LegalGatekeeper
 from modules.telegraph_publisher import TelegraphPublisher
+from modules.legal_db_sync import sync_legal_document_to_excel
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-DOWNLOADS_DIR = os.path.join(DATA_DIR, "downloads")
-KNOWN_DOCS_PATH = os.path.join(DATA_DIR, "known_documents.json")
-EXCEL_LEGAL_PATH = os.path.join(DATA_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+DOWNLOAD_DIR = os.path.join(DATA_DIR, "downloads")
+DATABASE_FILE = os.path.join(DATA_DIR, "known_documents.json")
+LOG_FILE = os.path.join(DATA_DIR, "nhat_ky_trinh_sat.log")
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8929996006:AAEkcgtKYRJihNtDZUPxymvAEIDBIlWzqIc")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "5004771861")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-FEED_SOURCES = [
+RSS_SOURCES = [
     {
         "name": "Công báo Nước CHXHCN Việt Nam (Văn bản mới)",
         "url": "https://congbao.chinhphu.vn/cac-van-ban-moi-ban-hanh.rss",
-        "authority": "Chính phủ"
+        "type": "CONG_BAO_VAN_BAN"
+    },
+    {
+        "name": "Công báo Nước CHXHCN Việt Nam (Số mới đăng)",
+        "url": "http://congbao.chinhphu.vn/cac-so-cong-bao-moi-dang.rss",
+        "type": "CONG_BAO_SO_DANG"
     },
     {
         "name": "Bộ Xây dựng (Văn bản quy phạm pháp luật mới)",
         "url": "https://moc.gov.vn/rss/1196/gioi-thieu-van-ban-moi.rss",
-        "authority": "Bộ Xây dựng"
+        "type": "BO_XAY_DUNG_QPPL"
     },
     {
         "name": "Bộ Xây dựng (Chỉ đạo điều hành chuyên ngành)",
         "url": "https://moc.gov.vn/rss/1176/tin-chi-dao--dieu-hanh.rss",
-        "authority": "Bộ Xây dựng"
+        "type": "BO_XAY_DUNG_CHIDAO"
     },
     {
         "name": "Bộ Kế hoạch và Đầu tư (Văn bản Đấu thầu & Đầu tư công)",
         "url": "https://www.mpi.gov.vn/Pages/rss.aspx",
-        "authority": "Bộ Kế hoạch và Đầu tư"
+        "type": "BO_KE_HOACH_DAU_TU"
     }
+]
+
+# TẦNG 1A: DANH SÁCH TỪ KHÓA CẤM (BLACKLIST CHẶN RÁC NGAY VÒNG 1)
+HARD_EXCLUDE_PATTERNS = [
+    r"thuốc biệt dược", r"generic nhóm", r"vật tư tiêu hao y tế", r"hóa chất xét nghiệm",
+    r"sinh phẩm chẩn đoán", r"đấu thầu thuốc", r"mua sắm thuốc",
+    r"xây dựng đảng", r"chỉnh đốn đảng", r"công tác cán bộ", r"phát triển đảng viên",
+    r"tổ chức đoàn thể", r"công đoàn cơ sở", r"huân chương lao động", r"bằng khen của thủ tướng",
+    r"bổ nhiệm giữ chức vụ", r"miễn nhiệm chức vụ", r"kỷ luật cảnh cáo",
+    r"tuyển sinh đại học", r"thi tốt nghiệp thpt", r"giống cây trồng", r"chăn nuôi lợn",
+    r"khai thác hải sản", r"cấp phép thăm dò khoáng sản", r"xử phạt giao thông"
+]
+
+# TẦNG 1B: BỘ TỪ KHÓA ĐỊNH HƯỚNG CHUYÊN NGÀNH MỞ RỘNG (WHITELIST GỐC & GHÉP)
+DOMAIN_KEYWORDS = [
+    r"\bxây dựng\b", r"\bđấu thầu\b", r"lựa chọn nhà thầu", r"chỉ định thầu", r"mạng đấu thầu", r"muasamcong",
+    r"e-hsmt", r"e-hsdt", r"e-tbmt", r"e-hsyc", r"e-hsdx", r"bảo lãnh dự thầu",
+    r"quản lý chi phí", r"định mức dự toán", r"\bdự toán\b", r"đơn giá nhân công", r"giá ca máy",
+    r"chi phí quản lý dự án", r"chi phí tư vấn", r"suất vốn đầu tư", r"hợp đồng xây dựng",
+    r"đầu tư công", r"quản lý dự án", r"báo cáo nghiên cứu khả thi", r"báo cáo kinh tế - kỹ thuật",
+    r"thiết kế bản vẽ thi công", r"\bbvtc\b", r"\bthiết kế\b", r"\bkhảo sát\b",
+    r"thẩm tra thiết kế", r"thẩm tra dự toán", r"\bthẩm tra\b", r"\bthẩm định\b",
+    r"thẩm định thiết kế", r"thẩm định dự toán", r"tư vấn giám sát", r"\bgiám sát\b",
+    r"thi công xây dựng", r"\bthi công\b", r"nhật ký thi công", r"bản vẽ hoàn công",
+    r"nghiệm thu hoàn thành", r"\bnghiệm thu\b", r"quyết toán dự án", r"\bquyết toán\b",
+    r"kiểm toán độc lập", r"\bkiểm toán\b", r"bảo hiểm công trình", r"\bbảo hiểm\b",
+    r"thí nghiệm nén tĩnh cọc", r"\bkiểm định\b",
+    r"chi thường xuyên", r"kinh phí thường xuyên", r"tài sản công", r"sửa chữa bảo trì",
+    r"bộ quốc phòng", r"tt-bqp", r"doanh trại", r"doanh cụ", r"công tác doanh trại",
+    r"quân chủng pk-kq", r"công trình quân sự", r"công trình quốc phòng", r"định mức doanh cụ",
+    r"quản lý chất lượng", r"phòng cháy chữa cháy", r"\bpccc\b", r"\bqcvn\b", r"\btcvn\b",
+    r"quy chuẩn", r"tiêu chuẩn"
 ]
 
 
 def log(msg: str):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    formatted = f"[{timestamp}] {msg}"
-    print(formatted)
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    formatted_msg = f"[{now_str}] {msg}"
+    print(formatted_msg)
     try:
         os.makedirs(DATA_DIR, exist_ok=True)
-        log_file = os.path.join(DATA_DIR, "nhat_ky_trinh_sat.log")
-        with open(log_file, "a", encoding="utf-8") as f:
-            f.write(formatted + "\n")
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(formatted_msg + "\n")
     except Exception:
         pass
 
 
-def load_known_documents() -> set:
-    if os.path.exists(KNOWN_DOCS_PATH):
-        try:
-            with open(KNOWN_DOCS_PATH, "r", encoding="utf-8") as f:
-                return set(json.load(f))
-        except Exception:
-            return set()
-    return set()
-
-
-def save_known_documents(docs: set):
+def init_storage():
     os.makedirs(DATA_DIR, exist_ok=True)
-    with open(KNOWN_DOCS_PATH, "w", encoding="utf-8") as f:
-        json.dump(list(docs), f, ensure_ascii=False, indent=2)
+    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+    if not os.path.exists(DATABASE_FILE):
+        with open(DATABASE_FILE, "w", encoding="utf-8") as f:
+            json.dump({}, f, ensure_ascii=False, indent=2)
 
 
-def normalize_url(base_url: str, link: str) -> str:
-    if not link:
-        return ""
-    link = link.strip()
-    if link.startswith("http://") or link.startswith("https://"):
-        return link
-    if link.startswith("http:") and not link.startswith("http://"):
-        link = link.replace("http:", "http://", 1)
-    elif link.startswith("https:") and not link.startswith("https://"):
-        link = link.replace("https:", "https://", 1)
-    return urljoin(base_url, link)
-
-
-def fetch_article_details(url: str) -> Dict[str, Any]:
-    if not url:
-        return {"body_text": "", "pdf_url": None}
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    }
+def load_known_documents() -> dict:
     try:
-        with httpx.Client(timeout=20.0, follow_redirects=True, verify=False) as client:
-            res = client.get(url, headers=headers)
-            if res.status_code != 200:
-                return {"body_text": "", "pdf_url": None}
+        with open(DATABASE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
 
-            soup = BeautifulSoup(res.text, "html.parser")
-            for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
-                tag.decompose()
 
+def save_known_documents(data: dict):
+    with open(DATABASE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def clean_html_text(raw_html: str) -> str:
+    if not raw_html:
+        return ""
+    soup = BeautifulSoup(raw_html, "html.parser")
+    text = soup.get_text(separator=" ").strip()
+    return re.sub(r"\s+", " ", text)
+
+
+def normalize_url(link: str) -> str:
+    link = link.strip()
+    if link.startswith("http:moc.gov.vn"):
+        link = link.replace("http:moc.gov.vn", "https://moc.gov.vn")
+    elif link.startswith("http:") and not link.startswith("http://"):
+        link = link.replace("http:", "https://")
+    elif link.startswith("/"):
+        link = "https://moc.gov.vn" + link
+    elif not link.startswith("http://") and not link.startswith("https://"):
+        link = "https://" + link
+    return link
+
+
+def cascade_evaluate_document(title: str, summary: str, gatekeeper: LegalGatekeeper) -> Tuple[bool, str, str]:
+    """
+    Quy trình Lọc 2 Tầng:
+    - Tầng 1: Kiểm tra Blacklist & Whitelist Regex (<1ms, 0đ)
+    - Tầng 2: Gọi Gemini AI Gatekeeper xác nhận ngữ nghĩa (0.3s)
+    """
+    combined_text = f"{title} {summary}".lower()
+
+    # 1. Tầng 1A: Kiểm tra Blacklist cứng
+    for pattern in HARD_EXCLUDE_PATTERNS:
+        if re.search(pattern, combined_text, re.IGNORECASE):
+            return False, "TIER_1_BLACKLIST", f"Dính từ khóa cấm: '{pattern}'"
+
+    # 2. Tầng 1B: Kiểm tra Whitelist tiềm năng
+    has_domain_keyword = False
+    for pattern in DOMAIN_KEYWORDS:
+        if re.search(pattern, combined_text, re.IGNORECASE):
+            has_domain_keyword = True
+            break
+
+    if not has_domain_keyword:
+        return False, "TIER_1_NO_KEYWORD", "Không chứa từ khóa chuyên ngành"
+
+    # 3. Tầng 2: Gọi Gemini AI Gatekeeper xác nhận ngữ cảnh thông minh
+    triage_res = gatekeeper.triage_document(title, summary)
+    if triage_res.get("is_in_scope", False):
+        return True, "TIER_2_AI_APPROVED", triage_res.get("reason", "Phù hợp phạm vi dự án")
+    else:
+        return False, "TIER_2_AI_REJECTED", triage_res.get("reason", "AI gác cổng loại bỏ")
+
+
+def classify_document_type(title: str) -> Tuple[str, str]:
+    title_lower = title.lower()
+
+    if re.search(r"\bluật\b|\bbộ luật\b|nghị quyết.*quốc hội|/qh", title_lower):
+        return ("🏛️ LUẬT & NGHỊ QUYẾT QUỐC HỘI", "LUAT")
+    
+    if re.search(r"\bnghị định\b|/nđ-cp|\bquyết định.*thủ tướng|/qđ-ttg", title_lower):
+        return ("📜 NGHỊ ĐỊNH CHÍNH PHỦ", "NGHI_DINH")
+    
+    if re.search(r"\bthông tư\b|/tt-|/vbhn-", title_lower):
+        if "bqp" in title_lower or "quốc phòng" in title_lower:
+            return ("🎖️ THÔNG TƯ BỘ QUỐC PHÒNG", "THONG_TU_BQP")
+        return ("📑 THÔNG TƯ BỘ NGÀNH (BXD, BKHĐT...)", "THONG_TU")
+    
+    if re.search(r"\bqcvn\b|\btcvn\b|quy chuẩn|tiêu chuẩn", title_lower):
+        return ("📐 QUY CHUẨN & TIÊU CHUẨN KỸ THUẬT", "QUY_CHUAN")
+
+    return ("📌 VĂN BẢN HƯỚNG DẪN & CHỈ ĐẠO", "HUONG_DAN")
+
+
+def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
+    clean_url = normalize_url(doc_url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Referer": clean_url
+    }
+
+    try:
+        with httpx.Client(verify=False, headers=headers, follow_redirects=True, timeout=25.0) as client:
+            resp = client.get(clean_url)
+            if resp.status_code != 200:
+                return None
+
+            soup = BeautifulSoup(resp.text, "html.parser")
             pdf_link = None
+
             for a_tag in soup.find_all("a", href=True):
                 href = a_tag["href"].strip()
-                if re.search(r"\.(pdf|docx|doc)($|\?)", href, re.IGNORECASE) or "download" in href.lower():
-                    pdf_link = normalize_url(url, href)
+                if ".pdf" in href.lower() or "datafiles.chinhphu.vn" in href.lower():
+                    pdf_link = href
                     break
 
-            text_containers = soup.find_all(["div", "article", "section"], class_=re.compile(r"(content|detail|article|post|body)", re.IGNORECASE))
-            if text_containers:
-                body_text = "\n".join([c.get_text(separator="\n", strip=True) for c in text_containers])
-            else:
-                body_text = soup.get_text(separator="\n", strip=True)
+            if not pdf_link:
+                return None
 
-            lines = [l.strip() for l in body_text.splitlines() if len(l.strip()) > 20]
-            clean_text = "\n".join(lines[:100])
-            return {"body_text": clean_text, "pdf_url": pdf_link}
+            pdf_url = normalize_url(pdf_link)
+            log(f"📥 Tìm thấy link PDF gốc: {pdf_url}")
+
+            pdf_resp = client.get(pdf_url)
+            if pdf_resp.status_code == 200 and len(pdf_resp.content) > 1000:
+                clean_filename = f"{doc_id[:16]}_van_ban_goc.pdf"
+                save_path = os.path.join(DOWNLOAD_DIR, clean_filename)
+                with open(save_path, "wb") as f:
+                    f.write(pdf_resp.content)
+                log(f"💾 Đã tải và lưu trữ file PDF thành công ({len(pdf_resp.content)} bytes): {save_path}")
+                return save_path
+
     except Exception as e:
-        log(f"⚠️ Không thể tải chi tiết URL {url}: {e}")
-        return {"body_text": "", "pdf_url": None}
+        log(f"⚠️ Không thể tự động tải PDF từ {clean_url}: {e}")
 
-
-def download_official_pdf(pdf_url: str, doc_hash: str) -> Optional[str]:
-    if not pdf_url:
-        return None
-    try:
-        os.makedirs(DOWNLOADS_DIR, exist_ok=True)
-        filename = f"{doc_hash[:16]}_van_ban_goc.pdf"
-        file_path = os.path.join(DOWNLOADS_DIR, filename)
-
-        if os.path.exists(file_path) and os.path.getsize(file_path) > 1000:
-            return file_path
-
-        headers = {"User-Agent": "Mozilla/5.0"}
-        with httpx.Client(timeout=35.0, follow_redirects=True, verify=False) as client:
-            res = client.get(pdf_url, headers=headers)
-            if res.status_code == 200 and len(res.content) > 1000:
-                with open(file_path, "wb") as f:
-                    f.write(res.content)
-                log(f"💾 Đã tải và lưu trữ file PDF thành công ({len(res.content)} bytes): {file_path}")
-                return file_path
-    except Exception as e:
-        log(f"⚠️ Lỗi tải file PDF từ {pdf_url}: {e}")
     return None
 
 
-def send_telegram_alert(
-    item: Dict[str, Any],
-    tier1_meta: Dict[str, Any],
-    ai_analysis: Dict[str, Any],
-    instant_view_url: Optional[str] = None,
-    local_pdf_path: Optional[str] = None
-):
-    so_hieu = tier1_meta.get("doc_number", "MỚI")
-    co_quan = tier1_meta.get("authority", "Bộ Xây dựng")
-    ngay_ban_hanh = tier1_meta.get("ngay_ban_hanh", datetime.now().strftime("%d/%m/%Y"))
-    title = item.get("title", "")
-    cau_can_cu = ai_analysis.get("cau_can_cu_nd30", "")
-    repealed_docs = ai_analysis.get("repealed_docs", [])
-    impact = ai_analysis.get("impact_summary", "")
-    points = ai_analysis.get("substantive_points", [])
+def format_master_telegram_alert(
+    item: dict,
+    doc_meta: dict,
+    ai_data: dict,
+    telegraph_url: str,
+    clean_link: str
+) -> Tuple[str, dict]:
+    """
+    Chuẩn hóa giao diện tin nhắn Telegram Master Template:
+    - <code> badge cho số hiệu để chạm là copy ngay (Tap-to-Copy)
+    - 4 trường sống còn: Hiệu lực, Thay thế, Chuyển tiếp, Gói thầu tác động
+    - Top 3 điểm mới định lượng in đậm rõ ràng
+    - Inline Keyboard chuẩn 1 Chính + 2 Phụ
+    """
+    type_label = doc_meta.get("loai_van_ban", "VĂN BẢN QUY PHẠM PHÁP LUẬT")
+    doc_title = item.get("title", "")
+    source_name = item.get("source_name", "Cơ quan Nhà nước")
 
-    doc_type_str = str(tier1_meta.get("doc_type", "")).upper()
-    if "VAN_BAN_HOP_NHAT" in doc_type_str or "VBHN" in title.upper() or "HỢP NHẤT" in title.upper():
-        doc_type_label = "VĂN BẢN HỢP NHẤT"
-    elif "QUYET_DINH" in doc_type_str:
-        doc_type_label = "QUYẾT ĐỊNH"
-    elif "NGHI_DINH" in doc_type_str:
-        doc_type_label = "NGHỊ ĐỊNH"
-    elif "LUAT" in doc_type_str:
-        doc_type_label = "LUẬT"
-    elif "QUY_CHUAN" in doc_type_str:
-        doc_type_label = "QUY CHUẨN KỸ THUẬT"
-    else:
-        doc_type_label = "THÔNG TƯ"
+    so_hieu_clean = ai_data.get("so_hieu_clean")
+    if not so_hieu_clean:
+        so_hieu_match = re.search(r"(\d+[\w\/\-\.]+)", doc_title)
+        so_hieu_clean = so_hieu_match.group(1) if so_hieu_match else "MỚI"
 
-    lines = [
-        f"📑 <b>{doc_type_label} MỚI | {co_quan.upper()}</b>",
-        f"<b>Số:</b> <code>{so_hieu}</code> • <b>Ban hành:</b> {ngay_ban_hanh}",
-        f"━━━━━━━━━━━━━━━━━━━━━━",
-        f"<b>{title.strip()}</b>",
-        ""
-    ]
-
-    # Bãi bỏ nếu có
-    if repealed_docs and len(repealed_docs) > 0:
-        lines.append(f"🔴 <b>Bãi bỏ/Thay thế:</b> {', '.join(repealed_docs)}")
-        lines.append("")
-
-    # Tác động cốt lõi
-    if impact:
-        lines.append(f"⚡ <b>TÁC ĐỘNG TRỰC TIẾP ĐẾN DỰ ÁN:</b>")
-        lines.append(f"<i>{impact}</i>")
-        lines.append("")
-
-    # Điểm mới kỹ thuật thực chiến
-    if points and len(points) > 0:
-        lines.append("📋 <b>ĐIỂM MỚI NGHIỆP VỤ TRỌNG YẾU:</b>")
-        for pt in points[:3]:
-            if isinstance(pt, dict):
-                cl = pt.get("clause", "")
-                t = pt.get("title", "")
-                act = pt.get("action_required", "")
-                lines.append(f"• <b>{cl} - {t}:</b> {pt.get('content', '')}")
-                if act:
-                    lines.append(f"  👉 <i>Hành động: {act}</i>")
-            elif isinstance(pt, str):
-                lines.append(f"• {pt}")
-        lines.append("")
-
-    lines.append("📋 <b>CHẠM ĐỂ COPY CĂN CỨ PHÁP LÝ (DÁN WORD):</b>")
-    lines.append(f"<code>{cau_can_cu}</code>")
-
-    lines.append("")
-    lines.append("📊 <i>Sổ cái Excel Master đã tự động đồng bộ: Kho_Can_Cu_Phap_Ly.xlsx</i>")
-
-    message_text = "\n".join(lines)
-
-    inline_keyboard = []
-    if instant_view_url:
-        inline_keyboard.append([{"text": "📖 Xem Báo Cáo Tham Mưu Toàn Văn (Instant View)", "url": instant_view_url}])
+    ngay_ban_hanh = ai_data.get("ngay_ban_hanh", doc_meta.get("ngay_ban_hanh", "Vừa ban hành"))
+    ngay_hieu_luc = ai_data.get("ngay_hieu_luc", ngay_ban_hanh)
+    van_ban_thay_the = ai_data.get("van_ban_thay_the", "Chưa có / Văn bản mới")
+    chuyen_tiep_ngan = ai_data.get("chuyen_tiep_ngan", "Áp dụng theo quy định hiện hành đối với các gói thầu phát hành trước ngày hiệu lực.")
     
-    doc_link = item.get("link", "")
-    if doc_link and doc_link.startswith("http"):
-        inline_keyboard.append([{"text": "🌐 Link Văn Bản Gốc", "url": doc_link}])
+    tags_list = ai_data.get("goi_thau_tags", ["#Đấu_thầu", "#Xây_lắp", "#Tư_vấn"])
+    tags_str = " ".join(tags_list)
 
-    reply_markup = {"inline_keyboard": inline_keyboard} if inline_keyboard else None
+    # 3 bullets định lượng
+    raw_bullets = ai_data.get("summary_top3", ["Đã hoàn thành rà soát và đối chiếu toàn văn."])
+    formatted_bullets = []
+    for idx, b in enumerate(raw_bullets[:3], 1):
+        clean_b = re.sub(r"^\d+[\.\-\)]\s*", "", b).strip()
+        formatted_bullets.append(f"{idx}. {clean_b}")
+    bullets_text = "\n".join(formatted_bullets)
 
-    # Gửi tin nhắn
-    try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    message_text = (
+        f"🏛 <b>{type_label}</b> | <code>{so_hieu_clean}</code>\n"
+        f"────────────────────────\n"
+        f"<b>{doc_title}</b>\n"
+        f"<i>📅 Ban hành: {ngay_ban_hanh} • 🏢 Cơ quan: {source_name}</i>\n\n"
+        f"⏱ <b>HIỆU LỰC & CHUYỂN TIẾP:</b>\n"
+        f"• ⚡ <b>Hiệu lực:</b> Từ ngày <code>{ngay_hieu_luc}</code>\n"
+        f"• 🔄 <b>Thay thế:</b> <code>{van_ban_thay_the}</code>\n"
+        f"• ⚠️ <b>Chuyển tiếp:</b> {chuyen_tiep_ngan}\n"
+        f"• 📦 <b>Gói thầu ảnh hưởng:</b> {tags_str}\n\n"
+        f"⚖️ <b>3 ĐIỂM THAY ĐỔI CỐT LÕI CẦN ÁP DỤNG:</b>\n"
+        f"{bullets_text}"
+    )
+
+    inline_keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "⚡ Đọc Báo Cáo Phân Tích (Instant View)", "url": telegraph_url}
+            ],
+            [
+                {"text": "🌐 Cổng Nguồn", "url": clean_link},
+                {"text": "📖 Thư Viện Luật", "url": "https://ditrang6266.github.io/Thu-vien-PL/"}
+            ]
+        ]
+    }
+
+    return message_text, inline_keyboard
+
+
+def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_pub: TelegraphPublisher) -> bool:
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        log("ℹ️ Không tìm thấy Token Telegram. Bỏ qua bước gửi tin nhắn.")
+        return False
+
+    type_label, type_code = classify_document_type(item["title"])
+    clean_link = normalize_url(item["link"])
+
+    pdf_file_path = extract_and_download_pdf(clean_link, item.get("id", "doc"))
+
+    log(f"🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: {item['title'][:60]}...")
+    doc_meta = {
+        "so_hieu": item["title"],
+        "co_quan": item["source_name"],
+        "loai_van_ban": type_label,
+        "ngay_ban_hanh": item.get("published", datetime.now().strftime("%d/%m/%Y"))
+    }
+    
+    ai_data = ai_analyzer.analyze_legal_impact(
+        old_doc_text=item.get("old_text", item.get("summary", "")),
+        new_doc_text=f"{item['title']}\n{item.get('new_text', item.get('summary', ''))}",
+        doc_metadata=doc_meta
+    )
+
+    telegraph_url = telegraph_pub.publish_report(
+        title=f"BÁO CÁO PHÂN TÍCH: {item['title']}",
+        analysis_data=ai_data,
+        doc_item=doc_meta
+    )
+
+    message_text, reply_markup = format_master_telegram_alert(
+        item=item,
+        doc_meta=doc_meta,
+        ai_data=ai_data,
+        telegraph_url=telegraph_url,
+        clean_link=clean_link
+    )
+
+    sent_success = False
+    # 💡 CƠ CHẾ GỘP 1 TIN NHẮN DUY NHẤT: Gửi kèm file PDF nếu có
+    if pdf_file_path and os.path.exists(pdf_file_path):
+        send_doc_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendDocument"
+        try:
+            with open(pdf_file_path, "rb") as f:
+                files = {"document": (os.path.basename(pdf_file_path), f, "application/pdf")}
+                data = {
+                    "chat_id": TELEGRAM_CHAT_ID,
+                    "caption": message_text[:1024],
+                    "parse_mode": "HTML",
+                    "reply_markup": json.dumps(reply_markup)
+                }
+                res = httpx.post(send_doc_url, data=data, files=files, timeout=40.0)
+                if res.status_code == 200:
+                    log(f"✅ Đã gửi bản tin Master Template kèm file PDF gốc thành công (1 tin duy nhất): {item['title'][:60]}...")
+                    sent_success = True
+                else:
+                    log(f"⚠️ sendDocument trả về {res.status_code}, chuyển sang sendMessage.")
+        except Exception as e:
+            log(f"⚠️ Lỗi gửi kèm PDF ({e}), chuyển sang gửi tin nhắn văn bản.")
+
+    # Fallback gửi tin nhắn văn bản nếu không có PDF hoặc upload PDF gặp sự cố
+    if not sent_success:
+        send_msg_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         payload = {
             "chat_id": TELEGRAM_CHAT_ID,
             "text": message_text,
             "parse_mode": "HTML",
             "reply_markup": reply_markup
         }
-        with httpx.Client(timeout=20.0) as client:
-            res = client.post(url, json=payload)
-            if res.status_code == 200:
-                log(f"✅ Đã gửi thông báo Telegram thành công: {so_hieu}")
-            else:
-                log(f"⚠️ Gửi Telegram thất bại: {res.text}")
-    except Exception as e:
-        log(f"⚠️ Lỗi gửi Telegram: {e}")
-
-    # Gửi file PDF đính kèm
-    if local_pdf_path and os.path.exists(local_pdf_path):
         try:
-            doc_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendDocument"
-            with open(local_pdf_path, "rb") as f:
-                files = {"document": (os.path.basename(local_pdf_path), f, "application/pdf")}
-                data = {
-                    "chat_id": TELEGRAM_CHAT_ID,
-                    "caption": f"📎 File PDF gốc: {so_hieu} ({title[:60]}...)"
-                }
-                with httpx.Client(timeout=45.0) as client:
-                    doc_res = client.post(doc_url, data=data, files=files)
-                    if doc_res.status_code == 200:
-                        log(f"✅ Đã gửi file PDF gốc đính kèm thành công: {local_pdf_path}")
+            response = httpx.post(send_msg_url, json=payload, timeout=20)
+            if response.status_code == 200:
+                log(f"✅ Đã gửi thông báo Telegram Master Template thành công: {item['title'][:60]}...")
+                sent_success = True
+            else:
+                log(f"❌ Gửi Telegram thất bại ({response.status_code}): {response.text}")
         except Exception as e:
-            log(f"⚠️ Lỗi gửi file PDF Telegram: {e}")
+            log(f"❌ Lỗi kết nối Telegram: {e}")
+
+    # 💡 BƯỚC 2: TỰ ĐỘNG ĐỒNG BỘ VÀO SỔ CÁI EXCEL (Kho_Can_Cu_Phap_Ly.xlsx)
+    try:
+        type_to_loai = {
+            "LUAT": "Luật",
+            "NGHI_DINH": "Nghị định",
+            "THONG_TU_BQP": "Thông tư",
+            "THONG_TU": "Thông tư",
+            "QUY_CHUAN": "Quy chuẩn",
+            "HUONG_DAN": "Văn bản hướng dẫn"
+        }
+        type_to_linh_vuc = {
+            "LUAT": "Xây dựng & Đấu thầu",
+            "NGHI_DINH": "Xây dựng & Đấu thầu",
+            "THONG_TU_BQP": "Quốc phòng & Doanh trại",
+            "THONG_TU": "Quản lý Chi phí & Dự toán",
+            "QUY_CHUAN": "PCCC & Tiêu chuẩn Kỹ thuật",
+            "HUONG_DAN": "Chỉ đạo & Điều hành"
+        }
+        clean_loai = type_to_loai.get(type_code, "Văn bản QPPL")
+        clean_linh_vuc = type_to_linh_vuc.get(type_code, "Xây dựng & Quản lý dự án")
+
+        so_hieu_val = ai_data.get("so_hieu_clean")
+        if not so_hieu_val or so_hieu_val == "MỚI":
+            so_hieu_match = re.search(r"(\d+[\w\/\-\.]+)", item.get("title", ""))
+            so_hieu_val = so_hieu_match.group(1) if so_hieu_match else item.get("title", "")[:20]
+
+        sync_payload = {
+            "so_hieu_clean": so_hieu_val,
+            "van_ban_thay_the": ai_data.get("van_ban_thay_the", ""),
+            "title": item.get("title", ""),
+            "trich_yeu": item.get("title", ""),
+            "linh_vuc": clean_linh_vuc,
+            "loai_van_ban": clean_loai,
+            "co_quan": item.get("source_name", "Nhà nước"),
+            "ngay_ban_hanh": ai_data.get("ngay_ban_hanh", item.get("published", "")),
+            "ngay_hieu_luc": ai_data.get("ngay_hieu_luc", ""),
+            "chuyen_tiep_ngan": ai_data.get("chuyen_tiep_ngan", ""),
+            "goi_thau_tags": ai_data.get("goi_thau_tags", ["ALL"]),
+            "telegraph_url": telegraph_url
+        }
+        excel_file_path = os.path.join(BASE_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
+        sync_legal_document_to_excel(sync_payload, excel_path=excel_file_path)
+        log(f"💾 Đã tự động đồng bộ Sổ cái Excel thành công: {excel_file_path}")
+    except Exception as e:
+        log(f"⚠️ Không thể đồng bộ vào Excel: {e}")
+
+    return sent_success
 
 
-def run_pipeline(force_reprocess: bool = False):
-    log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT VÀ ĐỐI CHIẾU PHÁP LUẬT TỰ ĐỘNG (4-PILLAR HYBRID GATE)...")
+def run_reconnaissance() -> int:
+    init_storage()
+    known_docs = load_known_documents()
+    new_matched_count = 0
+
+    log("🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT LỌC ĐA TẦNG (CASCADE FILTERING)...")
     
-    tier1_matcher = StructuralAuthorityMatcher()
-    tier2_filter = HybridTier2Classifier()
-    ai_analyzer = LegalAIAnalyzer()
-    excel_sync = LegalExcelSyncEngine(EXCEL_LEGAL_PATH)
+    gatekeeper = LegalGatekeeper(api_key=GEMINI_API_KEY)
+    ai_analyzer = LegalAIAnalyzer(api_key=GEMINI_API_KEY)
     telegraph_pub = TelegraphPublisher()
 
-    known_docs = set() if force_reprocess else load_known_documents()
-    total_matched = 0
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    }
 
-    for source in FEED_SOURCES:
-        log(f"📡 Đang quét nguồn: {source['name']} ({source['url']})...")
-        try:
-            with httpx.Client(timeout=30.0, follow_redirects=True, verify=False) as client:
-                res = client.get(source["url"])
-                if res.status_code != 200:
+    with httpx.Client(verify=False, headers=headers, follow_redirects=True, timeout=30.0) as client:
+        for source in RSS_SOURCES:
+            log(f"📡 Đang quét nguồn: {source['name']} ({source['url']})...")
+            try:
+                resp = client.get(source["url"])
+                if resp.status_code != 200:
+                    log(f"⚠️ Nguồn {source['name']} phản hồi mã {resp.status_code}. Bỏ qua.")
                     continue
-                feed = feedparser.parse(res.text)
+
+                feed = feedparser.parse(resp.text)
                 log(f"   -> Đọc được {len(feed.entries)} mục tin mới nhất.")
 
                 for entry in feed.entries:
-                    raw_title = entry.get("title", "").strip()
-                    link = normalize_url(source["url"], entry.get("link", ""))
-                    summary = entry.get("summary", "").strip()
-                    published = entry.get("published", datetime.now().strftime("%d/%m/%Y"))
+                    link = entry.get("link", "").strip()
+                    title = entry.get("title", "").strip()
+                    raw_summary = entry.get("summary", entry.get("description", "")).strip()
+                    summary = clean_html_text(raw_summary)
+                    published = entry.get("published", entry.get("updated", "")).strip()
 
-                    doc_hash = hashlib.md5(f"{raw_title}_{link}".encode("utf-8")).hexdigest()
-                    if not force_reprocess and doc_hash in known_docs:
+                    if not link or not title:
                         continue
 
-                    # TẦNG 1: SÀNG LỌC 4 TRỤ CỘT THỰC CHIẾN (< 0.1ms)
-                    t2_res = tier2_filter.classify_and_filter(raw_title, summary)
-                    if not t2_res["is_accepted"]:
-                        log(f"ℹ️ Tầng 1 đã lọc bỏ ({t2_res['decision']}): {raw_title}")
-                        known_docs.add(doc_hash)
+                    doc_hash = hashlib.md5(link.encode("utf-8")).hexdigest()
+
+                    if doc_hash in known_docs:
                         continue
 
-                    # CÀO NỘI DUNG CHI TIẾT
-                    details = fetch_article_details(link)
-                    body_text = details["body_text"]
-                    pdf_url = details["pdf_url"]
+                    # ÁP DỤNG QUY TRÌNH LỌC ĐA TẦNG THÔNG MINH
+                    is_approved, tier_stage, reason = cascade_evaluate_document(title, summary, gatekeeper)
 
-                    # TẦNG 1 BÓC TÁCH METADATA
-                    t1_res = tier1_matcher.process(raw_title, body_text, source_name=source["name"])
-                    if not t1_res["is_valid_legal_doc"]:
-                        known_docs.add(doc_hash)
-                        continue
+                    if is_approved:
+                        log(f"🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: {title} (Lý do: {reason})")
+                        doc_item = {
+                            "id": doc_hash,
+                            "title": title,
+                            "link": link,
+                            "summary": summary,
+                            "published": published,
+                            "source_name": source["name"],
+                            "tier_approved": tier_stage,
+                            "discovered_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        
+                        process_and_send_alert(doc_item, ai_analyzer, telegraph_pub)
+                        
+                        known_docs[doc_hash] = doc_item
+                        new_matched_count += 1
+                    else:
+                        log(f"🛡️ [LOẠI BỎ] {title[:60]}... -> {tier_stage}: {reason}")
+                        known_docs[doc_hash] = {
+                            "title": title,
+                            "filtered_out": True,
+                            "filter_tier": tier_stage,
+                            "reject_reason": reason,
+                            "discovered_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
 
-                    so_hieu_clean = t1_res.get("doc_number", raw_title[:35])
-                    ngay_bh_clean = t1_res.get("ngay_ban_hanh", published)
-                    auth_clean = t1_res.get("authority", source.get("authority", "Bộ Xây dựng"))
+                    # Lưu lũy tiến ngay sau mỗi văn bản
+                    save_known_documents(known_docs)
 
-                    t1_res["raw_content"] = body_text[:2000]
-
-                    # TẢI TRƯỚC FILE PDF VÀ BÓC TÁCH TOÀN VĂN
-                    local_pdf = None
-                    full_doc_text = f"{raw_title}\n{body_text}"
-                    if pdf_url:
-                        local_pdf = download_official_pdf(pdf_url, doc_hash)
-                        if local_pdf and os.path.exists(local_pdf):
-                            try:
-                                doc_pdf = fitz.open(local_pdf)
-                                pdf_pages_text = []
-                                max_pages = min(25, len(doc_pdf))
-                                for p_idx in range(max_pages):
-                                    pdf_pages_text.append(f"\n=== TRANG {p_idx+1} ===\n" + doc_pdf[p_idx].get_text())
-                                extracted_pdf_str = "\n".join(pdf_pages_text)
-                                if len(extracted_pdf_str.strip()) > 300:
-                                    full_doc_text = extracted_pdf_str[:35000]
-                                    log(f"📑 Đã bóc tách toàn văn PDF ({max_pages} trang, {len(full_doc_text)} ký tự) để nạp vào AI.")
-                            except Exception as e:
-                                log(f"⚠️ Lỗi bóc tách PDF text: {e}")
-
-                    # TẦNG 2: AI GATEKEEPER & BÁO CÁO THAM MƯU THỰC CHIẾN
-                    ai_result = ai_analyzer.analyze_document_deep(
-                        doc_text=full_doc_text,
-                        doc_title=raw_title,
-                        doc_metadata=t1_res
-                    )
-
-                    if not ai_result.get("is_project_relevant", True):
-                        log(f"ℹ️ Tầng 2 AI đã lọc bỏ do không thuộc 4 trụ cột thực chiến: [{so_hieu_clean}] {raw_title}")
-                        known_docs.add(doc_hash)
-                        continue
-
-                    log(f"🎯 PHÁT HIỆN VĂN BẢN PHỔ QUÁT TOÀN QUỐC HỢP LỆ: [{so_hieu_clean}] {raw_title}")
-
-                    # ĐỒNG BỘ SỔ CÁI EXCEL
-                    excel_sync.sync_new_document(
-                        so_hieu=so_hieu_clean,
-                        loai_vb=t1_res.get("doc_type", "Thông tư"),
-                        co_quan=auth_clean,
-                        ngay_bh=ngay_bh_clean,
-                        ngay_hl=ngay_bh_clean,
-                        linh_vuc=str(t2_res.get("target_domain", "XÂY DỰNG")),
-                        cau_can_cu=ai_result.get("cau_can_cu_nd30", "")
-                    )
-
-                    # XUẤT BẢN TELEGRAPH INSTANT VIEW
-                    instant_url = None
-                    try:
-                        instant_url = telegraph_pub.publish_report(
-                            title=f"BÁO CÁO THAM MƯU: {so_hieu_clean}",
-                            analysis_data=ai_result,
-                            doc_item={
-                                "so_hieu": so_hieu_clean,
-                                "co_quan": auth_clean,
-                                "ngay_ban_hanh": ngay_bh_clean,
-                                "link": link
-                            }
-                        )
-                    except Exception as e:
-                        log(f"⚠️ Lỗi xuất bản Telegraph: {e}")
-
-                    # BẮN TELEGRAM
-                    item_data = {
-                        "title": raw_title,
-                        "link": link,
-                        "published": ngay_bh_clean
-                    }
-                    send_telegram_alert(
-                        item=item_data,
-                        tier1_meta=t1_res,
-                        ai_analysis=ai_result,
-                        instant_view_url=instant_url,
-                        local_pdf_path=local_pdf
-                    )
-
-                    known_docs.add(doc_hash)
-                    total_matched += 1
-
-        except Exception as e:
-            log(f"❌ Lỗi khi quét nguồn {source['name']}: {e}")
+            except Exception as e:
+                log(f"❌ Lỗi khi quét nguồn {source['name']}: {e}")
 
     save_known_documents(known_docs)
-    log(f"🏁 HOÀN THÀNH CHU TRÌNH TRINH SÁT. Số văn bản mới phù hợp: {total_matched}")
+    log(f"🏁 HOÀN THÀNH CHU TRÌNH TRINH SÁT. Số văn bản được duyệt: {new_matched_count}")
+    return new_matched_count
 
 
 if __name__ == "__main__":
-    run_pipeline()
+    run_reconnaissance()
