@@ -34,10 +34,10 @@ class DomainEnum(str, Enum):
 
 class HybridTier2Classifier:
     STRICT_OUT_OF_SCOPE_BLACKLIST = [
-        # 1. Mảng Quy hoạch không gian đô thị & Nông thôn vĩ mô
-        "quy hoạch đô thị và nông thôn", "quy hoạch đô thị", "quy hoạch nông thôn", "đồ án quy hoạch chung",
-        "nhiệm vụ quy hoạch", "quy hoạch phân khu đô thị", "quy hoạch nông thôn mới", "quy hoạch phân khu xây dựng",
-        "cắm mốc giới quy hoạch", "quy hoạch xây dựng vùng", "quy hoạch phân vùng", "quy hoạch mạng lưới",
+        # 1. Mảng Quy hoạch không gian đô thị & Nông thôn vĩ mô (Cấp tỉnh / Toàn quốc)
+        "đồ án quy hoạch chung đô thị", "quy hoạch tỉnh", "quy hoạch tổng thể quốc gia",
+        "quy hoạch nông thôn mới xã", "quy hoạch phân khu đô thị loại", "quy hoạch mạng lưới đường sắt",
+        "cắm mốc giới quy hoạch vùng", "quy hoạch xây dựng vùng liên tỉnh", "quy hoạch phân vùng kinh tế",
         
         # 2. Mảng Dự thảo đang lấy ý kiến (Chưa ban hành chính thức)
         "truyền thông dự thảo", "lấy ý kiến dự thảo", "dự thảo thông tư", "dự thảo nghị định",
@@ -92,6 +92,8 @@ class HybridTier2Classifier:
         DomainEnum.DAU_TU_CONG_XAY_DUNG: [
             "đầu tư công", "luật xây dựng", "quản lý dự án", "quản lý dự án đầu tư", "chi phí đầu tư xây dựng",
             "dự toán xây dựng", "định mức xây dựng", "định mức dự toán", "tổng mức đầu tư", "chủ trương đầu tư",
+            "quy hoạch tổng mặt bằng", "tổng mặt bằng 1/500", "luật quy hoạch đô thị và nông thôn",
+            "nghị định 178/2025", "nghị định 210/2026", "nghị định 207/2026", "thông tư 36/2026", "nghị định 254/2025",
             "quy chuẩn kỹ thuật quốc gia", "qcvn", "tiêu chuẩn quốc gia", "tcvn", "thẩm định thiết kế",
             "nghiệm thu công trình", "quản lý chất lượng công trình", "bảo trì công trình", "phân cấp công trình",
             "hợp đồng xây dựng", "giám sát thi công", "khảo sát xây dựng", "chỉ số giá xây dựng",
@@ -110,7 +112,7 @@ class HybridTier2Classifier:
             "sửa chữa tài sản công", "bảo dưỡng tài sản công", "cải tạo công trình",
             "nâng cấp công trình", "mua sắm tài sản công", "mua sắm tập trung",
             "tiêu chuẩn định mức máy móc", "tiêu chuẩn định mức xe ô tô", "thuê tài sản công",
-            "thanh lý tài sản công", "tiêu chuẩn định mức sử dụng trụ sở", "nghị định 138/2024", "nghị định 114/2024"
+            "thanh lý tài sản công", "tiêu chuẩn định mức sử dụng trụ sở", "nghị định 104/2026", "nghị định 186/2025", "nghị định 114/2024"
         ],
         DomainEnum.QUOC_PHONG_PCCC: [
             "quốc phòng", "công trình quốc phòng", "doanh trại", "doanh trại quân đội",
