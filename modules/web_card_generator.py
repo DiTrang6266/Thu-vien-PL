@@ -113,21 +113,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="pills-container">
             <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả</button>
             <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
-            <button class="pill" onclick="setFilterCategory('TV-01', this)">🗺️ TV-01 (Quy hoạch/Đo đạc)</button>
-            <button class="pill" onclick="setFilterCategory('TV-02', this)">📋 TV-02 (Khảo sát/FS/BKTKT)</button>
-            <button class="pill" onclick="setFilterCategory('TV-03', this)">🔍 TV-03 (Thẩm tra FS)</button>
-            <button class="pill" onclick="setFilterCategory('TV-04', this)">📐 TV-04 (Thiết kế BVTC-DT)</button>
-            <button class="pill" onclick="setFilterCategory('TV-05', this)">🔎 TV-05 (Thẩm tra BVTC-DT)</button>
-            <button class="pill" onclick="setFilterCategory('TV-06', this)">⚖️ TV-06 (Lập HSMT/HSYC)</button>
-            <button class="pill" onclick="setFilterCategory('TV-07', this)">🧪 TV-07 (Nén cọc/Thí nghiệm)</button>
-            <button class="pill" onclick="setFilterCategory('TV-08', this)">👷 TV-08 (Giám sát XD)</button>
-            <button class="pill" onclick="setFilterCategory('TV-09', this)">📊 TV-09 (Kiểm toán)</button>
-            <button class="pill" onclick="setFilterCategory('PTV-01', this)">🛡️ PTV-01 (Bảo hiểm)</button>
-            <button class="pill" onclick="setFilterCategory('XD-01', this)">🏗️ XD-01 (Thi công & Doanh cụ)</button>
+            <button class="pill" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
+            <button class="pill" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
+            <button class="pill" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
+            <button class="pill" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
+            <button class="pill" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
+            <button class="pill" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
+            <button class="pill" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
+            <button class="pill" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
             <button class="pill" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
-            <button class="pill" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
             <button class="pill" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
-            <button class="pill" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
+            <button class="pill" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
+            <button class="pill" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên & Sửa chữa</button>
         </div>
     </div>
 
@@ -183,15 +180,60 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 if (currentFilter === 'HIEU_LUC') return item.trang_thai.toLowerCase().includes('đang có hiệu lực');
                 
                 const itemTags = (item.tags || '').toUpperCase();
+                const linhVuc = (item.linh_vuc || '').toLowerCase();
+                const trichYeu = (item.trich_yeu || '').toLowerCase();
+                const coQuan = (item.co_quan || '').toLowerCase();
                 const filterUpper = currentFilter.toUpperCase();
 
-                if (filterUpper.startsWith('TV-') || filterUpper.startsWith('PTV-') || filterUpper.startsWith('XD-')) {
-                    return itemTags.includes(filterUpper) || itemTags.includes('ALL');
+                if (filterUpper === 'QUY_HOACH_KHAO_SAT') {
+                    return linhVuc.includes('quy hoạch') || linhVuc.includes('khảo sát') || linhVuc.includes('đo đạc') ||
+                           itemTags.includes('QUY_HOACH') || itemTags.includes('KHAO_SAT') || itemTags.includes('DO_DAC') || itemTags.includes('TV-01') || itemTags.includes('TV-02') ||
+                           trichYeu.includes('quy hoạch') || trichYeu.includes('khảo sát') || trichYeu.includes('đo đạc') || trichYeu.includes('địa chất') || trichYeu.includes('trắc địa');
                 }
-                if (filterUpper === 'BQP') return itemTags.includes('BQP') || (item.co_quan || '').toLowerCase().includes('quốc phòng');
-                if (filterUpper === 'MOI_TRUONG') return itemTags.includes('MOI_TRUONG') || (item.trich_yeu || '').toLowerCase().includes('môi trường');
-                if (filterUpper === 'PCCC') return itemTags.includes('PCCC') || (item.trich_yeu || '').toLowerCase().includes('cháy') || (item.trich_yeu || '').toLowerCase().includes('pccc');
-                if (filterUpper === 'CHI_THUONG_XUYEN') return itemTags.includes('CHI_THUONG_XUYEN') || (item.trich_yeu || '').toLowerCase().includes('chi thường xuyên');
+                if (filterUpper === 'THIET_KE_DU_TOAN') {
+                    return linhVuc.includes('chi phí') || linhVuc.includes('định mức') || linhVuc.includes('thiết kế') ||
+                           itemTags.includes('CHI_PHI') || itemTags.includes('DINH_MUC') || itemTags.includes('THIET_KE') || itemTags.includes('DU_TOAN') || itemTags.includes('TV-04') ||
+                           trichYeu.includes('thiết kế') || trichYeu.includes('dự toán') || trichYeu.includes('định mức') || trichYeu.includes('quản lý chi phí');
+                }
+                if (filterUpper === 'THAM_TRA_THAM_DINH') {
+                    return itemTags.includes('THAM_TRA') || itemTags.includes('THAM_DINH') || itemTags.includes('TV-03') || itemTags.includes('TV-05') ||
+                           trichYeu.includes('thẩm tra') || trichYeu.includes('thẩm định') || trichYeu.includes('chủ trương') || linhVuc.includes('thẩm định');
+                }
+                if (filterUpper === 'DAU_THAU_HOP_DONG') {
+                    return linhVuc.includes('đấu thầu') || linhVuc.includes('hợp đồng') ||
+                           itemTags.includes('DAU_THAU') || itemTags.includes('HOP_DONG') || itemTags.includes('TV-06') ||
+                           trichYeu.includes('đấu thầu') || trichYeu.includes('hợp đồng') || trichYeu.includes('lựa chọn nhà thầu') || trichYeu.includes('tạm ứng');
+                }
+                if (filterUpper === 'GIAM_SAT_CHAT_LUONG') {
+                    return linhVuc.includes('chất lượng') || linhVuc.includes('nghiệm thu') || linhVuc.includes('giám sát') ||
+                           itemTags.includes('GIAM_SAT') || itemTags.includes('CHAT_LUONG') || itemTags.includes('NGHIEM_THU') || itemTags.includes('TV-08') ||
+                           trichYeu.includes('giám sát') || trichYeu.includes('chất lượng') || trichYeu.includes('nghiệm thu') || trichYeu.includes('nhật ký');
+                }
+                if (filterUpper === 'THI_CONG_XAY_DUNG') {
+                    return linhVuc.includes('xây dựng') || linhVuc.includes('an toàn') || linhVuc.includes('tiêu chuẩn') ||
+                           itemTags.includes('THI_CONG') || itemTags.includes('AN_TOAN') || itemTags.includes('XD-01') || itemTags.includes('TV-07') || itemTags.includes('THI_NGHIEM_COC') ||
+                           trichYeu.includes('thi công') || trichYeu.includes('an toàn lao động') || trichYeu.includes('nén cọc') || trichYeu.includes('thí nghiệm');
+                }
+                if (filterUpper === 'KIEM_TOAN_QUYET_TOAN') {
+                    return linhVuc.includes('kiểm toán') || linhVuc.includes('quyết toán') ||
+                           itemTags.includes('KIEM_TOAN') || itemTags.includes('QUYET_TOAN') || itemTags.includes('TV-09') ||
+                           trichYeu.includes('quyết toán') || trichYeu.includes('kiểm toán');
+                }
+                if (filterUpper === 'BAO_HIEM') {
+                    return linhVuc.includes('bảo hiểm') || itemTags.includes('BAO_HIEM') || itemTags.includes('PTV-01') || trichYeu.includes('bảo hiểm');
+                }
+                if (filterUpper === 'BQP') {
+                    return itemTags.includes('BQP') || coQuan.includes('quốc phòng') || linhVuc.includes('quốc phòng') || linhVuc.includes('doanh trại') || trichYeu.includes('bộ quốc phòng') || trichYeu.includes('doanh trại');
+                }
+                if (filterUpper === 'PCCC') {
+                    return itemTags.includes('PCCC') || linhVuc.includes('pccc') || linhVuc.includes('phòng cháy') || trichYeu.includes('cháy') || trichYeu.includes('pccc') || trichYeu.includes('cứu nạn');
+                }
+                if (filterUpper === 'MOI_TRUONG') {
+                    return itemTags.includes('MOI_TRUONG') || linhVuc.includes('môi trường') || trichYeu.includes('môi trường') || trichYeu.includes('đtm');
+                }
+                if (filterUpper === 'CHI_THUONG_XUYEN') {
+                    return itemTags.includes('CHI_THUONG_XUYEN') || linhVuc.includes('chi thường xuyên') || linhVuc.includes('tài sản') || trichYeu.includes('chi thường xuyên') || trichYeu.includes('tài sản công') || trichYeu.includes('sửa chữa');
+                }
 
                 return itemTags.includes(filterUpper);
             });
@@ -208,10 +250,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const statusClass = isActive ? 'status-active' : 'status-expired';
                 const statusText = isActive ? '🟢 CÒN HIỆU LỰC' : '🔴 HẾT HIỆU LỰC';
 
-                const tagsList = (item.tags || 'ALL').split(',').map(t => {
-                    const cleanTag = t.trim();
-                    return `<span class="tag-pill" style="cursor:pointer;" onclick="filterByTag('${cleanTag}')">${cleanTag}</span>`;
-                }).join('');
+                const tagsList = (item.tags || 'ALL').split(',')
+                    .map(t => t.trim())
+                    .filter(t => t && !t.startsWith('TV-') && !t.startsWith('PTV-') && !t.startsWith('XD-'))
+                    .map(cleanTag => {
+                        return `<span class="tag-pill" style="cursor:pointer;" onclick="filterByTag('${cleanTag}')">${cleanTag}</span>`;
+                    }).join('');
 
                 let transitionHtml = '';
                 if (item.chuyen_tiep && item.chuyen_tiep.length > 5) {

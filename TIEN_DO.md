@@ -26,7 +26,7 @@
   - *Tầng 3 (Deep Analysis):* Bóc tách toàn văn, đối soát trích dẫn gốc chống ảo giác (`_verify_citations`) và xuất bản Telegraph.
 
 ### ✅ Giai đoạn 5: Trang Web Thẻ Pháp Lý Di Động 1-Chạm (GitHub Pages)
-* **Web App Mobile Card View:** `https://ditrang6266.github.io/Thu-vien-PL/` hiển thị 94 thẻ di động, hỗ trợ Live Search, lọc theo 11 gói thầu (`TV-01` $\rightarrow$ `XD-01`), và nút **[ 📋 Sao Chép Căn Cứ ]** 1-chạm vào Clipboard.
+* **Web App Mobile Card View:** `https://ditrang6266.github.io/Thu-vien-PL/` hiển thị 94 thẻ di động, hỗ trợ Live Search, lọc theo **12 nhóm nghiệp vụ thực chiến** (Quy hoạch/Khảo sát, Thiết kế/Dự toán, Thẩm tra/Thẩm định, Đấu thầu/Hợp đồng, Giám sát/Nghiệm thu, Thi công/An toàn, Quyết toán/Kiểm toán, Bảo hiểm, BQP, PCCC, Môi trường, Chi thường xuyên), và nút **[ 📋 Sao Chép Căn Cứ ]** 1-chạm vào Clipboard.
 
 ### ✅ Giai đoạn 6: Thẩm định & Phản biện Độc lập bởi Hội đồng Subagents
 * **Hội đồng 3 Subagent Thẩm định AI Lọc:** Xác nhận không cần fine-tune trọng số máy học, áp dụng In-Context Prompting + CSDL Grounding; tháo gỡ Blacklist quy hoạch cho gói `TV-01`.

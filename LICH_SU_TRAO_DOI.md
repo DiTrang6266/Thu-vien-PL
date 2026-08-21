@@ -94,6 +94,14 @@ Dự án áp dụng quy chuẩn cố định bắt buộc khi đúc hồ sơ Wor
   - Đồng bộ `Book2.xlsx` lên GitHub (`580f638`).
   - Kiểm thử 18/18 Unit Test Cases PASS 100%.
 
+### Buổi 21: Tái cấu trúc Bộ lọc Thư Viện Luật sang Nhóm Nghiệp vụ Thực chiến Phổ quát
+* **Chỉ đạo của Người dùng:** Loại bỏ các mã gói thầu dự án nội bộ (`TV-01`, `TV-02`...) trên thanh lọc của Thư viện Luật vì mang tính cá biệt, gây rối mắt trên điện thoại và không áp dụng được cho dự án khác.
+* **Quyết định & Hành động đã triển khai:**
+  - Chuyển đổi 100% thanh lọc sang **12 nhóm nghiệp vụ chuyên ngành thực tế**: Quy hoạch & Khảo sát, Thiết kế & Dự toán, Thẩm tra & Thẩm định, Đấu thầu & Hợp đồng, Giám sát & Nghiệm thu, Thi công & An toàn, Kiểm toán & Quyết toán, Bảo hiểm, BQP, PCCC, Môi trường, Chi thường xuyên & Sửa chữa.
+  - Tinh lọc danh sách tag trên các thẻ luật (ẩn các mã `TV-01..XD-01`, chỉ giữ lại tag nghiệp vụ rõ nghĩa).
+  - Tái tạo thành công `docs/index.html` và `index.html`.
+  - Kiểm thử toàn bộ 18/18 Unit Test Cases PASS 100%.
+
 ---
 
 ## 📂 4. DANH MỤC CÁC FILE ĐANG HOẠT ĐỘNG TRONG DỰ ÁN
