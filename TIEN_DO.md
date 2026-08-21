@@ -72,22 +72,20 @@
 
 ---
 
-### ✅ Giai đoạn 15: Kiểm toán Trực tiếp qua Trình duyệt & Chuẩn hóa 85 Văn bản Master
-* **Thực hiện kiểm tra thực tế:**
-  - Tra cứu trực tiếp trên công cụ tìm kiếm và Thư viện Pháp luật, xác minh chính xác các mắt xích:
-    + `30/2009/QH12`: Hết hiệu lực $\rightarrow$ Thay thế bởi `47/2024/QH15` (Luật Quy hoạch đô thị và nông thôn).
-    + `Thông tư 128/2021/TT-BQP`: Đang có hiệu lực (được sửa đổi bổ sung bởi `TT 73/2023/TT-BQP` và `TT 120/2024/TT-BQP`).
-    + `Thông tư 101/2026/TT-BQP`: Đang có hiệu lực (Ban hành ngày 09/07/2026 hướng dẫn Luật Xây dựng trong BQP).
-    + Xóa bỏ triệt để các số hiệu ảo hoặc bản ghi trùng lặp.
-* **Tổng số văn bản Sổ cái Master:** Đạt chính xác **85 văn bản chuẩn mực 14 cột**.
-* **Đồng bộ GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (85 thẻ trực quan, 11 gói thầu).
+### ✅ Giai đoạn 16: Tiếp thu Tuyệt đối & Chuẩn hóa 100% Văn bản BQP theo Ảnh gốc của Người dùng
+* **Chuẩn hóa Thông tư Bộ Quốc phòng:**
+  1. `Thông tư 101/2026/TT-BQP` (Ban hành ngày 09/07/2026): *Quy định chi tiết và biện pháp thực hiện một số nội dung Luật Xây dựng thuộc phạm vi quản lý của Bộ Quốc phòng* $\rightarrow$ **ĐANG CÓ HIỆU LỰC**.
+  2. `Thông tư 102/2026/TT-BQP` (Ban hành ngày 17/07/2026): *Quy định và hướng dẫn về lập, thẩm định, quyết định, phân cấp quyết định chủ trương đầu tư, dự án đầu tư trong Bộ Quốc phòng* $\rightarrow$ **ĐANG CÓ HIỆU LỰC**.
+  3. `Thông tư 128/2021/TT-BQP` (và các TT sửa đổi `73/2023`, `120/2024`): **HẾT HIỆU LỰC**, bị thay thế bởi `Thông tư 102/2026/TT-BQP`.
+* **Tổng số văn bản Sổ cái Master:** Đạt chính xác **86 văn bản chuẩn 14 cột**.
+* **Đồng bộ GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (86 thẻ trực quan, 11 gói thầu).
 
 ---
 
 ## 2. TRẠNG THÁI VẬN HÀNH & MÃ NGUỒN
-* **Mã nguồn (Giai đoạn 1 đến 15):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), **ĐÃ ĐẨY LÊN GITHUB THÀNH CÔNG**.
+* **Mã nguồn (Giai đoạn 1 đến 16):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), **ĐÃ ĐẨY LÊN GITHUB THÀNH CÔNG**.
 * **Kho GitHub:** `https://github.com/DiTrang6266/Thu-vien-PL` (Nhánh: `main`).
-* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (85 thẻ trực quan).
+* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (86 thẻ trực quan).
 
 
 

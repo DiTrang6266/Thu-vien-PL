@@ -24,9 +24,9 @@ class TestWordGroundingAndWebCards(unittest.TestCase):
         self.assertEqual(_get_legal_rank("Quy chuẩn kỹ thuật"), 400)
         self.assertEqual(_get_legal_rank("Quyết định"), 400)
 
-    def test_02_word_grounding_8_packages_coverage(self):
-        """Kiểm tra trích xuất căn cứ pháp lý cho 8 gói thầu dự án."""
-        packages = ["TV-04", "TV-05", "TV-06", "TV-07", "TV-08", "TV-09", "PTV-01", "XD-01"]
+    def test_02_word_grounding_11_packages_coverage(self):
+        """Kiểm tra trích xuất căn cứ pháp lý cho toàn bộ 11 gói thầu dự án."""
+        packages = ["TV-01", "TV-02", "TV-03", "TV-04", "TV-05", "TV-06", "TV-07", "TV-08", "TV-09", "PTV-01", "XD-01"]
         for pkg in packages:
             bases = get_active_legal_bases(
                 dossier_type="TO_TRINH_DU_TOAN",

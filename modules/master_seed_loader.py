@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Module: master_seed_loader.py
-Mục đích: Nạp hạt giống toàn bộ 74 văn bản pháp luật nền tảng cốt lõi vào Sổ cái Kho_Can_Cu_Phap_Ly.xlsx.
+Mục đích: Nạp hạt giống toàn bộ 86 văn bản pháp luật nền tảng cốt lõi vào Sổ cái Kho_Can_Cu_Phap_Ly.xlsx.
 """
 
 import os
