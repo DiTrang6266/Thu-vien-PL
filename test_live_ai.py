@@ -46,7 +46,8 @@ NGHỊ ĐỊNH SỐ 24/2024/NĐ-CP: QUY ĐỊNH CHI TIẾT THI HÀNH MỘT SỐ 
 
     item = {
         "id": "live_test_master_template_nd24",
-        "title": "Quy định chi tiết thi hành một số điều của Luật Đấu thầu về lựa chọn nhà thầu",
+        "so_hieu": "24/2024/NĐ-CP",
+        "title": "Nghị định quy định chi tiết thi hành một số điều của Luật Đấu thầu về lựa chọn nhà thầu",
         "link": "https://thuvienphapluat.vn/van-ban/Dau-tu/Nghi-dinh-24-2024-ND-CP-huong-dan-Luat-Dau-thau-ve-lua-chon-nha-thau-578020.aspx",
         "old_text": old_text,
         "new_text": new_text,

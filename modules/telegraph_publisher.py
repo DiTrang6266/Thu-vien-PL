@@ -70,20 +70,8 @@ class TelegraphPublisher:
     ) -> List[Dict[str, Any]]:
         nodes = []
 
-        # 1. Header & Thông số hành chính
-        nodes.append({"tag": "h4", "children": ["🏛️ THÔNG TIN VĂN BẢN"]})
-        meta_items = []
-        if doc_meta:
-            if doc_meta.get("so_hieu"):
-                meta_items.append(f"• Số hiệu: {doc_meta['so_hieu']}\n")
-            if doc_meta.get("co_quan"):
-                meta_items.append(f"• Cơ quan ban hành: {doc_meta['co_quan']}\n")
-            if doc_meta.get("ngay_ban_hanh"):
-                meta_items.append(f"• Ngày ban hành: {doc_meta['ngay_ban_hanh']}\n")
-        
-        meta_items.append("• Phạm vi: Áp dụng phổ quát toàn quốc.\n")
-        nodes.append({"tag": "p", "children": meta_items})
-        nodes.append({"tag": "hr"})
+        # Bỏ khối THÔNG TIN VĂN BẢN trùng lặp vì đã hiển thị trên tin nhắn Telegram.
+        # Đi thẳng vào TOP thay đổi cốt lõi tác động đến dự án.
 
         # 2. Đánh giá Tác động Nghiệp vụ Tổng quan
         impact = ai_data.get("impact_summary")

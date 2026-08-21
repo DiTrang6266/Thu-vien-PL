@@ -72,9 +72,23 @@
 
 ---
 
+### ✅ Giai đoạn 12: Nâng cấp Hệ thống Trinh sát & Báo cáo Đa tầng Toàn diện (Chuẩn Executive Hybrid)
+* **Chữa dứt điểm 4 căn bệnh kinh niên của AI:**
+  - Tích hợp kỹ thuật bóc tách đa tầng phân theo Chương nghiệp vụ (`substantive_points`) chống bệnh "Lost-in-the-Middle".
+  - Tích hợp lớp kiểm chứng trích dẫn dòng đỏ (`Redline Grounding Engine`) chống ảo giác.
+  - Tách riêng khối cảnh báo bẫy thanh tra (`compliance_risks`) và quy định chuyển tiếp (`transition_rules`).
+* **Tối ưu hóa Báo cáo Telegraph Instant View:**
+  - Bỏ khối tiêu đề hành chính trùng lặp, đi thẳng vào 4 khối chuyên môn thực chiến.
+* **Kiểm thử & Đồng bộ:**
+  - 18/18 Unit Test Cases PASS 100%.
+  - Sổ cái Master 79 văn bản chuẩn 14 cột được bảo toàn nguyên vẹn.
+
+---
+
 ## 2. TRẠNG THÁI VẬN HÀNH & MÃ NGUỒN
-* **Mã nguồn (Giai đoạn 1 đến 11):** Đã kiểm thử hoàn tất 100% cục bộ trên máy, **CHƯA ĐẨY LÊN GITHUB** theo đúng chỉ đạo của người dùng.
+* **Mã nguồn (Giai đoạn 1 đến 12):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), sẵn sàng vận hành tự động.
 * **Kho GitHub:** `https://github.com/DiTrang6266/Thu-vien-PL` (Nhánh: `main`).
+* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (79 thẻ).
 
 
 
