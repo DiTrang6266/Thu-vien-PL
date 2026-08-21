@@ -56,11 +56,54 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         /* Filter Pills */
         .filter-section { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
-        .filter-label { font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .pill { user-select: none; -webkit-user-select: none; white-space: nowrap; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; transition: all 0.15s; }
+        
+        /* Slider with Navigation Arrows < > */
+        .nav-slider-wrapper { display: flex; align-items: center; gap: 6px; position: relative; }
+        .nav-arrow-btn {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .nav-arrow-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 2px 5px rgba(26,86,219,0.25);
+        }
+        .nav-arrow-btn:active { transform: scale(0.92); }
+        
+        .pills-scroll-track {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 2px 2px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            cursor: grab;
+            flex: 1;
+        }
+        .pills-scroll-track:active { cursor: grabbing; }
+        .pills-scroll-track::-webkit-scrollbar { display: none; }
+
+        .pill { user-select: none; -webkit-user-select: none; white-space: nowrap; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
         .pill:hover { background: #f1f5f9; border-color: #94a3b8; }
         .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 4px rgba(26,86,219,0.25); }
-        .pill-sub { font-size: 0.78rem; padding: 5px 10px; }
+        .pill-sub { font-size: 0.78rem; padding: 5px 11px; }
 
         /* Stats bar */
         .stats-bar { padding: 10px 16px 4px 16px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
@@ -114,23 +157,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <input type="text" id="searchInput" class="search-box" placeholder="Tìm số hiệu (24/2024...), định mức, tên văn bản..." oninput="renderFilteredCards()">
         <div class="filter-section">
             <div class="filter-group">
-                <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả</button>
+                <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả (94)</button>
                 <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
                 <button class="pill" onclick="setFilterCategory('HET_HIEU_LUC', this)">🔴 Hết hiệu lực</button>
             </div>
-            <div class="filter-group">
-                <button class="pill pill-sub" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
-                <button class="pill pill-sub" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
+            <div class="nav-slider-wrapper">
+                <button class="nav-arrow-btn" onclick="scrollPills(-240)" title="Cuộn sang trái">‹</button>
+                <div class="pills-scroll-track" id="pillsTrack">
+                    <button class="pill pill-sub" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
+                    <button class="pill pill-sub" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
+                </div>
+                <button class="nav-arrow-btn" onclick="scrollPills(240)" title="Cuộn sang phải">›</button>
             </div>
         </div>
     </div>
@@ -148,14 +195,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         const RAW_DATA = ###DATA_PLACEHOLDER###;
         let currentFilter = 'ALL';
 
+        function scrollPills(distance) {
+            const track = document.getElementById('pillsTrack');
+            if (track) {
+                track.scrollBy({ left: distance, behavior: 'smooth' });
+            }
+        }
+
         function setFilterCategory(cat, el) {
             currentFilter = cat;
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
             if (el) {
                 el.classList.add('active');
+                if (el.parentElement && el.parentElement.id === 'pillsTrack') {
+                    el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                }
             } else {
                 const btn = Array.from(document.querySelectorAll('.pill')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${cat}'`));
-                if (btn) btn.classList.add('active');
+                if (btn) {
+                    btn.classList.add('active');
+                    if (btn.parentElement && btn.parentElement.id === 'pillsTrack') {
+                        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }
+                }
             }
             renderFilteredCards();
         }
@@ -165,6 +227,41 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             setFilterCategory(tag, null);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // Kích hoạt tính năng lăn chuột và kéo rê chuột cho máy tính
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.getElementById('pillsTrack');
+            if (!track) return;
+
+            // 1. Lăn con lăn chuột để cuộn ngang
+            track.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    track.scrollLeft += e.deltaY * 1.2;
+                }
+            }, { passive: false });
+
+            // 2. Kéo rê chuột (Drag-to-Scroll)
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            track.addEventListener('mousedown', (e) => {
+                isDown = true;
+                track.classList.add('active');
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+            });
+            track.addEventListener('mouseleave', () => { isDown = false; });
+            track.addEventListener('mouseup', () => { isDown = false; });
+            track.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                track.scrollLeft = scrollLeft - walk;
+            });
+        });
 
         function renderFilteredCards() {
             const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
