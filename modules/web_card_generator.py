@@ -49,15 +49,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
         
         /* Search & Filter Container */
-        .sticky-tools { background: #ffffff; padding: 12px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 72px; z-index: 90; }
+        .sticky-tools { background: #ffffff; padding: 12px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 90; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
         .search-box { width: 100%; padding: 10px 14px 10px 36px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; outline: none; background: #f8fafc url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2364748b" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 12px center; transition: all 0.2s; }
         .search-box:focus { border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 3px rgba(26,86,219,0.15); }
         
         /* Filter Pills */
-        .pills-container { display: flex; gap: 8px; overflow-x: auto; padding-top: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .pills-container::-webkit-scrollbar { display: none; }
-        .pill { white-space: nowrap; padding: 6px 14px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; border: 1px solid #cbd5e1; background: #fff; color: #475569; cursor: pointer; transition: all 0.15s; }
-        .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .filter-section { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
+        .filter-label { font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .pill { user-select: none; -webkit-user-select: none; white-space: nowrap; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; transition: all 0.15s; }
+        .pill:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 4px rgba(26,86,219,0.25); }
+        .pill-sub { font-size: 0.78rem; padding: 5px 10px; }
 
         /* Stats bar */
         .stats-bar { padding: 10px 16px 4px 16px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
@@ -107,24 +110,28 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
 
     <!-- Search & Filter Controls -->
-    <!-- Search & Filter Controls -->
     <div class="sticky-tools">
         <input type="text" id="searchInput" class="search-box" placeholder="Tìm số hiệu (24/2024...), định mức, tên văn bản..." oninput="renderFilteredCards()">
-        <div class="pills-container">
-            <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả</button>
-            <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
-            <button class="pill" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
-            <button class="pill" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
-            <button class="pill" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
-            <button class="pill" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
-            <button class="pill" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
-            <button class="pill" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
-            <button class="pill" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
-            <button class="pill" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
-            <button class="pill" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
-            <button class="pill" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
-            <button class="pill" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
-            <button class="pill" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên & Sửa chữa</button>
+        <div class="filter-section">
+            <div class="filter-group">
+                <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả</button>
+                <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
+                <button class="pill" onclick="setFilterCategory('HET_HIEU_LUC', this)">🔴 Hết hiệu lực</button>
+            </div>
+            <div class="filter-group">
+                <button class="pill pill-sub" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
+                <button class="pill pill-sub" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
+            </div>
         </div>
     </div>
 
@@ -178,6 +185,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 // 2. Category filter
                 if (currentFilter === 'ALL') return true;
                 if (currentFilter === 'HIEU_LUC') return item.trang_thai.toLowerCase().includes('đang có hiệu lực');
+                if (currentFilter === 'HET_HIEU_LUC') return !item.trang_thai.toLowerCase().includes('đang có hiệu lực');
                 
                 const itemTags = (item.tags || '').toUpperCase();
                 const linhVuc = (item.linh_vuc || '').toLowerCase();
