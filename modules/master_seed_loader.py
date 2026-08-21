@@ -20,9 +20,9 @@ EXCEL_PATH = os.path.join(BASE_DIR, "Kho_Can_Cu_Phap_Ly.xlsx")
 MASTER_SEED_RECORDS = [
     {
         "linh_vuc": "Quy hoạch Xây dựng", "loai_vb": "Luật", "so_hieu": "30/2009/QH12",
-        "trich_yeu": "Luật Quy hoạch đô thị năm 2009 (sửa đổi, bổ sung bởi Luật số 35/2018/QH14)", "co_quan": "Quốc hội",
-        "ngay_bh": "17/06/2009", "ngay_hl": "01/01/2010", "trang_thai": "Đang có hiệu lực",
-        "thay_the": "None", "chuyen_tiep": "Căn cứ pháp lý nền tảng cho việc lập, thẩm định và phê duyệt điều chỉnh Quy hoạch Tổng mặt bằng 1/500 doanh trại và khu chức năng",
+        "trich_yeu": "Luật Quy hoạch đô thị năm 2009", "co_quan": "Quốc hội",
+        "ngay_bh": "17/06/2009", "ngay_hl": "01/01/2010", "trang_thai": "Hết hiệu lực",
+        "thay_the": "Bị thay thế bởi Luật Quy hoạch đô thị và nông thôn số 47/2024/QH15", "chuyen_tiep": "Căn cứ pháp lý nền tảng cho việc lập, thẩm định và phê duyệt điều chỉnh Quy hoạch Tổng mặt bằng 1/500 doanh trại và khu chức năng",
         "tags": "ALL, QUY_HOACH, TV-01, TV-02, BQP", "link_iv": ""
     },
     {

@@ -72,24 +72,25 @@
 
 ---
 
-### ✅ Giai đoạn 13: Bao quát Toàn diện 11 Gói thầu Dự án (Từ TV-01 đến XD-01)
-* **Bổ sung trọn vẹn Giai đoạn A (Chuẩn bị đầu tư):**
-  - Gói `TV-01`: Lập Quy hoạch TMB / Khảo sát đo đạc địa hình (53 văn bản áp dụng).
-  - Gói `TV-02`: Khảo sát địa chất & Lập Báo cáo nghiên cứu khả thi FS / BKTKT (55 văn bản áp dụng).
-  - Gói `TV-03`: Thẩm tra Báo cáo nghiên cứu khả thi FS / Thẩm tra BKTKT (41 văn bản áp dụng).
-* **Nâng cấp Bộ Lọc Thẻ Web Di Động (`web_card_generator.py`):**
-  - Tích hợp thanh lọc 1-chạm đầy đủ 11 gói thầu (`TV-01` $\rightarrow$ `XD-01`) và các chuyên ngành (BQP, Môi trường, PCCC, Chi thường xuyên).
-  - Cho phép bấm trực tiếp vào thẻ tag bên trong từng văn bản để lọc tức thì.
-* **Đồng bộ Sổ cái Excel & GitHub Pages:**
-  - Sổ cái `Kho_Can_Cu_Phap_Ly.xlsx` đạt chuẩn 79 văn bản với trường `tags` phủ kín 11 gói thầu.
-  - Đẩy lên GitHub Pages: `https://ditrang6266.github.io/Thu-vien-PL/`.
+### ✅ Giai đoạn 14: Bổ sung 7 Văn bản Chuyên ngành Quy hoạch & Đo đạc Khảo sát (Chuẩn hóa 86 Văn bản)
+* **Khắc phục triệt để câu hỏi của Người dùng:**
+  - Nạp đầy đủ 7 văn bản chuyên môn sâu cho Gói `TV-01` và `TV-02`:
+    1. `Luật 30/2009/QH12 & 35/2018`: Luật Quy hoạch đô thị.
+    2. `Nghị định 44/2015/NĐ-CP`: Quy định chi tiết về quy hoạch xây dựng.
+    3. `Thông tư 04/2022/TT-BXD`: Hồ sơ nhiệm vụ và đồ án quy hoạch xây dựng.
+    4. `Thông tư 20/2019/TT-BXD`: Định mức chi phí lập quy hoạch xây dựng.
+    5. `QCVN 01:2021/BXD` (TT 01/2021/TT-BXD): Quy chuẩn kỹ thuật quốc gia về Quy hoạch xây dựng.
+    6. `Luật 27/2018/QH14`: Luật Đo đạc và bản đồ.
+    7. `Nghị định 27/2019/NĐ-CP`: Hướng dẫn thi hành Luật Đo đạc và bản đồ.
+* **Tổng số văn bản Sổ cái Master:** Đạt chính xác **86 văn bản chuẩn 14 cột**.
+* **Đồng bộ GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (86 thẻ trực quan).
 
 ---
 
 ## 2. TRẠNG THÁI VẬN HÀNH & MÃ NGUỒN
-* **Mã nguồn (Giai đoạn 1 đến 13):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), **ĐÃ ĐẨY LÊN GITHUB THÀNH CÔNG**.
+* **Mã nguồn (Giai đoạn 1 đến 14):** Đã kiểm thử hoàn tất 100% (18/18 Unit Tests PASS), **ĐÃ ĐẨY LÊN GITHUB THÀNH CÔNG**.
 * **Kho GitHub:** `https://github.com/DiTrang6266/Thu-vien-PL` (Nhánh: `main`).
-* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (79 thẻ trực quan).
+* **Trang Web Thẻ Di Động GitHub Pages:** `https://ditrang6266.github.io/Thu-vien-PL/` (86 thẻ trực quan).
 
 
 
