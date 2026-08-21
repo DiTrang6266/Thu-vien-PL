@@ -21,19 +21,53 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background: var(--bg); color: var(--text-main); padding-bottom: 80px; -webkit-font-smoothing: antialiased; }
         
-        /* Header */
-        .header { background: #1e293b; color: #fff; padding: 18px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-        .header-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
-        .badge-live { background: #10b981; color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
-        .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+        /* Unified Sticky Top Nav */
+        .top-nav-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header-compact {
+            background: #1e293b;
+            color: #fff;
+            padding: 10px 16px 8px 16px;
+        }
+        .header-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .badge-live {
+            background: #10b981;
+            color: #fff;
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .header-sub {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
         
         /* Search & Filter Container */
-        .sticky-tools { background: #ffffff; padding: 12px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 90; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-        .search-box { width: 100%; padding: 10px 14px 10px 36px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; outline: none; background: #f8fafc url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2364748b" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 12px center; transition: all 0.2s; }
+        .tools-compact {
+            padding: 10px 16px 12px 16px;
+            background: #ffffff;
+        }
+        .search-box { width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.92rem; outline: none; background: #f8fafc url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2364748b" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 12px center; transition: all 0.2s; }
         .search-box:focus { border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 3px rgba(26,86,219,0.15); }
         
         /* Filter Pills */
-        .filter-section { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .filter-section { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
         .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
         
         /* Slider with Navigation Arrows < > */
@@ -122,41 +156,42 @@
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="header-title">
-            <span>🏛️ KHO CĂN CỨ PHÁP LÝ</span>
-            <span class="badge-live">TỰ ĐỘNG 24/7</span>
-        </div>
-        <div class="header-sub">Hồ sơ Dự án Xây dựng & Đấu thầu</div>
-    </div>
-
-    <!-- Search & Filter Controls -->
-    <div class="sticky-tools">
-        <input type="text" id="searchInput" class="search-box" placeholder="Tìm số hiệu (24/2024...), định mức, tên văn bản..." oninput="renderFilteredCards()">
-        <div class="filter-section">
-            <div class="filter-group">
-                <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả (94)</button>
-                <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
-                <button class="pill" onclick="setFilterCategory('HET_HIEU_LUC', this)">🔴 Hết hiệu lực</button>
+    <!-- Unified Sticky Top Bar -->
+    <div class="top-nav-sticky">
+        <div class="header-compact">
+            <div class="header-title">
+                <span>🏛️ KHO CĂN CỨ PHÁP LÝ</span>
+                <span class="badge-live">TỰ ĐỘNG 24/7</span>
             </div>
-            <div class="nav-slider-wrapper">
-                <button class="nav-arrow-btn" onclick="scrollPills(-240)" title="Cuộn sang trái">‹</button>
-                <div class="pills-scroll-track" id="pillsTrack">
-                    <button class="pill pill-sub" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
-                    <button class="pill pill-sub" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
+            <div class="header-sub">Hồ sơ Dự án Xây dựng & Đấu thầu</div>
+        </div>
+
+        <div class="tools-compact">
+            <input type="text" id="searchInput" class="search-box" placeholder="Tìm số hiệu (24/2024...), định mức, tên văn bản..." oninput="renderFilteredCards()">
+            <div class="filter-section">
+                <div class="filter-group">
+                    <button class="pill active" onclick="setFilterCategory('ALL', this)">Tất cả (94)</button>
+                    <button class="pill" onclick="setFilterCategory('HIEU_LUC', this)">🟢 Còn hiệu lực</button>
+                    <button class="pill" onclick="setFilterCategory('HET_HIEU_LUC', this)">🔴 Hết hiệu lực</button>
                 </div>
-                <button class="nav-arrow-btn" onclick="scrollPills(240)" title="Cuộn sang phải">›</button>
+                <div class="nav-slider-wrapper">
+                    <button class="nav-arrow-btn" onclick="scrollPills(-240)" title="Cuộn sang trái">‹</button>
+                    <div class="pills-scroll-track" id="pillsTrack">
+                        <button class="pill pill-sub" onclick="setFilterCategory('QUY_HOACH_KHAO_SAT', this)">🗺️ Quy hoạch & Khảo sát</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('THIET_KE_DU_TOAN', this)">📐 Thiết kế & Dự toán</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('THAM_TRA_THAM_DINH', this)">🔍 Thẩm tra & Thẩm định</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('DAU_THAU_HOP_DONG', this)">⚖️ Đấu thầu & Hợp đồng</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('GIAM_SAT_CHAT_LUONG', this)">👷 Giám sát & Nghiệm thu</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('THI_CONG_XAY_DUNG', this)">🏗️ Thi công & An toàn</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('KIEM_TOAN_QUYET_TOAN', this)">📊 Kiểm toán & Quyết toán</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('BAO_HIEM', this)">🛡️ Bảo hiểm công trình</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('BQP', this)">🎖️ Bộ Quốc phòng</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('PCCC', this)">🔥 PCCC</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('MOI_TRUONG', this)">🌿 Môi trường</button>
+                        <button class="pill pill-sub" onclick="setFilterCategory('CHI_THUONG_XUYEN', this)">💼 Chi thường xuyên</button>
+                    </div>
+                    <button class="nav-arrow-btn" onclick="scrollPills(240)" title="Cuộn sang phải">›</button>
+                </div>
             </div>
         </div>
     </div>
