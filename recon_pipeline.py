@@ -454,11 +454,7 @@ def send_daily_morning_heartbeat(
         )
         keyboard = {
             "inline_keyboard": [
-                [{"text": "📱 Mở Web App 94 Thẻ Di Động", "url": "https://ditrang6266.github.io/Thu-vien-PL/"}],
-                [
-                    {"text": "📖 Thư Viện Luật", "url": "https://ditrang6266.github.io/Thu-vien-PL/"},
-                    {"text": "⚡ Trợ Lý Pháp Luật", "url": "https://t.me/Troly_PL_bot"}
-                ]
+                [{"text": "📖 Thư Viện Luật", "url": "https://ditrang6266.github.io/Thu-vien-PL/"}]
             ]
         }
     else:
@@ -476,7 +472,7 @@ def send_daily_morning_heartbeat(
         )
         keyboard = {
             "inline_keyboard": [
-                [{"text": "📖 Mở Thư Viện Căn Cứ Luật", "url": "https://ditrang6266.github.io/Thu-vien-PL/"}]
+                [{"text": "📖 Thư Viện Luật", "url": "https://ditrang6266.github.io/Thu-vien-PL/"}]
             ]
         }
 
