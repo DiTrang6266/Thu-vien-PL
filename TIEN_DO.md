@@ -36,12 +36,17 @@
 * Dọn sạch thư mục `scratch/`, `data/downloads/`, bộ nhớ đệm `__pycache__`.
 * Mã nguồn sạch sẽ, tinh gọn 100%, 18/18 Unit Test Cases PASS.
 
-### ✅ Giai đoạn 8: Nâng cấp Toàn diện Trạm gác Pháp lý Cloud 24/7 & Báo cáo Tuần tra 07:00 Sáng
+### ✅ Giai đoạn 8: Nâng cấp Toàn diện Trạm gác Pháp lý Cloud 24/7, Báo cáo Tuần tra 07:00 Sáng & Chuẩn hóa UX Web App
 * **Hội đồng 3 Subagent Thẩm định & Phản biện Độc lập:** Thống nhất gói giải pháp xử lý sự cố trễ thông báo 07:00 sáng.
 * **Auto-Migration CSDL (`known_documents.json`):** Tự động chuyển đổi 108 văn bản cũ từ danh sách sang từ điển, loại bỏ 100% lỗi `TypeError`.
 * **Kích hoạt Báo cáo Tuần tra 07:00 Sáng (Daily Morning Heartbeat):** Gửi bản tin điểm danh trạng thái trực ban 24/7 và kho 94 văn bản kể cả khi 24h qua không có luật mới phát sinh.
+* **Chuẩn hóa Nút Bấm Telegram:** Khi có luật mới có 3 nút riêng biệt; khi điểm danh sáng chỉ có **đúng 1 nút `📖 Thư Viện Luật`** duy nhất.
 * **Định dạng Dual-Format Telegram:** Tách riêng caption $\le 850$ ký tự cho `sendDocument` và tin nhắn phân tích đầy đủ cho `sendMessage`, bảo vệ an toàn với `safe_html()` chống lỗi 400 Bad Request.
 * **Tối ưu Hạ tầng Cloud GitHub Actions:** Đổi lịch chạy sang 06:43 sáng (né đỉnh nghẽn 00:00 UTC), lưu trữ đồng bộ Sổ cái Excel `Kho_Can_Cu_Phap_Ly.xlsx`, `docs/index.html` và chống xung đột push.
+* **Chuẩn hóa Giao diện Web App Thẻ Di Động (`docs/index.html`):**
+  - Tích hợp **2 nút mũi tên `‹` và `›`** điều hướng cuộn ngang mượt mà cho máy tính chuột rời.
+  - Hỗ trợ lăn con lăn chuột trực tiếp và kéo rê chuột (Drag-to-Scroll).
+  - **Khối Ghim Cố Định (`top-nav-sticky`):** Hợp nhất toàn bộ Tiêu đề, Ô tìm kiếm và Bộ lọc thành 1 khối vững chắc ở đỉnh màn hình, cuộn xuống dưới không bị đè che mất thanh trên.
 * **Kiểm thử Bền vững:** 23/23 Unit Test Cases **PASS 100%**.
 
 ---

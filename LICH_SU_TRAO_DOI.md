@@ -102,15 +102,28 @@ Dự án áp dụng quy chuẩn cố định bắt buộc khi đúc hồ sơ Wor
   - Tái tạo thành công `docs/index.html` và `index.html`.
   - Kiểm thử toàn bộ 18/18 Unit Test Cases PASS 100%.
 
-### Buổi 22: Thẩm định & Triển khai Nâng cấp Trạm gác Pháp lý 24/7, Báo cáo Tuần tra 07:00 Sáng & Hạ tầng GitHub Actions Zero-Fail
-* **Chỉ đạo của Người dùng:** Điều tra nguyên nhân 2 ngày liên tiếp lúc 7h không có tin nhắn Telegram, chia 3 subagent nghiên cứu độc lập và lập kế hoạch nâng cấp bền vững.
-* **Quyết định & Hành động đã triển khai:**
+### Buổi 22: Thẩm định & Triển khai Nâng cấp Trạm gác Pháp lý 24/7, Báo cáo Tuần tra 07:00 Sáng, Chuẩn hóa Nút Telegram & Khối Ghim Cố định Web App
+* **Chỉ đạo của Người dùng:** 
+  1. Điều tra nguyên nhân 2 ngày liên tiếp lúc 7h không có tin nhắn Telegram, chia 3 subagent nghiên cứu độc lập và lập kế hoạch nâng cấp bền vững.
+  2. Chuẩn hóa nút bấm Telegram: Khi không có văn bản mới, chỉ để **đúng 1 nút `📖 Thư Viện Luật`** duy nhất (loại bỏ nút trùng lặp và nút tự trỏ vào bot).
+  3. Tối ưu giao diện Web App cho máy tính: Thêm **2 nút mũi tên `‹` và `›`** điều hướng cuộn ngang cho người dùng chuột rời.
+  4. Sửa lỗi cuộn trang Web App: **Ghim cố định toàn bộ khối Tiêu đề, Ô tìm kiếm và Bộ lọc** ở đỉnh màn hình, cuộn xuống dưới không bị đè che mất thanh trên.
+* **Quyết định & Hành động đã triển khai 100%:**
   - **Hội đồng 3 Subagent Độc lập:** Thẩm định và chỉ ra 3 nguyên nhân: (1) Lỗi `TypeError` do xung đột list/dict trong `known_documents.json`; (2) Lịch chạy 00:00 UTC bị nghẽn hàng đợi GitHub Actions (delay 15-45 phút); (3) Cơ chế "im lặng khi không có luật mới" làm người dùng tưởng bot hỏng.
   - **Auto-Migration CSDL:** Tự động nâng cấp 108 hash văn bản từ `list` sang `dict` trong `load_known_documents()`.
   - **Báo cáo Tuần tra 07:00 Sáng (Daily Morning Heartbeat):** Gửi bản tin điểm danh trực ban 24/7 và thông báo tình trạng an toàn kho 94 văn bản lúc 07:00 sáng mỗi ngày.
   - **Định dạng Dual-Format Telegram & `safe_html()`:** Tách riêng caption $\le 850$ ký tự cho `sendDocument` và tin nhắn phân tích đầy đủ cho `sendMessage`, bảo vệ an toàn chống lỗi 400 Bad Request.
+  - **Chuẩn hóa Nút Telegram:** 
+    + Khi có văn bản mới: 3 nút riêng biệt (Đọc phân tích Instant View Telegraph + Cổng nguồn + Thư viện Luật).
+    + Khi điểm danh sáng (không có luật mới): Chỉ giữ đúng 1 nút bấm duy nhất `[ 📖 Thư Viện Luật ]` trỏ về Web App 94 thẻ.
   - **Tối ưu Hạ tầng Cloud (`watchdog.yml`):** Đổi lịch chạy sang 06:43 sáng (né đỉnh nghẽn 00:00 UTC), lưu trữ đồng bộ Sổ cái Excel `Kho_Can_Cu_Phap_Ly.xlsx`, `docs/index.html` và chống xung đột push.
+  - **Tối ưu Giao diện Web App (`modules/web_card_generator.py`):**
+    + Khắc phục lỗi cắt cụt nút `🔥 PCCC` ở mép màn hình.
+    + Bổ sung 2 nút mũi tên `‹` và `›` điều hướng cuộn ngang mượt mà.
+    + Bổ sung sự kiện lăn chuột trực tiếp và kéo rê chuột (Drag-to-Scroll) cho người dùng PC/Laptop.
+    + **Hợp nhất khối ghim cố định (`top-nav-sticky`):** Ghim toàn bộ Tiêu đề, Ô tìm kiếm và Bộ lọc thành 1 khối vững chắc ở đỉnh màn hình, giải quyết triệt để lỗi cuộn trang bị đè che mất thanh trên.
   - **Kiểm thử Bền vững:** Bổ sung `tests/test_recon_pipeline_resilience.py`, 23/23 Unit Test Cases **PASS 100%**.
+  - **Đồng bộ Cloud:** Đã đẩy code và triển khai thành công 100% lên GitHub Pages `https://ditrang6266.github.io/Thu-vien-PL/`.
 
 ---
 
