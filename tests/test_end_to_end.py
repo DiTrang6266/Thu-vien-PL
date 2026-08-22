@@ -16,6 +16,8 @@ from modules.ai_analyzer import LegalAIAnalyzer
 from modules.telegraph_publisher import TelegraphPublisher
 
 
+from unittest.mock import patch, MagicMock
+
 def test_end_to_end_pipeline():
     print("--- BẮT ĐẦU KIỂM THỬ TÍCH HỢP TOÀN TRÌNH (END-TO-END) ---")
 
@@ -32,10 +34,13 @@ def test_end_to_end_pipeline():
     ai_analyzer = LegalAIAnalyzer()
     telegraph_pub = TelegraphPublisher()
 
-    success = process_and_send_alert(test_item, ai_analyzer, telegraph_pub)
-    print(f"Kết quả chạy toàn trình: {'THÀNH CÔNG (Gửi Telegram OK)' if success else 'HOÀN TẤT BƯỚC PHÂN TÍCH & TELEGRAPH'}")
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.text = '{"ok": true}'
 
-    assert success is True or not os.getenv("TELEGRAM_BOT_TOKEN")
+    with patch("httpx.post", return_value=mock_resp):
+        success = process_and_send_alert(test_item, ai_analyzer, telegraph_pub)
+        assert success is True
     print("[OK] Toàn bộ chu trình bóc tách -> phân tích -> xuất bản Telegraph -> bắn Telegram đã hoàn tất chuẩn mực 100%!")
 
 

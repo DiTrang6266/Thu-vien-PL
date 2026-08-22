@@ -37,6 +37,7 @@ from modules.ai_analyzer import LegalAIAnalyzer
 from modules.ai_gatekeeper import LegalGatekeeper
 from modules.telegraph_publisher import TelegraphPublisher
 from modules.legal_db_sync import sync_legal_document_to_excel
+from modules.legal_resolver import resolve_legal_url
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -53,14 +54,9 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 RSS_SOURCES = [
     {
-        "name": "Công báo Nước CHXHCN Việt Nam (Văn bản mới)",
+        "name": "Công báo Nước CHXHCN Việt Nam (Văn bản mới ban hành)",
         "url": "https://congbao.chinhphu.vn/cac-van-ban-moi-ban-hanh.rss",
         "type": "CONG_BAO_VAN_BAN"
-    },
-    {
-        "name": "Công báo Nước CHXHCN Việt Nam (Số mới đăng)",
-        "url": "https://congbao.chinhphu.vn/cac-so-cong-bao-moi-dang.rss",
-        "type": "CONG_BAO_SO_DANG"
     },
     {
         "name": "Bộ Xây dựng (Văn bản quy phạm pháp luật mới)",
@@ -254,6 +250,18 @@ def classify_document_type(title: str) -> Tuple[str, str]:
 
 def extract_and_download_pdf(doc_url: str, doc_id: str) -> Optional[str]:
     clean_url = normalize_url(doc_url)
+    if not clean_url:
+        return None
+
+    # Bỏ qua nếu là trang chủ hoặc trang tìm kiếm (tránh tải nhầm file PDF của cả tập san công báo)
+    clean_url_lower = clean_url.strip("/").lower()
+    if clean_url_lower in [
+        "https://congbao.chinhphu.vn", "http://congbao.chinhphu.vn",
+        "https://thuvienphapluat.vn", "http://thuvienphapluat.vn",
+        "https://moc.gov.vn", "https://www.mpi.gov.vn"
+    ] or "cac-so-cong-bao" in clean_url_lower or "tim-van-ban" in clean_url_lower:
+        return None
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Referer": clean_url
@@ -501,9 +509,30 @@ def process_and_send_alert(item: dict, ai_analyzer: LegalAIAnalyzer, telegraph_p
         return False
 
     type_label, type_code = classify_document_type(item["title"])
-    clean_link = normalize_url(item["link"])
+    raw_link = normalize_url(item.get("link", ""))
 
-    pdf_file_path = extract_and_download_pdf(clean_link, item.get("id", "doc"))
+    # Kiểm tra xem link RSS có phải là link bài viết chi tiết hợp lệ không
+    raw_link_lower = raw_link.strip("/").lower()
+    is_direct_detail_link = bool(
+        raw_link and
+        raw_link_lower not in [
+            "https://congbao.chinhphu.vn", "http://congbao.chinhphu.vn",
+            "https://thuvienphapluat.vn", "http://thuvienphapluat.vn",
+            "https://moc.gov.vn", "https://www.mpi.gov.vn"
+        ] and
+        "cac-so-cong-bao" not in raw_link_lower and
+        not raw_link_lower.endswith(".rss")
+    )
+
+    so_hieu_hint = item.get("title", "")
+    resolved_link = resolve_legal_url(so_hieu_hint)
+
+    if is_direct_detail_link:
+        clean_link = raw_link
+    else:
+        clean_link = resolved_link
+
+    pdf_file_path = extract_and_download_pdf(raw_link if is_direct_detail_link else "", item.get("id", "doc"))
 
     log(f"🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: {item['title'][:60]}...")
     doc_meta = {

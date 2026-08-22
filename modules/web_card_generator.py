@@ -166,7 +166,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .card-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
         .btn-copy { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(26,86,219,0.3); font-weight: 600; font-size: 0.85rem; padding: 9px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
         .btn-copy:active { background: var(--primary); color: #fff; }
-        .btn-view { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; font-size: 0.85rem; padding: 9px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .btn-view { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-weight: 600; font-size: 0.85rem; padding: 9px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.15s; }
+        .btn-view:hover { background: #dcfce7; }
+        .btn-view:active { background: #166534; color: #fff; }
 
         /* Toast */
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: #fff; padding: 12px 20px; border-radius: 99px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 999; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: none; text-align: center; }
@@ -404,7 +406,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     transitionHtml = `<div class="info-box">🔄 <b>Thay thế:</b> ${item.thay_the}</div>`;
                 }
 
-                const instantViewBtn = item.link_iv ? `<a href="${item.link_iv}" target="_blank" class="btn-view">⚡ Đọc Báo Cáo</a>` : '';
+                const targetUrl = item.link_iv || ("https://thuvienphapluat.vn/page/tim-van-ban.aspx?keyword=" + encodeURIComponent(item.so_hieu));
+                const btnLabel = (item.link_iv && item.link_iv.includes("telegra.ph")) ? "⚡ Báo Cáo" : "🌐 Xem Toàn Văn";
+                const instantViewBtn = `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="btn-view">${btnLabel}</a>`;
 
                 // Escape double quotes for JS copy string
                 const safeClause = (item.cau_can_cu || `Căn cứ ${item.so_hieu} ngày ${item.ngay_bh} của ${item.co_quan} ${item.trich_yeu};`).replace(/"/g, '&quot;');

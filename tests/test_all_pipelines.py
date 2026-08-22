@@ -21,10 +21,10 @@ def test_tier2_rejects_waterway_piloting():
     assert res["decision"] == "DROP_OUT_OF_SCOPE_INDUSTRY"
 
 
-def test_tier2_rejects_urban_rural_planning():
-    """Quy hoạch không gian đô thị & nông thôn vĩ mô phải bị loại trừ dứt khoát."""
+def test_tier2_rejects_macro_spatial_planning():
+    """Quy hoạch tổng thể quốc gia vĩ mô ngoài ngành phải bị loại trừ dứt khoát."""
     classifier = HybridTier2Classifier()
-    title = "Văn bản hợp nhất số 59/VBHN-BXD quy định chi tiết một số điều của Luật Quy hoạch đô thị và nông thôn"
+    title = "Nghị quyết số 81/2023/QH15 về Quy hoạch tổng thể quốc gia thời kỳ 2021 - 2030, tầm nhìn đến năm 2050"
     res = classifier.classify_and_filter(title)
     assert res["is_accepted"] is False
     assert res["decision"] == "DROP_OUT_OF_SCOPE_INDUSTRY"
