@@ -126,11 +126,9 @@ YÊU CẦU BẮT BUỘC:
         "2. [Bảo lãnh/Quy trình mới]: Nêu rõ quy định mới bắt buộc (VD: Bắt buộc 100% bảo lãnh dự thầu điện tử kết nối trực tiếp qua mạng muasamcong)",
         "3. [Thẩm quyền/Chỉ định thầu]: Nêu rõ bãi bỏ hoặc phân cấp hạn mức (VD: Bãi bỏ hạn mức chỉ định thầu cứng 1 tỷ đồng, giao quyền cho Chủ đầu tư)"
       ],
-      "impact_areas": {{
-        "ho_so_moi_thau_va_dau_thau": "Phân tích cụ thể: Người lập E-HSMT phải sửa đổi những mục nào, biểu mẫu nào, thời gian chuẩn bị và mở thầu ra sao...",
-        "du_toan_va_chi_phi": "Phân tích cụ thể: Dự toán gói thầu, chi phí bảo lãnh, đơn giá có bị ảnh hưởng thế nào...",
-        "tham_quyen_va_trach_nhiem": "Phân tích cụ thể: Thẩm quyền của Chủ đầu tư, BQLDA, Tổ chuyên gia thay đổi như thế nào..."
-      }},
+      "impact_areas": {
+        "Ten_Goi_Thau_Hoac_Chuyen_Nganh": "Phân tích cụ thể tác động đến gói thầu / nghiệp vụ đó (VD: '#TV-01_Quy_hoach_Khao_sat', '#TV-04_Thiet_ke_Du_toan', '#TV-06_Dau_thau', '#TV-08_Giam_sat', '#XD-01_Thi_cong', '#BH-01_Bao_hiem', '#TV-09_Kiem_toan', '#PCCC', '#MOI_TRUONG', '#BQP'). CHỈ LIỆT KÊ CÁC GÓI THẦU / MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA GÓI THẦU KHÔNG LIÊN QUAN VÀO."
+      },
       "substantive_points": [
         {{
           "clause": "Chương/Điều luật",

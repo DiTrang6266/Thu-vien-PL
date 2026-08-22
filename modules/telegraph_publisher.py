@@ -88,23 +88,45 @@ class TelegraphPublisher:
             nodes.append({"tag": "p", "children": [{"tag": "strong", "children": [impact]}]})
             nodes.append({"tag": "hr"})
 
-        # 3. Phân tích chi tiết theo từng mảng nghiệp vụ (impact_areas)
+        # 3. Phân tích chi tiết theo đúng từng gói thầu / chuyên ngành bị tác động
         impact_areas = ai_data.get("impact_areas")
         if impact_areas and isinstance(impact_areas, dict):
-            nodes.append({"tag": "h3", "children": ["📂 TÁC ĐỘNG THEO MẢNG NGHIỆP VỤ"]})
+            nodes.append({"tag": "h3", "children": ["📂 TÁC ĐỘNG TRỰC TIẾP THEO GÓI THẦU & NGHIỆP VỤ"]})
             area_nodes = []
+            
+            PACKAGE_ICONS = {
+                "TV-01": "🗺️", "Quy_hoach": "🗺️", "Khao_sat": "📐",
+                "TV-02": "📝", "Bao_cao_KTKT": "📝",
+                "TV-03": "🔍", "TV-05": "🔍", "Tham_tra": "🔍",
+                "TV-04": "📐", "Thiet_ke": "📐", "Du_toan": "💰",
+                "TV-06": "📋", "TV-07": "📋", "Dau_thau": "📋",
+                "TV-08": "👷", "Giam_sat": "👷",
+                "XD-01": "🏗️", "Thi_cong": "🏗️",
+                "BH-01": "🛡️", "Bao_hiem": "🛡️",
+                "TV-09": "📊", "Kiem_toan": "📊", "Quyet_toan": "📊",
+                "PCCC": "🔥",
+                "MOI_TRUONG": "🌿", "Khi_nha_kinh": "🌿",
+                "BQP": "⭐", "Quoc_phong": "⭐"
+            }
+
             for area_k, area_v in impact_areas.items():
-                area_label = area_k.replace("_", " ").title()
-                if "moi_thau" in area_k or "dau_thau" in area_k:
-                    area_label = "📋 Hồ sơ mời thầu & Đấu thầu"
-                elif "du_toan" in area_k or "chi_phi" in area_k:
-                    area_label = "💰 Dự toán & Quản lý chi phí"
-                elif "tham_quyen" in area_k or "trach_nhiem" in area_k:
-                    area_label = "⚖️ Thẩm quyền & Trách nhiệm"
-                area_nodes.append({"tag": "strong", "children": [f"• {area_label}:\n"]})
+                if not area_v or not str(area_v).strip():
+                    continue
+                
+                # Tìm icon phù hợp
+                icon = "📌"
+                for tag_k, tag_ico in PACKAGE_ICONS.items():
+                    if tag_k.lower() in area_k.lower():
+                        icon = tag_ico
+                        break
+
+                clean_label = area_k.replace("_", " ").replace("#", "").strip()
+                area_nodes.append({"tag": "strong", "children": [f"• {icon} {clean_label}:\n"]})
                 area_nodes.append(f"  {area_v}\n\n")
-            nodes.append({"tag": "p", "children": area_nodes})
-            nodes.append({"tag": "hr"})
+                
+            if area_nodes:
+                nodes.append({"tag": "p", "children": area_nodes})
+                nodes.append({"tag": "hr"})
 
         # 4. Các Quy định Cốt lõi & Hành động Bắt buộc
         points = ai_data.get("substantive_points", [])

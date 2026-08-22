@@ -697,3 +697,18 @@
 [2026-08-22 07:47:02] 🔄 Phát hiện CSDL dạng List (3 mục). Đang auto-migrate sang Dict...
 [2026-08-22 07:47:02] ✅ Đã chuyển đổi thành công 3 mục sang Dictionary chuẩn.
 [2026-08-22 07:47:03] ✅ Đã gửi Báo cáo Tuần tra 07:00 sáng về Telegram thành công.
+⚠️ CẢNH BÁO: Chưa tìm thấy GEMINI_API_KEY. Chạy phân tích quy tắc cục bộ.
+🛡️ Điểm kiểm chứng trích dẫn gốc: 50.0% (1/2)
+[2026-08-22 07:52:50] ⚠️ Không thể tự động tải PDF từ https://: Request URL is missing an 'http://' or 'https://' protocol.
+[2026-08-22 07:52:50] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Nghị định 24/2024/NĐ-CP Sửa đổi một số điều về Đấu thầu qua ...
+⚠️ CẢNH BÁO: Chưa tìm thấy GEMINI_API_KEY. Chạy phân tích quy tắc cục bộ.
+[2026-08-22 07:52:51] ✅ Đã gửi thông báo Telegram Master Template thành công: Nghị định 24/2024/NĐ-CP Sửa đổi một số điều về Đấu thầu qua ...
+[2026-08-22 07:52:52] 💾 Đã tự động đồng bộ Sổ cái Excel thành công: C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự án1\Kho_Can_Cu_Phap_Ly.xlsx
+[GATEKEEPER] ⚠️ Không có API Key, chuyển sang duyệt mặc định theo từ khóa.
+[GATEKEEPER] ⚠️ Không có API Key, chuyển sang duyệt mặc định theo từ khóa.
+[GATEKEEPER] ⚠️ Không có API Key, chuyển sang duyệt mặc định theo từ khóa.
+[GATEKEEPER] ⚠️ Không có API Key, chuyển sang duyệt mặc định theo từ khóa.
+[GATEKEEPER] ⚠️ Không có API Key, chuyển sang duyệt mặc định theo từ khóa.
+[2026-08-22 07:52:53] 🔄 Phát hiện CSDL dạng List (3 mục). Đang auto-migrate sang Dict...
+[2026-08-22 07:52:53] ✅ Đã chuyển đổi thành công 3 mục sang Dictionary chuẩn.
+[2026-08-22 07:52:54] ✅ Đã gửi Báo cáo Tuần tra 07:00 sáng về Telegram thành công.
