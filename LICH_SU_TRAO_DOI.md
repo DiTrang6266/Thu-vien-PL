@@ -131,7 +131,17 @@ Dự án áp dụng quy chuẩn cố định bắt buộc khi đúc hồ sơ Wor
   3. **Bảo vệ Bộ Tải PDF (`extract_and_download_pdf`):** Chặn đứng 100% việc tải file PDF từ trang chủ hoặc trang tìm kiếm chung, đảm bảo chỉ tải file PDF gốc có dấu đỏ khi có link bài viết chi tiết thực sự.
   4. **Nạp Link Toàn Diện 94 Văn Bản:** Đồng bộ link toàn văn vào `Kho_Can_Cu_Phap_Ly.xlsx`, `Book2.xlsx`, `modules/master_seed_loader.py` và Web App Thẻ Di Động (`docs/index.html` & `index.html`) với nút bấm **`[ 🌐 Xem Toàn Văn ]`** màu xanh.
   5. **Bảo vệ Kiểm thử Tự động:** Mocking API Telegram trong `tests/test_end_to_end.py` để chạy kiểm thử tự động không gửi tin nhắn rác về Telegram của người dùng.
-  6. **Kiểm thử Toàn trình:** 38/38 Unit Test Cases **PASS 100%**.
+### Buổi 24: Chuẩn hóa 12 Mảng Nghiệp Vụ Phổ Quát, Phản Biện Độc Lập Hội Đồng 2 Subagents & Dọn Dẹp Mã Nguồn (Skill don-code)
+* **Ý kiến Người dùng:** Phản ánh việc báo cáo Telegraph hiển thị các mã nội bộ `TV-02`, `XD-01` là không phù hợp vì mỗi dự án có cách đặt tên gói thầu riêng; đồng thời việc ép cứng 3 mục (*Hồ sơ mời thầu, Dự toán, Thẩm quyền*) làm cho các văn bản chuyên ngành (PCCC, Môi trường, Bảo hiểm) sinh ra tóm tắt sáo rỗng.
+* **Quyết định & Hành động đã triển khai 100%:**
+  1. **Loại bỏ mã gói thầu cục bộ:** Xóa sạch tiền tố `TV-01`, `TV-02`, `XD-01`, `BH-01` trong prompt AI và renderer Telegraph.
+  2. **Chuẩn hóa 12 Mảng Nghiệp Vụ Phổ Quát:** Bao quát trọn vẹn 100% vòng đời dự án đầu tư xây dựng công (Quy hoạch/Khảo sát, Lập DA/TK Cơ sở, Thiết kế/Dự toán, Thẩm tra/Thẩm định, Đấu thầu/Hợp đồng, Giám sát/Chất lượng, Thi công xây lắp, Bảo hiểm, Quyết toán/Thanh toán, PCCC, Môi trường/ĐTM, Quốc phòng/Chi thường xuyên).
+  3. **Phân tích Tác động Động (`impact_areas`):** Văn bản thuộc mảng chuyên môn nào thì AI chỉ sinh phân tích đúng mảng đó kèm hành động cụ thể.
+  4. **Phản biện Độc lập Hội đồng 2 Subagents:**
+     - Subagent 1 (Kỹ thuật): Thẩm định an toàn ngoại lệ 100%, định dạng Node Telegraph đạt chuẩn, 38/38 unit tests PASS.
+     - Subagent 2 (Nghiệp vụ & UX): Xác nhận 12 mảng chuyên môn bao quát 100% vòng đời dự án, trải nghiệm 1-chạm sao chép và Bảng đối chiếu Cũ - Mới (Redline Table) tối ưu cho giải trình thanh tra.
+  5. **Dọn dẹp Mã nguồn (Skill don-code):** Dọn sạch 2 file PDF tải về tạm thời trong `data/downloads/` và toàn bộ bộ nhớ đệm `__pycache__`, `.pytest_cache`.
+  6. **Đồng bộ Cloud:** Đã đẩy toàn bộ mã nguồn lên nhánh chính GitHub (`main`).
 
 ---
 

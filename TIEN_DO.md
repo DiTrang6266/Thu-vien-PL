@@ -64,6 +64,13 @@
   - Web App Thẻ Di Động (`docs/index.html`) đã có nút màu xanh **`[ 🌐 Xem Toàn Văn ]`** trên tất cả các thẻ luật.
 * **Kiểm thử Toàn diện:** 38/38 Unit Test Cases **PASS 100%**.
 
+### ✅ Giai đoạn 10: Chuẩn hóa 12 Mảng Nghiệp Vụ Phổ Quát & Dọn Dẹp Mã Nguồn Sạch Sẽ (Skill don-code)
+* **Xóa Bỏ Mã Gói Thầu Cục Bộ:** Loại bỏ hoàn toàn các mã `TV-01`, `TV-02`, `XD-01`, `BH-01` vốn chỉ mang tính nội bộ của từng dự án.
+* **Chuẩn Hóa 12 Mảng Nghiệp Vụ Phổ Quát:** Bao quát trọn vẹn 100% vòng đời dự án đầu tư xây dựng công tại Việt Nam (Quy hoạch/Khảo sát, Lập DA/TK Cơ sở, Thiết kế/Dự toán, Thẩm tra/Thẩm định, Đấu thầu/Hợp đồng, Giám sát/Chất lượng, Thi công xây lắp, Bảo hiểm, Quyết toán/Thanh toán, PCCC, Môi trường/ĐTM, Quốc phòng/Chi thường xuyên).
+* **Phân Tích Tác Động Động (`impact_areas`):** Xóa bỏ 3 mục ép cứng cũ; văn bản tác động mảng nào thì AI chỉ nêu đích danh mảng đó kèm hành động cụ thể, triệt tiêu 100% sự sáo rỗng.
+* **Phản Biện Độc Lập Hội Đồng 2 Subagent:** Subagent 1 (Kỹ thuật) & Subagent 2 (Nghiệp vụ & UX) thẩm định và nghiệm thu đạt chuẩn 100%.
+* **Dọn Dẹp Mã Nguồn (Skill don-code):** Dọn sạch các file PDF tải về tạm thời trong `data/downloads/` và toàn bộ bộ nhớ đệm `__pycache__`, `.pytest_cache`. Thư mục dự án sạch sẽ, tinh gọn 100%, 38/38 Unit Tests PASS.
+
 ---
 
 ## 2. BẢNG TỔNG HỢP 94 VĂN BẢN THEO CHUYÊN NGÀNH (MỐC 21/08/2026)
