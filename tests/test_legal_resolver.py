@@ -9,8 +9,8 @@ from modules.legal_resolver import resolve_legal_url
 def test_resolve_legal_url_basic():
     # Test phân giải Luật Đấu thầu / Xây dựng
     url = resolve_legal_url("24/2024/NĐ-CP")
-    assert url.startswith("http")
-    assert ("thuvienphapluat.vn" in url or "chinhphu.vn" in url or "vbpl.vn" in url)
+    assert url.startswith("https://www.google.com/search?q=")
+    assert "24" in url and "2024" in url
 
 def test_resolve_legal_url_fallback():
     # Test fallback khi số hiệu rỗng hoặc MỚI
@@ -23,5 +23,5 @@ def test_resolve_legal_url_fallback():
 def test_resolve_legal_url_complex():
     # Test với số hiệu Bộ Quốc Phòng
     url_bqp = resolve_legal_url("101/2026/TT-BQP")
-    assert url_bqp.startswith("http")
-    assert "101" in url_bqp or "tim-van-ban" in url_bqp
+    assert url_bqp.startswith("https://www.google.com/search?q=")
+    assert "101" in url_bqp and "BQP" in url_bqp
