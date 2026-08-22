@@ -96,17 +96,17 @@ class TelegraphPublisher:
             area_nodes = []
             
             DOMAIN_ICONS = {
-                "quy_hoach": "🗺️", "khao_sat": "📐",
-                "du_an": "📝", "thiet_ke": "📐", "du_toan": "💰", "chi_phi": "💰",
-                "tham_tra": "🔍", "tham_dinh": "🔍",
-                "dau_thau": "📋", "hop_dong": "📋", "nha_thau": "📋",
-                "giam_sat": "👷", "chat_luong": "👷",
-                "thi_cong": "🏗️", "xay_lap": "🏗️",
-                "bao_hiem": "🛡️",
-                "kiem_toan": "📊", "quyet_toan": "📊", "thanh_toan": "💳",
-                "pccc": "🔥", "chay": "🔥",
-                "moi_truong": "🌿", "khi_nha_kinh": "🌿", "dtm": "🌿",
-                "quoc_phong": "⭐", "bqp": "⭐"
+                "quy hoach": "🗺️", "khao sat": "📐", "trac dia": "📐", "dia chat": "📐",
+                "du an": "📝", "thiet ke": "📐", "du toan": "💰", "chi phi": "💰", "dinh muc": "💰",
+                "tham tra": "🔍", "tham dinh": "🔍",
+                "dau thau": "📋", "hop dong": "📋", "nha thau": "📋", "hsmt": "📋",
+                "giam sat": "👷", "chat luong": "👷", "nghiem thu": "👷",
+                "thi cong": "🏗️", "xay lap": "🏗️", "an toan": "🦺",
+                "bao hiem": "🛡️",
+                "kiem toan": "📊", "quyet toan": "📊", "thanh toan": "💳", "kho bac": "💳",
+                "pccc": "🔥", "chay": "🔥", "cuu nan": "🔥",
+                "moi truong": "🌿", "khi nha kinh": "🌿", "dtm": "🌿", "phat thai": "🌿",
+                "quoc phong": "⭐", "bqp": "⭐", "quan su": "⭐", "doanh trai": "⭐"
             }
 
             for area_k, area_v in impact_areas.items():
