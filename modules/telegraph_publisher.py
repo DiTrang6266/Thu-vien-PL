@@ -12,6 +12,7 @@ Hiển thị:
 """
 
 import os
+import re
 import json
 import logging
 from typing import Dict, List, Any, Optional
@@ -88,40 +89,44 @@ class TelegraphPublisher:
             nodes.append({"tag": "p", "children": [{"tag": "strong", "children": [impact]}]})
             nodes.append({"tag": "hr"})
 
-        # 3. Phân tích chi tiết theo đúng từng gói thầu / chuyên ngành bị tác động
+        # 3. Phân tích chi tiết theo đúng từng mảng nghiệp vụ & chuyên môn bị tác động
         impact_areas = ai_data.get("impact_areas")
         if impact_areas and isinstance(impact_areas, dict):
-            nodes.append({"tag": "h3", "children": ["📂 TÁC ĐỘNG TRỰC TIẾP THEO GÓI THẦU & NGHIỆP VỤ"]})
+            nodes.append({"tag": "h3", "children": ["📂 TÁC ĐỘNG TRỰC TIẾP THEO MẢNG NGHIỆP VỤ & CHUYÊN MÔN"]})
             area_nodes = []
             
-            PACKAGE_ICONS = {
-                "TV-01": "🗺️", "Quy_hoach": "🗺️", "Khao_sat": "📐",
-                "TV-02": "📝", "Bao_cao_KTKT": "📝",
-                "TV-03": "🔍", "TV-05": "🔍", "Tham_tra": "🔍",
-                "TV-04": "📐", "Thiet_ke": "📐", "Du_toan": "💰",
-                "TV-06": "📋", "TV-07": "📋", "Dau_thau": "📋",
-                "TV-08": "👷", "Giam_sat": "👷",
-                "XD-01": "🏗️", "Thi_cong": "🏗️",
-                "BH-01": "🛡️", "Bao_hiem": "🛡️",
-                "TV-09": "📊", "Kiem_toan": "📊", "Quyet_toan": "📊",
-                "PCCC": "🔥",
-                "MOI_TRUONG": "🌿", "Khi_nha_kinh": "🌿",
-                "BQP": "⭐", "Quoc_phong": "⭐"
+            DOMAIN_ICONS = {
+                "quy_hoach": "🗺️", "khao_sat": "📐",
+                "du_an": "📝", "thiet_ke": "📐", "du_toan": "💰", "chi_phi": "💰",
+                "tham_tra": "🔍", "tham_dinh": "🔍",
+                "dau_thau": "📋", "hop_dong": "📋", "nha_thau": "📋",
+                "giam_sat": "👷", "chat_luong": "👷",
+                "thi_cong": "🏗️", "xay_lap": "🏗️",
+                "bao_hiem": "🛡️",
+                "kiem_toan": "📊", "quyet_toan": "📊", "thanh_toan": "💳",
+                "pccc": "🔥", "chay": "🔥",
+                "moi_truong": "🌿", "khi_nha_kinh": "🌿", "dtm": "🌿",
+                "quoc_phong": "⭐", "bqp": "⭐"
             }
 
             for area_k, area_v in impact_areas.items():
                 if not area_v or not str(area_v).strip():
                     continue
                 
+                # Làm sạch nhãn: Xóa các mã nội bộ TV-01, XD-01, BH-01 nếu có
+                clean_k = str(area_k).strip()
+                clean_k = re.sub(r"^(?:#?TV-\d+|#?XD-\d+|#?BH-\d+|#?XL-\d+)\s*[-_:]*\s*", "", clean_k, flags=re.IGNORECASE)
+                clean_k = clean_k.replace("_", " ").replace("#", "").strip()
+
                 # Tìm icon phù hợp
                 icon = "📌"
-                for tag_k, tag_ico in PACKAGE_ICONS.items():
-                    if tag_k.lower() in area_k.lower():
+                k_lower = clean_k.lower()
+                for tag_k, tag_ico in DOMAIN_ICONS.items():
+                    if tag_k in k_lower:
                         icon = tag_ico
                         break
 
-                clean_label = area_k.replace("_", " ").replace("#", "").strip()
-                area_nodes.append({"tag": "strong", "children": [f"• {icon} {clean_label}:\n"]})
+                area_nodes.append({"tag": "strong", "children": [f"• {icon} {clean_k}:\n"]})
                 area_nodes.append(f"  {area_v}\n\n")
                 
             if area_nodes:

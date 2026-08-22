@@ -120,14 +120,14 @@ YÊU CẦU BẮT BUỘC:
       "ngay_hieu_luc": "dd/mm/yyyy (ngày bắt đầu có hiệu lực thi hành)",
       "van_ban_thay_the": "Số hiệu văn bản cũ bị thay thế/sửa đổi/bãi bỏ (VD: Nghị định số 63/2014/NĐ-CP)",
       "chuyen_tiep_ngan": "Tóm tắt 1 câu cốt lõi hướng dẫn xử lý gói thầu đang dở dang / đã phát hành HSMT trước ngày hiệu lực",
-      "goi_thau_tags": ["#Xây_lắp", "#Tư_vấn", "#Mua_sắm", "#Doanh_cụ", "#Chi_thường_xuyên"],
+      "goi_thau_tags": ["#Quy_hoạch", "#Thiết_kế", "#Dự_toán", "#Đấu_thầu", "#Thi_công", "#Giám_sát", "#Bảo_hiểm", "#Quyết_toán", "#PCCC", "#Môi_trường", "#Quốc_phòng"],
       "summary_top3": [
-        "1. [Thời gian/Hạn mức/Mẫu biểu]: Nêu rõ con số/quy định cụ thể bị thay đổi (VD: Rút ngắn thời gian đánh giá E-HSDT từ 45 ngày xuống 25 ngày)",
-        "2. [Bảo lãnh/Quy trình mới]: Nêu rõ quy định mới bắt buộc (VD: Bắt buộc 100% bảo lãnh dự thầu điện tử kết nối trực tiếp qua mạng muasamcong)",
-        "3. [Thẩm quyền/Chỉ định thầu]: Nêu rõ bãi bỏ hoặc phân cấp hạn mức (VD: Bãi bỏ hạn mức chỉ định thầu cứng 1 tỷ đồng, giao quyền cho Chủ đầu tư)"
+        "1. [Thời gian/Hạn mức/Mẫu biểu]: Nêu rõ con số/quy định cụ thể bị thay đổi",
+        "2. [Bảo lãnh/Quy trình mới]: Nêu rõ quy định mới bắt buộc",
+        "3. [Thẩm quyền/Phân cấp]: Nêu rõ bãi bỏ hoặc phân cấp thẩm quyền"
       ],
       "impact_areas": {
-        "Ten_Goi_Thau_Hoac_Chuyen_Nganh": "Phân tích cụ thể tác động đến gói thầu / nghiệp vụ đó (VD: '#TV-01_Quy_hoach_Khao_sat', '#TV-04_Thiet_ke_Du_toan', '#TV-06_Dau_thau', '#TV-08_Giam_sat', '#XD-01_Thi_cong', '#BH-01_Bao_hiem', '#TV-09_Kiem_toan', '#PCCC', '#MOI_TRUONG', '#BQP'). CHỈ LIỆT KÊ CÁC GÓI THẦU / MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA GÓI THẦU KHÔNG LIÊN QUAN VÀO."
+        "Ten_Mang_Nghiep_Vu": "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
       },
       "substantive_points": [
         {{
