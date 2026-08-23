@@ -137,11 +137,19 @@ Dự án áp dụng quy chuẩn cố định bắt buộc khi đúc hồ sơ Wor
   1. **Loại bỏ mã gói thầu cục bộ:** Xóa sạch tiền tố `TV-01`, `TV-02`, `XD-01`, `BH-01` trong prompt AI và renderer Telegraph.
   2. **Chuẩn hóa 12 Mảng Nghiệp Vụ Phổ Quát:** Bao quát trọn vẹn 100% vòng đời dự án đầu tư xây dựng công (Quy hoạch/Khảo sát, Lập DA/TK Cơ sở, Thiết kế/Dự toán, Thẩm tra/Thẩm định, Đấu thầu/Hợp đồng, Giám sát/Chất lượng, Thi công xây lắp, Bảo hiểm, Quyết toán/Thanh toán, PCCC, Môi trường/ĐTM, Quốc phòng/Chi thường xuyên).
   3. **Phân tích Tác động Động (`impact_areas`):** Văn bản thuộc mảng chuyên môn nào thì AI chỉ sinh phân tích đúng mảng đó kèm hành động cụ thể.
-  4. **Phản biện Độc lập Hội đồng 2 Subagents:**
-     - Subagent 1 (Kỹ thuật): Thẩm định an toàn ngoại lệ 100%, định dạng Node Telegraph đạt chuẩn, 38/38 unit tests PASS.
-     - Subagent 2 (Nghiệp vụ & UX): Xác nhận 12 mảng chuyên môn bao quát 100% vòng đời dự án, trải nghiệm 1-chạm sao chép và Bảng đối chiếu Cũ - Mới (Redline Table) tối ưu cho giải trình thanh tra.
-  5. **Dọn dẹp Mã nguồn (Skill don-code):** Dọn sạch 2 file PDF tải về tạm thời trong `data/downloads/` và toàn bộ bộ nhớ đệm `__pycache__`, `.pytest_cache`.
-  6. **Đồng bộ Cloud:** Đã đẩy toàn bộ mã nguồn lên nhánh chính GitHub (`main`).
+### Buổi 25: Đối Soát Mốc Hiệu Lực 2023–2026 & Quy Hoạch Phân Hệ Tiêu Chuẩn (TCVN) / Quy Chuẩn (QCVN) Đi Kèm Thông Tư 38/2026
+* **Ý kiến & Yêu cầu Người dùng:**
+  1. *Yêu cầu 1:* Lọc và rà soát các văn bản hết hiệu lực trước năm 2023 để làm sạch kho, nhưng phải giữ lại các văn bản tuy nay đã hết hiệu lực nhưng vào năm 2023 vẫn còn hiệu lực để phục vụ tra cứu, thanh quyết toán các dự án cũ thực hiện từ mốc 2023.
+  2. *Yêu cầu 2:* Kiểm tra Thông tư 38/2026/TT-BXD (Định mức xây dựng) và các Quy chuẩn / Tiêu chuẩn kỹ thuật thi công - nghiệm thu đi kèm.
+* **Kết quả đối soát & Quyết định kỹ thuật:**
+  1. **Xác nhận 100% CSDL 94 Văn bản đạt chuẩn:**
+     - Toàn bộ 94 văn bản trong kho đều đang hoặc đã từng có hiệu lực trong giai đoạn **2023 – 2026**.
+     - Hoàn toàn **không có bất kỳ văn bản nào hết hiệu lực trước ngày 01/01/2023** (các văn bản cổ trước 2023 như Luật Xây dựng 2003, Luật Đấu thầu 2005, NĐ 59/2015, NĐ 32/2015... từ đầu đã được loại bỏ).
+     - Giữ nguyên vẹn 94 văn bản vừa phục vụ đúc hồ sơ 2026, vừa tra cứu dự án cũ 2023–2025.
+  2. **Khảo sát & Lập danh mục Phân hệ Quy chuẩn (QCVN) & Tiêu chuẩn (TCVN) thi công - nghiệm thu:**
+     - Xác định nhóm Quy chuẩn cốt lõi: `QCVN 18:2021/BXD` (An toàn thi công), `QCVN 03:2022/BXD` (Phân cấp công trình), `QCVN 02:2022/BXD` (Điều kiện tự nhiên), `QCVN 06:2022/BXD` (PCCC).
+     - Xác định nhóm Tiêu chuẩn cốt lõi: `TCVN 4453:1995` & `TCVN 5574:2018` (Bê tông cốt thép), `TCVN 4447:2012` (Công tác đất), `TCVN 9361:2012` (Nền móng), `TCVN 5674:1992` (Hoàn thiện), `TCVN 9393:2012` (Nén cọc), `TCVN 5575:2012` (Kết cấu thép).
+  3. **Lưu trữ Bàn giao Máy Mới:** Đóng gói toàn bộ lịch sử trao đổi vào tài liệu bàn giao để chuyển máy mới không cần giải thích lại.
 
 ---
 
@@ -152,19 +160,20 @@ Thư mục làm việc: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự �
 1. 📊 **`Book2.xlsx`:** Bảng kiểm tra thẩm định Executive Dashboard 94 dòng, có badge màu Xanh/Đỏ và quy định chuyển tiếp chi tiết.
 2. 📗 **`Kho_Can_Cu_Phap_Ly.xlsx`:** Sổ cái Master Căn cứ Pháp lý 14 cột chuẩn hóa 94 văn bản.
 3. 📄 **`BANG_DOI_SOAT_HIEU_LUC_TOAN_BO.md`:** Bảng đối soát chi tiết 94 văn bản khớp 1:1.
-4. 🌐 **`docs/index.html` & `index.html`:** Trang Web Thẻ Di Động tra cứu 1-chạm trên GitHub Pages.
+4. 🌐 **`docs/index.html` & `index.html`:** Trang Web Thẻ Di Động tra cứu 1-chạm trên GitHub Pages với 12 mảng nghiệp vụ và nút xem toàn văn.
 5. 🧠 **`modules/master_seed_loader.py`:** CSDL hạt giống 94 văn bản chuẩn hóa.
-6. 📄 **`modules/word_grounding_engine.py`:** Động cơ đúc câu căn cứ vào phôi Word chuẩn Nghị định 30 theo thứ bậc Luật $\rightarrow$ NĐ $\rightarrow$ TT $\rightarrow$ QCVN.
-7. 🛡️ **`modules/ai_gatekeeper.py`:** Bộ lọc gác cổng AI siêu nhẹ (<0.3s) với 8 ví dụ mẫu Few-shot 2026.
-8. 🧠 **`modules/ai_analyzer.py`:** Bộ não phân tích tác động toàn văn & đối soát trích dẫn chống ảo giác.
-9. 🔍 **`modules/classifier_tier1.py` & `classifier_tier2.py`:** Bộ lọc thể thức và 4 trụ cột nghiệp vụ.
-10. 📊 **`modules/legal_db_sync.py`:** Module đồng bộ Sổ cái Excel chống kẹt file trên Windows.
-11. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản bài viết Instant View Telegraph.
-12. 🔍 **`modules/legal_parser.py` & `legal_diff.py`:** Bóc tách phân cấp và so sánh điều khoản (diff).
-13. 🧪 **`tests/`:** 10 bộ kiểm thử tự động (23/23 Unit Test Cases PASS 100%).
-14. ⚙️ **`recon_pipeline.py`:** Luồng trinh sát pháp lý 24/7 & Báo cáo Tuần tra Heartbeat 07:00.
-15. 🚀 **`.github/workflows/watchdog.yml`:** Tự động chạy 06:43 sáng T2-T6 trên GitHub Actions (né đỉnh nghẽn 00:00 UTC).
-16. 📋 **`LICH_SU_TRAO_DOI.md` & `TIEN_DO.md`:** Hồ sơ bàn giao dự án.
+6. 🔗 **`modules/legal_resolver.py`:** Module phân giải link gốc toàn văn thông minh 0đ, tự động trích xuất số hiệu chuẩn xác.
+7. 📄 **`modules/word_grounding_engine.py`:** Động cơ đúc câu căn cứ vào phôi Word chuẩn Nghị định 30 theo thứ bậc Luật $\rightarrow$ NĐ $\rightarrow$ TT $\rightarrow$ QCVN.
+8. 🛡️ **`modules/ai_gatekeeper.py`:** Bộ lọc gác cổng AI siêu nhẹ (<0.3s) với 8 ví dụ mẫu Few-shot 2026.
+9. 🧠 **`modules/ai_analyzer.py`:** Bộ não phân tích tác động toàn văn, tự động tra cứu CSDL 94 văn bản và đối soát trích dẫn chống ảo giác.
+10. 🔍 **`modules/classifier_tier1.py` & `classifier_tier2.py`:** Bộ lọc thể thức và phân loại chuyên sâu.
+11. 📊 **`modules/legal_db_sync.py`:** Module đồng bộ Sổ cái Excel chống kẹt file trên Windows.
+12. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản bài viết Instant View Telegraph với 12 mảng nghiệp vụ và icon trực quan.
+13. 🔍 **`modules/legal_parser.py` & `legal_diff.py`:** Bóc tách phân cấp và so sánh điều khoản (diff).
+14. 🧪 **`tests/`:** 11 bộ kiểm thử tự động toàn diện (38/38 Unit Test Cases PASS 100%).
+15. ⚙️ **`recon_pipeline.py`:** Luồng trinh sát pháp lý 24/7, tải PDF thật và Báo cáo Tuần tra Heartbeat 07:00.
+16. 🚀 **`.github/workflows/watchdog.yml`:** Tự động chạy 06:43 sáng T2-T6 trên GitHub Actions.
+17. 📋 **`LICH_SU_TRAO_DOI.md` & `TIEN_DO.md`:** Hồ sơ bàn giao dự án toàn diện.
 
 
 ---
