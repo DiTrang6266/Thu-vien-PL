@@ -646,5 +646,40 @@
     "title": "Migrated from legacy list",
     "migrated": true,
     "discovered_at": "Lịch sử khởi tạo"
+  },
+  "9228fdfbf7d930791e89b4e780b65fbb": {
+    "title": "Thành lập Ủy ban quốc gia về an ninh hàng không và tạo thuận lợi hàng không",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-08-23 23:56:24"
+  },
+  "97b1dc0bee016d202957d4aed849891e": {
+    "title": "Phê duyệt Điều chỉnh Quy hoạch chung Khu kinh tế Vũng Áng, tỉnh Hà Tĩnh đến năm 2050",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-08-23 23:56:41"
+  },
+  "675d5ed9b149477a745c189ba4d80351": {
+    "title": "Công bố, công khai Quy hoạch mạng lưới đường sắt thời kỳ 2021-2030, tầm nhìn đến năm 2050",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-08-23 23:56:47"
+  },
+  "b7f4f393d023de0e73302221fa1e9203": {
+    "title": "Bảo đảm trật tự, an toàn giao thông dịp nghỉ lễ 02/9 và tháng cao điểm học sinh đến trường",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-08-24 00:00:10"
+  },
+  "d41559286b2cd7e219665a8d03796721": {
+    "title": "Kế hoạch hành động phòng, chống bão, lũ, thiên tai cực đoan và biến đổi khí hậu",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-08-24 00:00:58"
   }
 }
