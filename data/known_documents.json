@@ -681,5 +681,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-08-24 00:00:58"
+  },
+  "c98d5ccb56abca1c7111a6b5bbed0aaf": {
+    "title": "Truyền thông chính sách dự thảo Thông tư xác định chi phí trực tiếp, quy định các tiêu chí phân bổ chi phí gián tiếp, dùng chung liên quan đến việc khai thác tài sản kết cấu hạ tầng hàng không",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-08-24 23:58:52"
   }
 }
