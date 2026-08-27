@@ -1760,3 +1760,332 @@
 [2026-08-26 00:03:47] ❌ Lỗi khi quét nguồn Bộ Kế hoạch và Đầu tư (Văn bản Đấu thầu & Đầu tư công): [Errno 101] Network is unreachable
 [2026-08-26 00:03:47] 🏁 HOÀN THÀNH CHU TRÌNH TRINH SÁT. Số văn bản được duyệt: 0
 [2026-08-26 00:03:47] ✅ Đã gửi Báo cáo Tuần tra 07:00 sáng về Telegram thành công.
+[2026-08-27 05:02:21] 🔍 BẮT ĐẦU CHU TRÌNH TRINH SÁT LỌC ĐA TẦNG (CASCADE FILTERING)...
+[2026-08-27 05:02:21] 📡 Đang quét nguồn: Công báo Nước CHXHCN Việt Nam (Văn bản mới ban hành) (https://congbao.chinhphu.vn/cac-van-ban-moi-ban-hanh.rss)...
+[2026-08-27 05:02:26]    -> Đọc được 50 mục tin mới nhất.
+[2026-08-27 05:02:26] 📡 Đang quét nguồn: Bộ Xây dựng (Văn bản quy phạm pháp luật mới) (https://moc.gov.vn/rss/1196/gioi-thieu-van-ban-moi.rss)...
+[2026-08-27 05:02:28]    -> Đọc được 30 mục tin mới nhất.
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:29] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng ban hành Thông tư Quy định về quản lý, bảo trì công trình hàng không (Lý do: Fallback pass)
+[2026-08-27 05:02:30] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_66-2026-TT-BXD_24082026.pdf
+[2026-08-27 05:02:32] 💾 Đã tải và lưu trữ file PDF thành công (2824490 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/9a53c8ff36b638ea_van_ban_goc.pdf
+[2026-08-27 05:02:32] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng ban hành Thông tư Quy định về quản lý, bảo trì c...
+[2026-08-27 05:02:32] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:32] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thành lập Tổ soạn thảo xây dựng dự thảo Nghị định quy định xử phạt vi phạm hành chính trong lĩnh vực hàng không dân dụng (Lý do: Fallback pass)
+[2026-08-27 05:02:34] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thành lập Tổ soạn thảo xây dựng dự thảo Nghị định quy định x...
+[2026-08-27 05:02:34] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:34] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Chính phủ ban hành Nghị định yêu cầu kỹ thuật và thời hạn áp dụng thiết bị giám sát trên xe ô tô kinh doanh vận tải (Lý do: Fallback pass)
+[2026-08-27 05:02:36] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Chính phủ ban hành Nghị định yêu cầu kỹ thuật và thời hạn áp...
+[2026-08-27 05:02:36] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:37] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư ban hành Định mức kinh tế - kỹ thuật khảo sát đo sâu trong lĩnh vực hàng hải sử dụng nguồn vốn ngân sách nhà nước (Lý do: Fallback pass)
+[2026-08-27 05:02:38] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư ban hành Định mức kinh tế - kỹ thuật khảo sát đo sâ...
+[2026-08-27 05:02:38] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:39] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư ban hành định mức dự toán xây dựng Dự án thành phần 2 thuộc Dự án đầu tư xây dựng tuyến đường sắt Lào Cai - Hà Nội - Hải Phòng (Lý do: Fallback pass)
+[2026-08-27 05:02:41] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư ban hành định mức dự toán xây dựng Dự án thành phần...
+[2026-08-27 05:02:41] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:41] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Điều chuyển xe ô tô cho Trường Đại học Xây dựng miền Trung (Lý do: Fallback pass)
+[2026-08-27 05:02:43] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_1371-QD-BXD_07082026.pdf
+[2026-08-27 05:02:47] 💾 Đã tải và lưu trữ file PDF thành công (790879 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/b00bd421c31d1cbf_van_ban_goc.pdf
+[2026-08-27 05:02:47] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Điều chuyển xe ô tô cho Trường Đại học Xây dựng miền Trung...
+[2026-08-27 05:02:47] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:48] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Điều chuyển tài sản là cơ sở nhà, đất tại số 33, đường Đào Trí, phường Phú Thuận, Thành phố Hồ Chí Minh (Lý do: Fallback pass)
+[2026-08-27 05:02:50] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_1366-QD-BXD_06082026.pdf
+[2026-08-27 05:02:53] 💾 Đã tải và lưu trữ file PDF thành công (557725 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/4a43e7ec4c387b23_van_ban_goc.pdf
+[2026-08-27 05:02:53] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Điều chuyển tài sản là cơ sở nhà, đất tại số 33, đường Đào T...
+[2026-08-27 05:02:53] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:53] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Văn bản hợp nhất Thông tư quy định về quản lý nhà nước chuyên ngành tại cảng thủy nội địa, bến thủy nội địa, khu neo đậu và quản lý hoạt động hoa tiêu đường thủy nội địa (Lý do: Fallback pass)
+[2026-08-27 05:02:55] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_64-2026-VBHN-TT-BXD_04082026.pdf
+[2026-08-27 05:02:56] 💾 Đã tải và lưu trữ file PDF thành công (1204044 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/44fb8ae2f27752c7_van_ban_goc.pdf
+[2026-08-27 05:02:56] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Văn bản hợp nhất Thông tư quy định về quản lý nhà nước chuyê...
+[2026-08-27 05:02:56] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:02:57] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Ban hành Quy chuẩn kỹ thuật quốc gia về Công trình dân dụng - Phần 3: Công trình xây dựng sử dụng năng lượng hiệu quả (Lý do: Fallback pass)
+[2026-08-27 05:03:00] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Thong_tu_ban%20hanh%20QCVN_04-3_ve_CT%20SDNL_TKHQ_7_2026(1).pdf
+[2026-08-27 05:03:02] 💾 Đã tải và lưu trữ file PDF thành công (450881 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/4424176cc71bee09_van_ban_goc.pdf
+[2026-08-27 05:03:02] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Ban hành Quy chuẩn kỹ thuật quốc gia về Công trình dân dụng ...
+[2026-08-27 05:03:02] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:02] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Hợp nhất Thông tư Hướng dẫn một số điều và biện pháp thi hành Nghị định số 06/2021/NĐ-CP và Nghị định số 44/2016/NĐ-CP của Chính phủ (Lý do: Fallback pass)
+[2026-08-27 05:03:04] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Van%20ban%20Hop%20nhat%20Thong%20tu%2010%20_2021_TT_BXD.pdf
+[2026-08-27 05:03:12] 💾 Đã tải và lưu trữ file PDF thành công (559831 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/0f69c47b7a104fe0_van_ban_goc.pdf
+[2026-08-27 05:03:12] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Hợp nhất Thông tư Hướng dẫn một số điều và biện pháp thi hàn...
+[2026-08-27 05:03:12] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:12] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư phân cấp thẩm quyền thực hiện một số nội dung quản lý công chức, viên chức cho các Cục, đơn vị sự nghiệp công lập thuộc phạm vi quản lý của Bộ Xây dựng (Lý do: Fallback pass)
+[2026-08-27 05:03:14] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư phân cấp thẩm quyền thực hiện một số nội dung quản ...
+[2026-08-27 05:03:14] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:15] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Hợp nhất Thông tư Ban hành quy trình kiểm định kỹ thuật an toàn đối với hệ thống cốp pha trượt; cần phân phối bê tông độc lập; máy khoan, máy ép cọc, đóng cọc sử dụng trong thi công xây dựng công trình (Lý do: Fallback pass)
+[2026-08-27 05:03:17] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Th%C3%B4ng%20t%C6%B0%2011%20-%20VBHN%20-%20Th%C3%B4ng%20t%C6%B0%20ban%20h%C3%A0nh%20Quy%20tr%C3%ACnh%20K%C4%90AT%20C%E1%BA%A7n%20ph%C3%A2n%20ph%E1%BB%91i%2C%20h%E1%BB%87%20th%E1%BB%91ng%20c%E1%BB%91p%20pha%20tr%C6%B0%E1%BB%A3t.pdf
+[2026-08-27 05:03:18] 💾 Đã tải và lưu trữ file PDF thành công (1365519 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/cbe1ce13902f7dfc_van_ban_goc.pdf
+[2026-08-27 05:03:18] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Hợp nhất Thông tư Ban hành quy trình kiểm định kỹ thuật an t...
+[2026-08-27 05:03:18] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:19] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Hợp nhất Thông tư Ban hành quy trình kiểm định kỹ thuật an toàn đối với máy khoan, máy ép cọc, đóng cọc sử dụng trong thi công xây dựng (Lý do: Fallback pass)
+[2026-08-27 05:03:21] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Th%C3%B4ng%20t%C6%B0%2009%20-%20VBHN%20-%20Th%C3%B4ng%20t%C6%B0%20ban%20h%C3%A0nh%20Quy%20tr%C3%ACnh%20K%C4%90AT%20M%C3%A1y%20khoan%2C%20m%C3%A1y%20%C3%A9p%20c%E1%BB%8Dc%2C%20%C4%91%C3%B3ng%20c%E1%BB%8Dc.pdf
+[2026-08-27 05:03:38] 💾 Đã tải và lưu trữ file PDF thành công (2075971 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/cc0ef64230af5f4f_van_ban_goc.pdf
+[2026-08-27 05:03:38] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Hợp nhất Thông tư Ban hành quy trình kiểm định kỹ thuật an t...
+[2026-08-27 05:03:38] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:38] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Hợp nhất Thông tư ban hành quy trình kiểm định kỹ thuật an toàn đối với cần trục tháp, máy vận thăng và sàn treo nâng người sử dụng trong thi công xây dựng (Lý do: Fallback pass)
+[2026-08-27 05:03:40] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Hợp nhất Thông tư ban hành quy trình kiểm định kỹ thuật an t...
+[2026-08-27 05:03:40] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:40] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư sửa đổi, bổ sung một số điều của Thông tư về quản lý nhà nước chuyên ngành tại cảng thủy nội địa, bến thủy nội địa, khu neo đậu và quản lý hoạt động hoa tiêu đường thủy nội địa và Thông tư quy định về quản lý kết cấu hạ tầng đường thủy nội địa (Lý do: Fallback pass)
+[2026-08-27 05:03:42] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư sửa đổi, bổ sung một số điều của Thông tư về quản l...
+[2026-08-27 05:03:42] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:42] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư Ban hành Bộ Quy chế An toàn hàng không dân dụng lĩnh vực tàu bay và khai thác tàu bay (Lý do: Fallback pass)
+[2026-08-27 05:03:45] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư Ban hành Bộ Quy chế An toàn hàng không dân dụng lĩn...
+[2026-08-27 05:03:45] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:45] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư sửa đổi, bổ sung một số điều của các Thông tư trong lĩnh vực đăng kiểm phương tiện giao thông đường bộ (Lý do: Fallback pass)
+[2026-08-27 05:03:47] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/QLVB/2026/BXD_45-TT-BXD_30062026.pdf
+[2026-08-27 05:03:56] 💾 Đã tải và lưu trữ file PDF thành công (8607783 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/382b1f2806e33d56_van_ban_goc.pdf
+[2026-08-27 05:03:56] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư sửa đổi, bổ sung một số điều của các Thông tư trong...
+[2026-08-27 05:03:56] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:57] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Phê duyệt điều chỉnh Quy hoạch hệ thống cảng hàng không toàn quốc thời kỳ 2021-2030, tầm nhìn đến năm 2050 (Lý do: Fallback pass)
+[2026-08-27 05:03:59] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Phê duyệt điều chỉnh Quy hoạch hệ thống cảng hàng không toàn...
+[2026-08-27 05:03:59] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:03:59] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư ban hành Định mức kinh tế - kỹ thuật công tác nạo vét công trình hàng hải (Lý do: Fallback pass)
+[2026-08-27 05:04:02] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư ban hành Định mức kinh tế - kỹ thuật công tác nạo v...
+[2026-08-27 05:04:02] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:02] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng ban hành Thông tư Quy định về quản lý và bảo đảm hoạt động bay (Lý do: Fallback pass)
+[2026-08-27 05:04:04] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng ban hành Thông tư Quy định về quản lý và bảo đảm...
+[2026-08-27 05:04:04] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:04] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Ban hành các giải pháp kỹ thuật nâng cao an toàn phòng cháy, chữa cháy cho các cơ sở, công trình không bảo đảm yêu cầu về phòng cháy và chữa cháy và không có khả năng khắc phục theo các tiêu chuẩn, quy chuẩn kỹ thuật tại thời điểm đưa vào hoạt động... (Lý do: Fallback pass)
+[2026-08-27 05:04:06] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Ban hành các giải pháp kỹ thuật nâng cao an toàn phòng cháy,...
+[2026-08-27 05:04:06] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:07] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Ban hành Thông tư Quy định về đăng kiểm tàu biển Việt Nam (Lý do: Fallback pass)
+[2026-08-27 05:04:08] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Ban hành Thông tư Quy định về đăng kiểm tàu biển Việt Nam...
+[2026-08-27 05:04:08] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:09] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư quy định về thẩm định thiết kế, kiểm định, kiểm tra, chứng nhận an toàn kỹ thuật và phòng ngừa ô nhiễm môi trường đối với phương tiện, thiết bị thăm dò, khai thác, vận chuyển dầu khí trên biển (Lý do: Fallback pass)
+[2026-08-27 05:04:11] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư quy định về thẩm định thiết kế, kiểm định, kiểm tra...
+[2026-08-27 05:04:11] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:11] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thông tư quy định về thời giờ làm việc, thời giờ nghỉ ngơi đối với người lao động làm công việc có tính chất đặc biệt trên biển trong hoạt động cung cấp dịch vụ sự nghiệp công bảo đảm an toàn hàng hải (Lý do: Fallback pass)
+[2026-08-27 05:04:15] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thông tư quy định về thời giờ làm việc, thời giờ nghỉ ngơi đ...
+[2026-08-27 05:04:15] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:15] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Điều chuyển xe ô tô cho Trường Cao đẳng Giao thông vận tải Trung ương I (Lý do: Fallback pass)
+[2026-08-27 05:04:19] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_1173-QD-BXD_07072026.pdf
+[2026-08-27 05:04:29] 💾 Đã tải và lưu trữ file PDF thành công (868724 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/8094219bf0b9bc28_van_ban_goc.pdf
+[2026-08-27 05:04:29] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Điều chuyển xe ô tô cho Trường Cao đẳng Giao thông vận tải T...
+[2026-08-27 05:04:29] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:29] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng ban hành Thông tư Quy định về vận tải hàng không (Lý do: Fallback pass)
+[2026-08-27 05:04:31] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng ban hành Thông tư Quy định về vận tải hàng không...
+[2026-08-27 05:04:31] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:31] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng ban hành Kế hoạch triển khai hoạt động hưởng ứng “Ngày thế giới phòng, chống mua bán người” và “Ngày toàn dân phòng, chống mua bán người 30/7” năm 2026 (Lý do: Fallback pass)
+[2026-08-27 05:04:33] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng ban hành Kế hoạch triển khai hoạt động hưởng ứng...
+[2026-08-27 05:04:33] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[2026-08-27 05:04:33] 📡 Đang quét nguồn: Bộ Xây dựng (Chỉ đạo điều hành chuyên ngành) (https://moc.gov.vn/rss/1176/tin-chi-dao--dieu-hanh.rss)...
+[2026-08-27 05:04:34]    -> Đọc được 30 mục tin mới nhất.
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:34] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng yêu cầu các đơn vị trực thuộc tăng cường công tác bảo đảm an ninh, trật tự dịp Lễ Quốc khánh 02/9 (Lý do: Fallback pass)
+[2026-08-27 05:04:36] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_13516-BXD-VT%26ATGT_25082026.pdf
+[2026-08-27 05:04:37] 💾 Đã tải và lưu trữ file PDF thành công (471445 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/2a93e1dcf9fc9fd5_van_ban_goc.pdf
+[2026-08-27 05:04:37] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng yêu cầu các đơn vị trực thuộc tăng cường công tá...
+[2026-08-27 05:04:37] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:37] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Truyền thông Dự thảo Thông tư quy định về phân cấp và quy trình kiểm tra trong hoạt động chuyên ngành thuộc phạm vi quản lý của Bộ Xây dựng (Lý do: Fallback pass)
+[2026-08-27 05:04:39] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/QLVB/2026/2026_No%CC%A3%CC%82i%20dung%20truye%CC%82%CC%80n%20tho%CC%82ng%20Xa%CC%82y%20du%CC%9B%CC%A3ng%20Tho%CC%82ng%20tu%CC%9B%20(1).pdf
+[2026-08-27 05:04:40] 💾 Đã tải và lưu trữ file PDF thành công (192861 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/dadd39b7b86894dd_van_ban_goc.pdf
+[2026-08-27 05:04:40] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Truyền thông Dự thảo Thông tư quy định về phân cấp và quy tr...
+[2026-08-27 05:04:40] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:40] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Thành lập Tổ soạn thảo xây dựng dự thảo Nghị định quy định xử phạt vi phạm hành chính trong lĩnh vực hàng không dân dụng (Lý do: Fallback pass)
+[2026-08-27 05:04:42] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Thành lập Tổ soạn thảo xây dựng dự thảo Nghị định quy định x...
+[2026-08-27 05:04:42] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:43] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng ban hành Công điện yêu cầu chủ động ứng phó mưa lũ sau bão số 4 (Lý do: Fallback pass)
+[2026-08-27 05:04:44] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_41-CD-BXD_23082026.pdf
+[2026-08-27 05:04:52] 💾 Đã tải và lưu trữ file PDF thành công (516120 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/50adf1ac408d5b11_van_ban_goc.pdf
+[2026-08-27 05:04:52] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng ban hành Công điện yêu cầu chủ động ứng phó mưa ...
+[2026-08-27 05:04:52] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:52] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Công khai quyết toán vốn đầu tư công nguồn NSNN theo niên độ ngân sách năm 2025 của Bộ Xây dựng (Lý do: Fallback pass)
+[2026-08-27 05:04:54] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Công khai quyết toán vốn đầu tư công nguồn NSNN theo niên độ...
+[2026-08-27 05:04:54] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:04:54] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng ban hành Kế hoạch xây dựng quy chuẩn kỹ thuật năm 2026 (Lý do: Fallback pass)
+[2026-08-27 05:04:56] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Q%C4%901476%20K%E1%BA%BF%20ho%E1%BA%A1ch%20x%C3%A2y%20d%E1%BB%B1ng%20QCKT%202026.pdf
+[2026-08-27 05:05:06] 💾 Đã tải và lưu trữ file PDF thành công (876782 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/6fac3a71c81d2d5e_van_ban_goc.pdf
+[2026-08-27 05:05:06] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng ban hành Kế hoạch xây dựng quy chuẩn kỹ thuật nă...
+[2026-08-27 05:05:06] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:06] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Tăng cường công tác bảo đảm an toàn giao thông hàng không dân dụng (Lý do: Fallback pass)
+[2026-08-27 05:05:08] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Tăng cường công tác bảo đảm an toàn giao thông hàng không dâ...
+[2026-08-27 05:05:08] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:08] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Giao một số chỉ tiêu định hướng năm 2026 đối với Công ty TNHH một thành viên Cơ khí ô tô và Thiết bị điện Đà Nẵng (Lý do: Fallback pass)
+[2026-08-27 05:05:10] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_1455-Q%C4%90-BXD_20082026.pdf
+[2026-08-27 05:05:11] 💾 Đã tải và lưu trữ file PDF thành công (635969 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/8913bfc0728cec95_van_ban_goc.pdf
+[2026-08-27 05:05:11] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Giao một số chỉ tiêu định hướng năm 2026 đối với Công ty TNH...
+[2026-08-27 05:05:11] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:11] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Ban hành Kế hoạch thực hiện Nghị quyết của Chính phủ về Kế hoạch hành động thực hiện Kết luận của đồng chí Tổng Bí thư, Chủ tịch nước về công tác phòng, chống bão, lũ, thiên tai cực đoan và biến đổi khí hậu (Lý do: Fallback pass)
+[2026-08-27 05:05:13] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_1463-QD-BXD_20082026.pdf
+[2026-08-27 05:05:15] 💾 Đã tải và lưu trữ file PDF thành công (1015151 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/367e16517201ac92_van_ban_goc.pdf
+[2026-08-27 05:05:15] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Ban hành Kế hoạch thực hiện Nghị quyết của Chính phủ về Kế h...
+[2026-08-27 05:05:15] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:15] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng yêu cầu các đơn vị triển khai thực hiện Công điện số 55/CĐ-TTg ngày 19/8/2026 của Thủ tướng Chính phủ (Lý do: Fallback pass)
+[2026-08-27 05:05:17] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_13209-BXD-VT%26ATGT_20082026.pdf
+[2026-08-27 05:05:20] 💾 Đã tải và lưu trữ file PDF thành công (531604 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/306222ddcbc7dedc_van_ban_goc.pdf
+[2026-08-27 05:05:20] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng yêu cầu các đơn vị triển khai thực hiện Công điệ...
+[2026-08-27 05:05:20] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:21] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Truyền thông dự thảo Thông tư quy định thi, cấp, cấp lại, chuyển đổi giấy chứng nhận khả năng chuyên môn, chứng chỉ chuyên môn thuyền viên, người lái phương tiện thủy nội địa (Lý do: Fallback pass)
+[2026-08-27 05:05:23] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Noi%20dung%20truyen%20thong_docx.pdf
+[2026-08-27 05:05:23] 💾 Đã tải và lưu trữ file PDF thành công (165691 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/a1e6d97793e2532a_van_ban_goc.pdf
+[2026-08-27 05:05:23] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Truyền thông dự thảo Thông tư quy định thi, cấp, cấp lại, ch...
+[2026-08-27 05:05:23] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:24] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Phó Thủ tướng yêu cầu xây dựng cơ chế điều phối vật liệu xây dựng liên vùng trong tháng 10/2026 (Lý do: Fallback pass)
+[2026-08-27 05:05:26] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Phó Thủ tướng yêu cầu xây dựng cơ chế điều phối vật liệu xây...
+[2026-08-27 05:05:26] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:26] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng yêu cầu tăng cường công tác vận tải, bảo đảm trật tự, an toàn giao thông, phục vụ nhu cầu đi lại của nhân dân dịp kỷ niệm Cách mạng Tháng Tám và Quốc khánh 02/9 năm 2026 (Lý do: Fallback pass)
+[2026-08-27 05:05:28] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_13003-BXD-VT%26ATGT_18082026.pdf
+[2026-08-27 05:05:31] 💾 Đã tải và lưu trữ file PDF thành công (540714 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/583ab18231b91530_van_ban_goc.pdf
+[2026-08-27 05:05:31] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng yêu cầu tăng cường công tác vận tải, bảo đảm trậ...
+[2026-08-27 05:05:31] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:31] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Truyền thông dự thảo Thông tư sửa đổi, bổ sung một số điều của Thông tư số 33/2025/TT-BXD (Lý do: Fallback pass)
+[2026-08-27 05:05:33] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/QLVB/2026/2_%20Noi%20dung%20truyen%20thong%20du%20thao%20TT%20sua%20doi%20TT33.pdf
+[2026-08-27 05:05:36] 💾 Đã tải và lưu trữ file PDF thành công (477198 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/cd9ed811cfaa4fc2_van_ban_goc.pdf
+[2026-08-27 05:05:36] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Truyền thông dự thảo Thông tư sửa đổi, bổ sung một số điều c...
+[2026-08-27 05:05:36] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:37] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Quy trình giải quyết thủ tục hành chính nội bộ lĩnh vực phát triển đô thị thuộc phạm vi giải quyết của Bộ Xây dựng (Lý do: Fallback pass)
+[2026-08-27 05:05:38] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Q%C4%901447%20ban%20h%C3%A0nh%20quy%20tr%C3%ACnh%20gi%E1%BA%A3i%20quy%E1%BA%BFt%20tthc.pdf
+[2026-08-27 05:05:43] 💾 Đã tải và lưu trữ file PDF thành công (952074 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/4ebb13c08482aa69_van_ban_goc.pdf
+[2026-08-27 05:05:43] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Quy trình giải quyết thủ tục hành chính nội bộ lĩnh vực phát...
+[2026-08-27 05:05:43] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:44] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Truyền thông dự thảo Thông tư ban hành Sửa đổi 1:2026 QCVN 23:2025/BXD và Sửa đổi 1:2026 QCVN 25:2025/BXD (Lý do: Fallback pass)
+[2026-08-27 05:05:46] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/QLVB/2026/2__Noi_dung_truyen_thong_du_thao_Thong_tu_ban_hanh_02_Sua_doi_1786964711290_docx.pdf
+[2026-08-27 05:05:48] 💾 Đã tải và lưu trữ file PDF thành công (171281 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/b91c81aa916b0742_van_ban_goc.pdf
+[2026-08-27 05:05:48] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Truyền thông dự thảo Thông tư ban hành Sửa đổi 1:2026 QCVN 2...
+[2026-08-27 05:05:48] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:48] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Tăng cường biện pháp quản lý, giám sát thiết bị bay không người lái (Lý do: Fallback pass)
+[2026-08-27 05:05:50] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Tăng cường biện pháp quản lý, giám sát thiết bị bay không ng...
+[2026-08-27 05:05:50] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:50] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Tháo gỡ vướng mắc lĩnh vực công nghiệp, xây dựng, hạ tầng và quy hoạch (Lý do: Fallback pass)
+[2026-08-27 05:05:51] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Tháo gỡ vướng mắc lĩnh vực công nghiệp, xây dựng, hạ tầng và...
+[2026-08-27 05:05:51] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:52] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Bộ Xây dựng yêu cầu các đơn vị tăng cường chủ động ứng phó với mưa lớn, lũ, ngập lụt, lũ quét, sạt lở đất (Lý do: Fallback pass)
+[2026-08-27 05:05:54] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/BXD_12899-BXD-VT%26ATGT_16082026.pdf
+[2026-08-27 05:05:54] 💾 Đã tải và lưu trữ file PDF thành công (392238 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/571cb142014884f6_van_ban_goc.pdf
+[2026-08-27 05:05:54] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Bộ Xây dựng yêu cầu các đơn vị tăng cường chủ động ứng phó v...
+[2026-08-27 05:05:54] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:55] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Quyết định ban hành Kế hoạch triển khai Phong trào thi đua Quyết tâm thực hiện thắng lợi mục tiêu tăng trưởng bền vững “2 con số” giai đoạn 2026 -2030 (Lý do: Fallback pass)
+[2026-08-27 05:05:56] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Quyết định ban hành Kế hoạch triển khai Phong trào thi đua Q...
+[2026-08-27 05:05:56] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:57] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Công bố kết quả xếp loại doanh nghiệp năm 2025 đối với Công ty mẹ - Tổng công ty Quản lý bay Việt Nam (Lý do: Fallback pass)
+[2026-08-27 05:05:59] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Công bố kết quả xếp loại doanh nghiệp năm 2025 đối với Công ...
+[2026-08-27 05:05:59] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:05:59] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Đẩy nhanh tiến độ các dự án đường bộ cao tốc khu vực Đông Nam Bộ và Tây Nam Bộ (Lý do: Fallback pass)
+[2026-08-27 05:06:01] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Đẩy nhanh tiến độ các dự án đường bộ cao tốc khu vực Đông Na...
+[2026-08-27 05:06:01] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:06:01] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Kết luận của Bộ Chính trị về phát triển công nghiệp vật liệu Việt Nam (Lý do: Fallback pass)
+[2026-08-27 05:06:03] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Kết luận của Bộ Chính trị về phát triển công nghiệp vật liệu...
+[2026-08-27 05:06:03] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:06:03] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Xây dựng và phát triển Việt Nam trở thành quốc gia biển mạnh (Lý do: Fallback pass)
+[2026-08-27 05:06:05] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Xây dựng và phát triển Việt Nam trở thành quốc gia biển mạnh...
+[2026-08-27 05:06:05] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:06:06] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Phó Thủ tướng Thường trực Phạm Gia Túc: Cần nghiên cứu kỹ phương án đầu tư cao tốc Bảo Hà - Lai Châu (Lý do: Fallback pass)
+[2026-08-27 05:06:09] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Phó Thủ tướng Thường trực Phạm Gia Túc: Cần nghiên cứu kỹ ph...
+[2026-08-27 05:06:09] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:06:09] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Ban hành Kế hoạch xây dựng Hiệp định giữa Chính phủ nước Cộng hòa xã hội chủ nghĩa Việt Nam và Chính phủ nước Cộng hòa Dân chủ Nhân dân Lào về vận tải đường bộ (Lý do: Fallback pass)
+[2026-08-27 05:06:11] 📥 Tìm thấy link PDF gốc: https://moc.gov.vn/Images/editor/files/Nam%202026/Quy%E1%BA%BFt%20%C4%91%E1%BB%8Bnh%201405%20ph%C3%AA%20duy%E1%BB%87t%20KHXD%20Hi%E1%BB%87p%20%C4%91%E1%BB%8Bnh%2030_7.pdf
+[2026-08-27 05:06:16] 💾 Đã tải và lưu trữ file PDF thành công (880685 bytes): /home/runner/work/Thu-vien-PL/Thu-vien-PL/data/downloads/fc1064509c9380a2_van_ban_goc.pdf
+[2026-08-27 05:06:16] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Ban hành Kế hoạch xây dựng Hiệp định giữa Chính phủ nước Cộn...
+[2026-08-27 05:06:16] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[GATEKEEPER] ⚠️ Kích hoạt chế độ an toàn (Cho phép đi tiếp).
+[2026-08-27 05:06:16] 🎯 [DUYỆT] VĂN BẢN ĐÚNG NGÀNH: Giao Cục Đường bộ Việt Nam quản lý tài sản kết cấu hạ tầng giao thông đường bộ thuộc dự án đường Trường Sơn Đông (Lý do: Fallback pass)
+[2026-08-27 05:06:18] 🧠 [TẦNG 3] Đang gọi AI Gemini phân tích tác động toàn văn cho: Giao Cục Đường bộ Việt Nam quản lý tài sản kết cấu hạ tầng g...
+[2026-08-27 05:06:18] ⚠️ Bỏ qua bài viết bị lỗi phân tích: Invalid format specifier ' "Phân tích cụ thể tác động đến mảng nghiệp vụ đó (VD: 'Quy hoạch & Khảo sát', 'Thiết kế & Dự toán', 'Đấu thầu & Hợp đồng', 'Thi công & Quản lý chất lượng', 'Giám sát thi công', 'Bảo hiểm công trình', 'Nghiệm thu & Quyết toán', 'Phòng cháy chữa cháy', 'Môi trường & ĐTM', 'Công trình Quốc phòng'). CHỈ NÊU CÁC MẢNG THỰC SỰ BỊ TÁC ĐỘNG, TUYỆT ĐỐI KHÔNG ĐƯA MẢNG KHÔNG LIÊN QUAN VÀO."
+      ' for object of type 'str'
+[2026-08-27 05:06:18] 📡 Đang quét nguồn: Bộ Kế hoạch và Đầu tư (Văn bản Đấu thầu & Đầu tư công) (https://www.mpi.gov.vn/Pages/rss.aspx)...
+[2026-08-27 05:06:49] ❌ Lỗi khi quét nguồn Bộ Kế hoạch và Đầu tư (Văn bản Đấu thầu & Đầu tư công): [Errno 101] Network is unreachable
+[2026-08-27 05:06:49] 🏁 HOÀN THÀNH CHU TRÌNH TRINH SÁT. Số văn bản được duyệt: 0
+[2026-08-27 05:06:49] ✅ Đã gửi Báo cáo Tuần tra 07:00 sáng về Telegram thành công.
