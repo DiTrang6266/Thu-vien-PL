@@ -688,5 +688,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-08-24 23:58:52"
+  },
+  "e7523db026412b4c443b18e5a4d86725": {
+    "title": "Quyết liệt xử lý vướng mắc, bảo đảm tiến độ, chất lượng Dự án sân bay Long Thành",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-09-02 01:25:47"
   }
 }
