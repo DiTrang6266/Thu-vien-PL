@@ -695,5 +695,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-09-02 01:25:47"
+  },
+  "8cef4d6925ea6a27171d6905a4d9c1e2": {
+    "title": "Nghị quyết của Bộ Chính trị về phát triển các vùng và tổ chức không gian phát triển quốc gia trong giai đoạn mới",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-09-08 01:25:34"
   }
 }
