@@ -149,7 +149,24 @@ Dự án áp dụng quy chuẩn cố định bắt buộc khi đúc hồ sơ Wor
   2. **Khảo sát & Lập danh mục Phân hệ Quy chuẩn (QCVN) & Tiêu chuẩn (TCVN) thi công - nghiệm thu:**
      - Xác định nhóm Quy chuẩn cốt lõi: `QCVN 18:2021/BXD` (An toàn thi công), `QCVN 03:2022/BXD` (Phân cấp công trình), `QCVN 02:2022/BXD` (Điều kiện tự nhiên), `QCVN 06:2022/BXD` (PCCC).
      - Xác định nhóm Tiêu chuẩn cốt lõi: `TCVN 4453:1995` & `TCVN 5574:2018` (Bê tông cốt thép), `TCVN 4447:2012` (Công tác đất), `TCVN 9361:2012` (Nền móng), `TCVN 5674:1992` (Hoàn thiện), `TCVN 9393:2012` (Nén cọc), `TCVN 5575:2012` (Kết cấu thép).
-  3. **Lưu trữ Bàn giao Máy Mới:** Đóng gói toàn bộ lịch sử trao đổi vào tài liệu bàn giao để chuyển máy mới không cần giải thích lại.
+### Buổi 26: Nghiên cứu Chuyên sâu NotebookLM, Xây dựng Phôi Mẫu Word (.docx) & Động cơ Đúc Hồ sơ Dự án (docxtpl)
+* **Ý kiến & Định hướng của Người dùng:**
+  - Nhắc nhở mục đích cốt lõi cuối cùng của dự án: Hoàn thiện hồ sơ dự án đầu tư xây dựng công chuẩn pháp lý, bảo vệ trước thanh tra/kiểm toán.
+  - Chỉ đạo phương châm kỹ thuật: "Đầu tiên nghiên cứu mở rộng, không có mở rộng thì mới nghiên cứu từng thành phần bánh xe, mục đích đứng trên vai người khổng lồ, code ít, hiệu quả cao để đúc hồ sơ; chuyển yêu cầu sang NotebookLM để nghiên cứu chuyên sâu".
+  - Chỉ đạo triển khai phôi mẫu: "Tôi có mẫu Word sẵn rồi, bạn chỉnh các mẫu Word thành các cái như thẻ {{ ten_du_an }}, {{ can_cu_phap_ly }}".
+* **Hành động & Kết quả đã triển khai 100%:**
+  1. **Nghiên cứu Chuyên sâu trên Google NotebookLM:**
+     - Đã tạo Notebook `Nghien cuu Giai phap Duc Ho so Du an Xay dung chieu chuan ND30` trên tài khoản `manhduy.leader@gmail.com`.
+     - Nạp 3 nguồn tri thức: Thể thức 13 thành phần NĐ 30, Yêu cầu thứ bậc pháp lý đúc hồ sơ, Ma trận so sánh các giải pháp.
+     - Kết quả NotebookLM: Mô hình Phôi mẫu Word (.docx) + Template Engine `docxtpl` là phương án số 1 (Code <30 dòng, giữ nguyên 100% định dạng Word gốc, không bao giờ vỡ font, người dùng sửa mẫu trực tiếp trên Word không cần biết code).
+  2. **Tạo Phôi Mẫu Thực Chiến:**
+     - Lấy file thực tế `4. QĐ phê duyệt nhiệm vụ và dự toán giai đoạn Chuẩn bị.docx` của Trường Cao đẳng Kỹ thuật PK-KQ trên Desktop.
+     - Chuyển đổi thành phôi mẫu sạch `templates/phoi_QD_du_toan_chuan_bi.docx` với các thẻ giữ chỗ Jinja2 (`{{ ten_cong_trinh }}`, `{{ so_quyet_dinh }}`, `{{ chi_phi_lap_bcktkt_so }}`, `{{ chi_phi_lap_bcktkt_chu }}`, `{{ chuc_vu_nguoi_ky }}`, v.v.).
+     - Thiết lập khối lặp căn cứ pháp lý: `{%p for cc in danh_sach_can_cu %}{{ cc }}{%p endfor %}`.
+  3. **Xây dựng Module Đúc Hồ sơ `modules/dossier_engine.py`:**
+     - Tự động nạp căn cứ pháp lý còn hiệu lực từ `modules/word_grounding_engine.py` và CSDL 94 văn bản.
+     - Hàm `render_qd_du_toan_chuan_bi(data)` xuất file Word hoàn chỉnh trong <0.5 giây.
+  4. **Kiểm thử Tự động:** Bổ sung `tests/test_dossier_engine.py`, nâng tổng số test lên **40/40 Unit Test Cases PASS 100%**.
 
 ---
 
@@ -164,16 +181,18 @@ Thư mục làm việc: `C:\Users\Manh Duy\Desktop\Hoàn thiện Hồ sơ dự �
 5. 🧠 **`modules/master_seed_loader.py`:** CSDL hạt giống 94 văn bản chuẩn hóa.
 6. 🔗 **`modules/legal_resolver.py`:** Module phân giải link gốc toàn văn thông minh 0đ, tự động trích xuất số hiệu chuẩn xác.
 7. 📄 **`modules/word_grounding_engine.py`:** Động cơ đúc câu căn cứ vào phôi Word chuẩn Nghị định 30 theo thứ bậc Luật $\rightarrow$ NĐ $\rightarrow$ TT $\rightarrow$ QCVN.
-8. 🛡️ **`modules/ai_gatekeeper.py`:** Bộ lọc gác cổng AI siêu nhẹ (<0.3s) với 8 ví dụ mẫu Few-shot 2026.
-9. 🧠 **`modules/ai_analyzer.py`:** Bộ não phân tích tác động toàn văn, tự động tra cứu CSDL 94 văn bản và đối soát trích dẫn chống ảo giác.
-10. 🔍 **`modules/classifier_tier1.py` & `classifier_tier2.py`:** Bộ lọc thể thức và phân loại chuyên sâu.
-11. 📊 **`modules/legal_db_sync.py`:** Module đồng bộ Sổ cái Excel chống kẹt file trên Windows.
-12. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản bài viết Instant View Telegraph với 12 mảng nghiệp vụ và icon trực quan.
-13. 🔍 **`modules/legal_parser.py` & `legal_diff.py`:** Bóc tách phân cấp và so sánh điều khoản (diff).
-14. 🧪 **`tests/`:** 11 bộ kiểm thử tự động toàn diện (38/38 Unit Test Cases PASS 100%).
-15. ⚙️ **`recon_pipeline.py`:** Luồng trinh sát pháp lý 24/7, tải PDF thật và Báo cáo Tuần tra Heartbeat 07:00.
-16. 🚀 **`.github/workflows/watchdog.yml`:** Tự động chạy 06:43 sáng T2-T6 trên GitHub Actions.
-17. 📋 **`LICH_SU_TRAO_DOI.md` & `TIEN_DO.md`:** Hồ sơ bàn giao dự án toàn diện.
+8. 📑 **`modules/dossier_engine.py`:** Động cơ đúc hồ sơ Word dự án (docxtpl) kết hợp phôi mẫu thực chiến.
+9. 📂 **`templates/phoi_QD_du_toan_chuan_bi.docx`:** Phôi mẫu Quyết định phê duyệt dự toán chuẩn bị dự án gắn thẻ Jinja2.
+10. 🛡️ **`modules/ai_gatekeeper.py`:** Bộ lọc gác cổng AI siêu nhẹ (<0.3s) với 8 ví dụ mẫu Few-shot 2026.
+11. 🧠 **`modules/ai_analyzer.py`:** Bộ não phân tích tác động toàn văn, tự động tra cứu CSDL 94 văn bản và đối soát trích dẫn chống ảo giác.
+12. 🔍 **`modules/classifier_tier1.py` & `classifier_tier2.py`:** Bộ lọc thể thức và phân loại chuyên sâu.
+13. 📊 **`modules/legal_db_sync.py`:** Module đồng bộ Sổ cái Excel chống kẹt file trên Windows.
+14. 📰 **`modules/telegraph_publisher.py`:** Bộ xuất bản bài viết Instant View Telegraph với 12 mảng nghiệp vụ và icon trực quan.
+15. 🔍 **`modules/legal_parser.py` & `legal_diff.py`:** Bóc tách phân cấp và so sánh điều khoản (diff).
+16. 🧪 **`tests/`:** 12 bộ kiểm thử tự động toàn diện (40/40 Unit Test Cases PASS 100%).
+17. ⚙️ **`recon_pipeline.py`:** Luồng trinh sát pháp lý 24/7, tải PDF thật và Báo cáo Tuần tra Heartbeat 07:00.
+18. 🚀 **`.github/workflows/watchdog.yml`:** Tự động chạy 06:43 sáng T2-T6 trên GitHub Actions.
+19. 📋 **`LICH_SU_TRAO_DOI.md` & `TIEN_DO.md`:** Hồ sơ bàn giao dự án toàn diện.
 
 
 ---

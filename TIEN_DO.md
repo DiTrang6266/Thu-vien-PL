@@ -71,6 +71,12 @@
 * **Phản Biện Độc Lập Hội Đồng 2 Subagent:** Subagent 1 (Kỹ thuật) & Subagent 2 (Nghiệp vụ & UX) thẩm định và nghiệm thu đạt chuẩn 100%.
 * **Dọn Dẹp Mã Nguồn (Skill don-code):** Dọn sạch các file PDF tải về tạm thời trong `data/downloads/` và toàn bộ bộ nhớ đệm `__pycache__`, `.pytest_cache`. Thư mục dự án sạch sẽ, tinh gọn 100%, 38/38 Unit Tests PASS.
 
+### ✅ Giai đoạn 11: Nghiên cứu Chuyên sâu NotebookLM & Động cơ Đúc Hồ sơ Word Thực chiến (docxtpl)
+* **Nghiên cứu Chuyên sâu NotebookLM:** Kết nối Google NotebookLM tài khoản `manhduy.leader@gmail.com`, tạo Notebook `Nghien cuu Giai phap Duc Ho so Du an Xay dung chieu chuan ND30`. Phân tích và kết luận: Mô hình Phôi mẫu Word (.docx) kết hợp Template Engine `docxtpl` là giải pháp tối ưu số 1 ("Đứng trên vai người khổng lồ", code ít nhất, không vỡ format, dễ bảo trì).
+* **Chuyển đổi Phôi mẫu Thực tế:** Lấy mẫu thực chiến của đơn vị (`4. QĐ phê duyệt nhiệm vụ và dự toán giai đoạn Chuẩn bị.docx`), tạo phôi mẫu sạch `templates/phoi_QD_du_toan_chuan_bi.docx` có gắn các thẻ giữ chỗ Jinja2 (`{{ ten_cong_trinh }}`, `{{ can_cu_phap_ly }}`, `{{ chi_phi_lap_bcktkt_so }}`, `{{ chuc_vu_nguoi_ky }}`, v.v.).
+* **Phát triển Module `modules/dossier_engine.py`:** Động cơ đúc hồ sơ tự động nạp căn cứ pháp lý còn hiệu lực, bơm dữ liệu vào phôi và xuất file Word hoàn chỉnh trong <0.5 giây.
+* **Kiểm thử Toàn diện:** 40/40 Unit Test Cases **PASS 100%**.
+
 ---
 
 ## 2. BẢNG TỔNG HỢP 94 VĂN BẢN THEO CHUYÊN NGÀNH (MỐC 21/08/2026)
