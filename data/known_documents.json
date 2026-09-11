@@ -702,5 +702,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-09-08 01:25:34"
+  },
+  "c31e55199ed781535f7c3e49770bdbbc": {
+    "title": "Quy định mới về điều kiện, cấp phép cơ sở đào tạo, huấn luyện thuyền viên hàng hải",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-09-11 01:28:36"
   }
 }
