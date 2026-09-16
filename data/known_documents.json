@@ -709,5 +709,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-09-11 01:28:36"
+  },
+  "aa5d68b42874ae2d0f86141f79919c44": {
+    "title": "Truyền thông chính sách dự thảo Thông tư ban hành tiêu chí đánh giá khả năng chống chịu với biến đổi khí hậu và việc tổ chức thực hiện tại các đô thị",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-09-16 01:41:22"
   }
 }
