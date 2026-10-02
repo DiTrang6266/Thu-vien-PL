@@ -716,5 +716,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-09-16 01:41:22"
+  },
+  "c418763eaa10ad349b7cdf015d8e2c76": {
+    "title": "Chính phủ giao chỉ tiêu phát triển nhà ở xã hội, nhà ở cho thuê cho các địa phương",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-02 02:36:28"
   }
 }
