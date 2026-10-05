@@ -723,5 +723,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-02 02:36:28"
+  },
+  "0e071669cf5c8d4f0f47883e5868bf64": {
+    "title": "Kết luận của Bộ Chính trị về khai thác, quản trị và bảo vệ không gian tầm thấp phục vụ phát triển đất nước trong tình hình mới",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-05 02:26:13"
   }
 }
