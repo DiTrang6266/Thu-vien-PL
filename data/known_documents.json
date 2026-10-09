@@ -737,5 +737,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-08 02:58:03"
+  },
+  "750a1151c3c65fd98764bc885e5caa83": {
+    "title": "Tổ chức Cuộc thi trực tuyến tìm hiểu về chuyển đổi số quốc gia",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-09 03:06:14"
   }
 }
