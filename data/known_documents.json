@@ -744,5 +744,19 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-09 03:06:14"
+  },
+  "2a8b0ed75a30a0cb29594f1b4d836cfa": {
+    "title": "Kiểm soát thủ tục hành chính gắn với chuyển đổi số và quản trị dữ liệu",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-12 02:39:18"
+  },
+  "14be225723122646810e118526c63f43": {
+    "title": "Quy chế tổ chức và hoạt động của Ủy ban quốc gia về An ninh hàng không và tạo thuận lợi hàng không",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-12 02:41:25"
   }
 }
