@@ -758,5 +758,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-12 02:41:25"
+  },
+  "3aef47057386ae3877c7bf1cfb7283c5": {
+    "title": "Quy định mới về quản lý, tính hao mòn, trích khấu hao tài sản kết cấu hạ tầng",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-14 02:09:43"
   }
 }
