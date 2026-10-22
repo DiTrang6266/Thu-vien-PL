@@ -772,5 +772,19 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-20 02:06:13"
+  },
+  "811951e5093de35c336c2f4265ba4ebe": {
+    "title": "Truyền thông chính sách dự thảo Luật Kinh doanh bất động sản (sửa đổi)",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-22 01:53:48"
+  },
+  "e0d17d9cf01f37cd5376255fc71953e8": {
+    "title": "Thủ tướng Chính phủ phê duyệt Quy hoạch chung đô thị Khánh Hòa",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-22 01:53:48"
   }
 }
