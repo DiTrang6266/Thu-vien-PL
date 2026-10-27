@@ -786,5 +786,19 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-22 01:53:48"
+  },
+  "208c226a0714d4345801ed6066bef823": {
+    "title": "Bảo đảm tuyệt đối an ninh, an toàn hàng không trong mọi hoàn cảnh",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-27 02:26:57"
+  },
+  "f1874ff9d838f4d5cacd6046571dd2d7": {
+    "title": "Đến năm 2075, Đà Nẵng thuộc nhóm đô thị giàu bản sắc hàng đầu châu Á",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-10-27 02:26:57"
   }
 }
