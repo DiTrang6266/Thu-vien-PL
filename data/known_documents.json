@@ -800,5 +800,19 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-10-27 02:26:57"
+  },
+  "8e06c9cd4db3522e8b90662d7c4adb21": {
+    "title": "Tạo nền tảng để phát triển công nghiệp hàng hải theo hướng hiện đại, đồng bộ",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-05 03:46:30"
+  },
+  "f25c3b0342f0402d64741c261f8ef5ad": {
+    "title": "Tạo nền tảng để phát triển công nghiệp hàng hải theo hướng hiện đại, đồng bộ",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-05 03:46:30"
   }
 }
