@@ -814,5 +814,19 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-11-05 03:46:30"
+  },
+  "dd9bd88876dfa5a286d43f89cf07f39e": {
+    "title": "Định hướng phát triển đô thị thông minh quốc gia giai đoạn 2026 - 2030, tầm nhìn đến năm 2035",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-06 03:41:09"
+  },
+  "561264ab0c544d7f51297ff8378b3b8b": {
+    "title": "Truyền thông dự thảo Nghị định sửa đổi, bổ sung một số điều của các Nghị định trong lĩnh vực sản xuất, lắp ráp, nhập khẩu phương tiện giao thông đường bộ và Nghị định quy định chi tiết một số điều của Luật Đường sắt",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-06 03:41:12"
   }
 }
