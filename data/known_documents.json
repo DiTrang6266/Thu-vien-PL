@@ -828,5 +828,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-11-06 03:41:12"
+  },
+  "c5cb36739f4e4a6476e1d7daeb880f84": {
+    "title": "Đẩy nhanh tiến độ triển khai Dự án Cảng hàng không quốc tế Long Thành giai đoạn 1",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-09 03:00:26"
   }
 }
