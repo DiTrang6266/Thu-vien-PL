@@ -835,5 +835,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-11-09 03:00:26"
+  },
+  "78c32c6eb468333b532ac43f8ddb1c13": {
+    "title": "Kết luận của Bộ Chính trị về Quy hoạch tổng thể Thành phố Hồ Chí Minh giai đoạn 2025-2050, tầm nhìn 100 năm",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-10 04:49:07"
   }
 }
