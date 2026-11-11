@@ -842,5 +842,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-11-10 04:49:07"
+  },
+  "a7ff11d2f361eb3036e6cd3181aae966": {
+    "title": "Chương trình hành động của Chính phủ phát triển các vùng và tổ chức không gian phát triển quốc gia",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-11 03:03:20"
   }
 }
