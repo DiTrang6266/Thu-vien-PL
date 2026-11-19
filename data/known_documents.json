@@ -849,5 +849,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-11-11 03:03:20"
+  },
+  "86dfa59c8900e6caf82979d7199af8e9": {
+    "title": "Hoàn thiện Báo cáo tiếp thu, giải trình 2 dự thảo luật về bất động sản và nhà ở",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-19 04:32:28"
   }
 }
