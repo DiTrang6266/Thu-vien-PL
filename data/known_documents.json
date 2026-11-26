@@ -856,5 +856,12 @@
     "filter_tier": "TIER_1_NO_KEYWORD",
     "reject_reason": "Không chứa từ khóa chuyên ngành",
     "discovered_at": "2026-11-19 04:32:28"
+  },
+  "6bf89afba3b5003fa2aa096144fa7c50": {
+    "title": "Chương trình thực hiện Quy hoạch vùng Bắc Trung Bộ thời kỳ 2021 - 2030, tầm nhìn đến năm 2050",
+    "filtered_out": true,
+    "filter_tier": "TIER_1_NO_KEYWORD",
+    "reject_reason": "Không chứa từ khóa chuyên ngành",
+    "discovered_at": "2026-11-26 05:29:46"
   }
 }
